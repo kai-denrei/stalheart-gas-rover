@@ -1,3 +1,4 @@
+import {separateDomeShell} from './dome-glazing.js';
 import {openDomePort,subtractBox,unionWalkingFloor} from './dome-ports.js';
 import * as T from '../upstream/stalheart/vendor/three.module.js';
 import {GLTFLoader} from '../upstream/stalheart/vendor/GLTFLoader.js';
@@ -12,12 +13,16 @@ export async function createRaceCity(view){
  const bank=new Map(),loader=new GLTFLoader(),items=[],group=new T.Group();group.name='DOME_RACE_CITY';view.scene.add(group);
  await Promise.all([...ROLES,'bridge_long'].flatMap(role=>[1,2].map(async tier=>{
   const gltf=await loader.loadAsync(`./assets/dome-city/${role}_d0_lod${tier}.glb`);
+  if(role!=='bridge_long')separateDomeShell(gltf.scene);
   gltf.scene.traverse(o=>{if(o.isMesh){if(role!=='bridge_long'&&o.name==='BODY'){const old=o.geometry;o.geometry=unionWalkingFloor(old);old.dispose();}o.castShadow=false;o.receiveShadow=false;}});bank.set(role+tier,gltf.scene);
  })));
  function solid(matrix,min,max,id){const pts=[];for(const x of [min[0],max[0]])for(const y of [min[1],max[1]])for(const z of [min[2],max[2]])pts.push(new T.Vector3(x,y,z).applyMatrix4(matrix));const c=convexCollider(pts,id,'city');view.world.colliders.push(c);}
  function add(role,matrix){const root=new T.Group();root.matrix.copy(matrix);root.matrix.decompose(root.position,root.quaternion,root.scale);const levels=[1,2].map(t=>bank.get(role+t).clone(true));levels.forEach(m=>root.add(m));levels[1].visible=false;group.add(root);const item={root,levels,near:true};items.push(item);return item;}
  const domes=CITY_SITES.map((site,i)=>{
   const origin=point(site.x,site.z),frame=frameAt(origin),matrix=new T.Matrix4().compose(origin,frame.q,new T.Vector3(1,1,1)),item=add(site.role,matrix);
+  // Keep glazing consistent across both LODs; never mutate the shared asset bank.
+  const glazing=(i+Math.floor(i/6))%2===0?'clear':'opaque';item.glazing=glazing;
+  for(const level of item.levels)level.traverse(o=>{if(!o.isMesh||o.name!=='SHELL')return;o.material=new T.MeshStandardMaterial(glazing==='clear'?{color:0x79cbd2,transparent:true,opacity:.22,roughness:.2,metalness:.18,depthWrite:false,side:T.DoubleSide}:{color:0xb3beb0,roughness:.7,metalness:.12});o.material.forceSinglePass=true;});
   // Low envelope + upper mast proxies, independent of visible LOD.
   solid(matrix,[-14.6,0,-14.6],[14.6,13.2,14.6],'city-dome-'+i);solid(matrix,[-2,13.2,-2],[2,36,2],'city-mast-'+i);
   return {...site,...item,matrix,frame};
@@ -38,5 +43,5 @@ export async function createRaceCity(view){
   solid(matrix,[-27,7.5,-2.2],[27,10.9,2.2],'city-bridge-'+bridges);
   for(const t of [-26,-10,10,26])solid(matrix,[t-1,0,-1],[t+1,7.5,1],`city-pillar-${bridges}-${t}`);bridges++;
  }
- return {group,domes:domes.length,sites:domes,bridges,items,update(position){for(const item of items){const d=item.root.position.distanceToSquared(position),near=item.near?d<110**2:d<90**2;if(near!==item.near){item.near=near;item.levels[0].visible=near;item.levels[1].visible=!near;}}},snapshot(){return {domes:domes.length,bridges,near:items.filter(i=>i.near).length,far:items.filter(i=>!i.near).length};}};
+ return {group,domes:domes.length,sites:domes,bridges,items,update(position){for(const item of items){const d=item.root.position.distanceToSquared(position),near=item.near?d<110**2:d<90**2;if(near!==item.near){item.near=near;item.levels[0].visible=near;item.levels[1].visible=!near;}}},snapshot(){return {domes:domes.length,clear:domes.filter(d=>d.glazing==='clear').length,opaque:domes.filter(d=>d.glazing==='opaque').length,bridges,near:items.filter(i=>i.near).length,far:items.filter(i=>!i.near).length};}};
 }

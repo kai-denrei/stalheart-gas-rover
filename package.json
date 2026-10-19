@@ -17,6 +17,7 @@
     "test:combat": "node scripts/combat-browser-test.mjs",
     "test:finish": "node scripts/finish-update-browser-test.mjs",
     "test:stunts": "node scripts/stunt-browser-test.mjs",
+    "test:base": "node scripts/base-update-browser-test.mjs",
     "test:battle": "node scripts/battle-browser-test.mjs"
   },
   "engines": {

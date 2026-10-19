@@ -29,7 +29,7 @@ export class CityDefense {
  constructor(world,guns){this.world=world;this.guns=guns;this.budget=crowdBudget();this.spatial=new CombatSpatial(world);this.reset();}
  setLoad(limit=360,adaptive=true){this.budget=crowdBudget(Math.max(40,Math.min(BATTLE.capacity,limit)),adaptive);}
  frame(ms){crowdFrame(this.budget,ms,this.enemies.filter(e=>!e.dead).length);}
- reset(){this.time=0;this.accumulator=0;this.nextWave=2;this.wave=0;this.serial=0;this.enemies=[];this.shots=[];this.projectiles=[];this.pending=[];this.stats={spawned:0,killed:0,escaped:0,nearTrack:0,fired:0,blocked:0,runOver:0,peak:0,missilePhases:{},impacts:0};for(const g of this.guns){g.next=g.id*.05;g.target=null;g.beam=null;g.lock=makeLock();g.heat=0;g.overheated=false;g.engaged=false;g.engagedAt=null;}this.generation=this.world.race.hazardGeneration;}
+ reset(){this.time=0;this.accumulator=0;this.nextWave=2;this.wave=0;this.serial=0;this.enemies=[];this.shots=[];this.projectiles=[];this.pending=[];this.stats={spawned:0,killed:0,escaped:0,nearTrack:0,fired:0,blocked:0,runOver:0,peak:0,missilePhases:{},impacts:0};for(const g of this.guns){g.next=g.id*.05;g.target=null;g.beam=null;g.lock=makeLock();g.heat=0;g.overheated=false;g.engaged=false;g.engagedAt=null;g.rejected=new Map();}this.generation=this.world.race.hazardGeneration;}
  spawn(){
   // Four broad incoming lanes, alternating sides, queued rather than discarded
   // when the measured crowd cap is full.
@@ -40,7 +40,7 @@ export class CityDefense {
  blast(position,radius,damage){let hit=0;for(const e of this.enemies){if(e.dead)continue;const d=e.position.distanceTo(position);if(d>radius)continue;e.hp-=damage*(1-(d/radius)**2);e.hit=this.time;if(e.hp<=0)this.kill(e);hit++;}return hit;}
  step(dt,race){if(this.generation!==this.world.race.hazardGeneration)this.reset();if(!['racing','finished'].includes(race.phase))return;this.accumulator+=dt;while(this.accumulator>=BATTLE.step){this.accumulator-=BATTLE.step;this.tick(BATTLE.step,race);}}
  tick(dt,race){
-  this.time+=dt;this.spatial.rebuild();if(this.time>=this.nextWave){this.spawn();this.nextWave=this.time+BATTLE.interval;}this.release();this.shots=this.shots.filter(s=>this.time-s.time<.18);
+  this.time+=dt;this.spatial.rebuild();if(this.time>=this.nextWave){this.spawn();this.nextWave=this.time+BATTLE.interval;}this.release();this.shots=this.shots.filter(s=>this.time-s.time<.3);
   for(const e of this.enemies){e.px=e.x;e.pz=e.z;e.age+=dt;if(e.dead)continue;
    const slow=(e.slowUntil||0)>this.time?TOWER_BY_KEY.relay.slowFactor:1;const moved=this.moveEnemy?.(e,dt*slow);let nx=moved?.x??e.x+e.direction*e.speed*dt*slow,nz=moved?.z??e.z;
    if(!e.solids||e.solidsRevision!==this.spatial.revision||Math.hypot(e.x-e.solidsX,e.z-e.solidsZ)>5){e.solids=this.spatial.region(e.x,e.z,8);e.solidsX=e.x;e.solidsZ=e.z;e.solidsRevision=this.spatial.revision;}
@@ -65,26 +65,28 @@ export class CityDefense {
    if(arrived||obstructed||friendly||p.age>12){p.done=true;this.onImpact?.(p.type,p.position);this.stats.impacts++;if(!obstructed&&!friendly)this.blast(p.position,['quiver','heptapod','mortar'].includes(p.type)?12:2,p.damage);}
   }this.projectiles=this.projectiles.filter(p=>!p.done);
   for(const g of this.guns){
+   for(const [id,until] of g.rejected)if(until<=this.time)g.rejected.delete(id);
    if(g.type==='relay'){g.engaged=false;for(const e of this.enemies)if(!e.dead&&e.position.distanceToSquared(g.origin)<g.range*g.range){e.slowUntil=this.time+TOWER_BY_KEY.relay.slowDur;g.engaged=true;}continue;}
    const missile=g.type==='quiver'||g.type==='heptapod',missileTune=g.type==='heptapod'?MISSILE_DEFAULTS.heptapod:QUIVER;
    g.heat=coolHeat(g.heat,dt,SENTRY_HEAT.rotor);if(g.overheated&&g.heat<SENTRY_HEAT.rotor.resume)g.overheated=false;
-   let e=this.byId.get(g.target);if(!e||e.dead||e.position.distanceToSquared(g.origin)>g.range*g.range){e=null;let best=g.range*g.range;for(const v of this.enemies){if(v.dead)continue;const d=v.position.distanceToSquared(g.origin);if(d<best){best=d;e=v;}if(g.type==='needle'&&v.kind==='gorogoro'&&d<g.range*g.range){e=v;break;}}g.target=e?.id??null;g.lock=makeLock();}
+   let e=this.byId.get(g.target);if(!e||e.dead||e.position.distanceToSquared(g.origin)>g.range*g.range){e=null;let best=g.range*g.range;for(const v of this.enemies){if(v.dead||(g.rejected.get(v.id)||0)>this.time)continue;const d=v.position.distanceToSquared(g.origin);if(d<best){best=d;e=v;}if(g.type==='needle'&&v.kind==='gorogoro'&&d<g.range*g.range){e=v;break;}}g.target=e?.id??null;g.lock=makeLock();}
    if(!e){g.beam=null;g.engaged=false;g.engagedAt=null;continue;}if(!g.engaged)g.engagedAt=this.time;g.engaged=true;
    const target=g.type==='rotor'?new Vector3().fromArray(leadPoint(e.position.toArray(),e.velocity.toArray(),g.origin.toArray(),150)):e.position.clone(),from=g.aim?g.aim(target):g.origin;
    if(missile)stepMissileLock(g.lock,dt,e,Math.hypot(e.x-g.x,e.z-g.z),from?0:99999,{...missileTune,maxRange:g.range});
    if(!from)continue;
    if(g.beam&&this.time<g.beam.until){
     if(segmentBlocked(this.world,from,target,this.spatial)||race.racers.some(r=>segmentNear(from,target,r.sim.pos,2))){g.beam=null;continue;}
-    g.beam.from.copy(from);g.beam.to.copy(target);if(g.type==='needle')continue;for(const victim of this.enemies)if(!victim.dead&&segmentNear(from,target,victim.position,1.25)){victim.hp-=g.damage*dt;victim.hit=this.time;if(victim.hp<=0)this.kill(victim);}continue;
+    g.beam.from.copy(from);g.beam.to.copy(target);for(const victim of this.enemies)if(!victim.dead&&segmentNear(from,target,victim.position,1.25)){victim.hp-=g.damage*dt;victim.hit=this.time;if(victim.hp<=0)this.kill(victim);}continue;
    }g.beam=null;
    if(this.time<g.next||g.overheated||(g.type==='rotor'&&this.time-g.engagedAt<FIRING.rotor.spinUp))continue;
    if(missile&&(!missileCanFire(g.lock,e,Math.hypot(e.x-g.x,e.z-g.z),0,{...missileTune,maxRange:g.range})||this.projectiles.some(p=>p.gun===g.id)))continue;
-   if(!missile&&g.type!=='mortar'&&segmentBlocked(this.world,from,target,this.spatial)){this.stats.blocked++;g.target=null;g.next=this.time+.15;continue;}
-   if(!missile&&g.type!=='mortar'&&race.racers.some(r=>segmentNear(from,target,r.sim.pos,2)))continue;
+   if(!missile&&g.type!=='mortar'&&segmentBlocked(this.world,from,target,this.spatial)){this.stats.blocked++;g.rejected.set(e.id,this.time+1.5);g.target=null;g.next=this.time+.15;continue;}
+   if(!missile&&g.type!=='mortar'&&race.racers.some(r=>segmentNear(from,target,r.sim.pos,2))){g.rejected.set(e.id,this.time+.5);g.target=null;continue;}
    if(this.projectiles.length>=128&&g.type!=='lancer')continue;
    const gap=g.cooldown??.5;g.next=Math.max(this.time-gap,g.next)+gap;this.stats.fired++;const id=++this.serial;
    this.shots.push({id,time:this.time,from:from.clone(),to:target,gun:g.id,type:g.type});
-   if(['lancer','plasma','needle'].includes(g.type)){if(g.type==='needle'){e.hp-=g.damage;e.hit=this.time;if(e.hp<=0)this.kill(e);this.onImpact?.('needle',target);}g.beam={from:from.clone(),to:target.clone(),until:this.time+(FIRING[g.type]?.beamHold??.1)};g.next=g.beam.until+gap;}
+   if(g.type==='needle'){g.next=this.time+gap;e.hp-=g.damage;e.hit=this.time;if(e.hp<=0)this.kill(e);this.onImpact?.('needle',target);}
+   else if(['lancer','plasma'].includes(g.type)){g.beam={from:from.clone(),to:target.clone(),until:this.time+(FIRING[g.type]?.beamHold??.1)};g.next=g.beam.until+gap;}
    else {const direction=g.direction?.()??target.clone().sub(from).projectOnPlane(upAt(from)).normalize().multiplyScalar(.56).addScaledVector(upAt(from),.83).normalize(),flight=missile?launchQuiver(from,target,direction,g.type):null;
     this.projectiles.push({id,gun:g.id,type:g.type,from:from.clone(),to:target,position:from.clone(),previous:from.clone(),direction:direction.clone(),flight,ignition:false,phase:flight?'Eject':g.type==='mortar'?'Arc':'Round',arc:g.type==='mortar'?from.distanceTo(target)*.62:0,duration:Math.max(1,from.distanceTo(target)/35),up:upAt(from),age:0,speed:150,target:e.id,damage:g.damage});
     if(g.type==='rotor'){g.heat+=SENTRY_HEAT.rotor.perShot;if(g.heat>=1)g.overheated=true;}

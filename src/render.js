@@ -87,7 +87,7 @@ export class Presentation {
   if(this.width!==w||this.height!==h||this.lastDpr!==dpr){this.width=w;this.height=h;this.lastDpr=dpr;this.renderer.setSize(w,h,false);this.performance.resizeCalls++;this.camera.aspect=w/h;this.camera.updateProjectionMatrix();}
  }
  stepEffects(dt){
-  this.raceView?.defense?.step(dt);this.isao?.step(dt,this.isao.inputEnabled!==false);
+  this.raceView?.traffic?.step(dt);this.raceView?.defense?.step(dt);this.isao?.step(dt,this.isao.inputEnabled!==false);
   if(this.world.race)this.syncRaceHazards();
   for(let i=0;i<this.effects.length;i++){const fx=this.effects[i],h=this.world.holes[i];
    if(this.world.race&&h.dormant){
@@ -102,7 +102,7 @@ export class Presentation {
   this.resize();if(this.world.race)this.syncRaceHazards();this.raceView?.update(alpha);const s=this.sim.motion.sample(alpha),up=upAt(s.pos),fwd=new T.Vector3(0,0,1).applyQuaternion(s.q).projectOnPlane(up).normalize();if(fwd.lengthSq()<.1)fwd.copy(frameAt(s.pos).north);const right=new T.Vector3().crossVectors(up,fwd).normalize();
   this.driftTrails?.update(s);
   this.instruments?.update(s,s.vel.clone().projectOnPlane(up).length());
-  if(this.rover){this.rover.position.copy(s.pos);this.rover.quaternion.copy(s.q);this.rig.update(s,s.vel.clone().projectOnPlane(up).length());}
+  if(this.rover){this.rover.visible=!this.sim.recovering;this.rover.position.copy(s.pos);this.rover.quaternion.copy(s.q);this.rig.update(s,s.vel.clone().projectOnPlane(up).length());}
 
   const ground=terrainSample(this.world,s.pos,false),alt=Number.isFinite(ground.height)?Math.max(0,ground.altitude-ground.height):100;
   this.shadow.visible=Number.isFinite(ground.height)&&alt<30;if(this.shadow.visible){this.shadow.position.copy(s.pos.clone().sub(CENTER).normalize().multiplyScalar(RADIUS+ground.height+.06).add(CENTER));this.shadow.quaternion.setFromUnitVectors(new T.Vector3(0,0,1),up);this.shadow.material.opacity=.24*Math.max(0,1-alt/30);this.shadow.scale.setScalar(1+alt*.03);}

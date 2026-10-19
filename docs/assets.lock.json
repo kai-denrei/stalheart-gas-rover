@@ -1412,6 +1412,110 @@
       "bytes": 295520,
       "kind": "copy",
       "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/domain/landing-sequence.js",
+      "path": "upstream/stalheart/src/domain/landing-sequence.js",
+      "sha256": "67525a5e9bc2f037097d27370be54ae6003545a2989b94fb8c884291e2c13d1e",
+      "bytes": 2386,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/launch-plume.js",
+      "path": "upstream/stalheart/src/fx/launch-plume.js",
+      "sha256": "a7d2af60769d956b61dd9f54a11908407ec172f40edeb3754ac3657fc2a7e936",
+      "bytes": 3056,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/impactfx.js",
+      "path": "upstream/stalheart/src/impactfx.js",
+      "sha256": "008a685f71b2e5d1c52f88ee2eb35ec86045eb12cd43d3066457529bea254a6b",
+      "bytes": 18894,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/content/impact-schema.js",
+      "path": "upstream/stalheart/src/content/impact-schema.js",
+      "sha256": "c465b560dbb7328477c06e4b455339d7b0bba20d5bd43d65558474bb5dc46d36",
+      "bytes": 4848,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/content/weapon-defaults.js",
+      "path": "upstream/stalheart/src/content/weapon-defaults.js",
+      "sha256": "2a98f240f5ff1231e2d0e91a4184b3d1e434e162ad142e4a7721668f766bbeff",
+      "bytes": 4864,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/domain/orbital-laser.js",
+      "path": "upstream/stalheart/src/domain/orbital-laser.js",
+      "sha256": "2069934989a4347091d618f57da60789684c8169a51d0821ebe19dc953099368",
+      "bytes": 8023,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/story/sh_rocket.glb",
+      "path": "assets/base-traffic/sh_rocket.glb",
+      "sha256": "9c777de6f9f766539915fa1132bbc72e0a5383aae369b7e5f416545c74ce3c33",
+      "bytes": 1587456,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/astro/hugin_launchpad_d0_game.glb",
+      "path": "assets/base-traffic/hugin_launchpad.glb",
+      "sha256": "e9bb58e5de49a96e82f5c06310a61dbb5da9a63998f14246399e21ec120f44cd",
+      "bytes": 3244492,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/sol88/sol88_platform_game.glb",
+      "path": "assets/city-combat/sol88.glb",
+      "sha256": "c7fc3b73bdad389e3731d7976c2537fc8e664beb6b7b1fa61acb817bf544f752",
+      "bytes": 386400,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/audio/needle_fire.mp3",
+      "path": "assets/audio/needle_fire.mp3",
+      "sha256": "701d7ff747b37d79bb296dd2a10084a02d4f905a8386eece757ae4277da86e99",
+      "bytes": 15066,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/audio/rocket_thrust.mp3",
+      "path": "assets/audio/rocket_thrust.mp3",
+      "sha256": "afc2bffaf9c7d48272561b28b69035c147fd61dc032a61dab6505c885c791460",
+      "bytes": 850129,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/audio/tank_spool_up.mp3",
+      "path": "assets/audio/tank_spool_up.mp3",
+      "sha256": "b3369537336209526a3fc407373ccca3de64e4d7f6fcf62abe3c0b2511076932",
+      "bytes": 14150,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/audio/tank_spool_down.mp3",
+      "path": "assets/audio/tank_spool_down.mp3",
+      "sha256": "f425b180ea254640d4388e5c23f3e749b4855cb3821cf176ec469b583a18e264",
+      "bytes": 11955,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
     }
   ],
   "flagsRevision": "7466a4a15ecd6b520dc405316cbeaa58a4e211a2",
