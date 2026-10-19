@@ -6,7 +6,7 @@ Open http://localhost:8166/?mode=race and refresh an existing tab.
 
 After a podium claim or race completion, ISAO takes over as before. A/D rotates left/right; W/S flies forward/backward along his heading. Shift descends, Space ascends. Releasing the controls brakes to a hover. Drag orbits the camera without steering the drone; F swaps views. Heading is retained while reversing. Ground/world collision, pause, interpolation and the 130 m ceiling remain active.
 
-Racing rovers use **Shift+A/D while airborne** to kick a lateral roll. Release to coast, then fire the opposite combination to counter the spin. The existing thruster allocator supplies the torque, consumes gas and respects damaged jets. On the ground, Shift still brakes and Shift+steering drifts. No roll auto-level or automatic stop runs during a trick. The separate Kick-Flip practice mode remains available.
+Racing rovers use **Q/E while airborne** to kick a lateral roll. Release to coast, then fire the opposite roll key to counter the spin. Balanced lab reaction jets supply torque, consume gas and scale with thruster health. Arrow keys add pitch/yaw figures; X brakes translation, Shift thrusts down, and C restores stabilization. On the ground, Shift still brakes and Shift+steering drifts. No roll auto-level or automatic stop runs during a trick. The separate Kick-Flip practice mode remains available.
 
 ## Points and callouts
 
@@ -37,6 +37,6 @@ All three podiums are 64-sided cylinders with matching convex collision hulls an
 - `npm test`: physics scoring, single/double rotations, crossing bonuses, duplicate prevention, late-opening fallback, per-racer ranking, recovery/reset, yaw/forward/reverse/vertical drone controls, round podium collisions and open scoreboard supports.
 - `npm run check`: pinned asset hashes, module syntax/imports.
 - `npm run test:race`: all 14 gates and three physical podium claims in the fully rendered course. Cobalt earned 1,000 points from a flip, sinkhole crossing and rover crossing; the race finished.
-- `npm run test:stunts`: real Shift+D input, physical double/counter burst, synchronized HUD/world board, human cylinder landing/claim, actual ISAO keyboard yaw/forward/down/up, dense battle and restart. Report: `../artifacts/stunt-browser-report.json`.
+- `npm run test:stunts`: real E input, physical double/counter burst, synchronized HUD/world board, human cylinder landing/claim, actual ISAO keyboard yaw/forward/down/up, dense battle and restart. Report: `../artifacts/stunt-browser-report.json`.
 
 Measured final dense-battle result: 603 live enemies, approximately 60 FPS, 6.12 ms GPU at 2520×1597 (1.75×). All 92 unit tests passed; 183 pinned assets and 171 modules verified. Browser checks reported no console errors. Measurements are from this machine/headless Chrome; the live FPS/GPU panel remains available for interactive comparisons.

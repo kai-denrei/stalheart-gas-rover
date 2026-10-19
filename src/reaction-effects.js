@@ -1,0 +1,8 @@
+import * as T from '../upstream/stalheart/vendor/three.module.js';
+import {RCS_PORTS} from './reaction-thrusters.js';
+// All ports and all plumes take two draw calls per rover, independent of jet count.
+export function createReactionEffects(model){const root=new T.Group();root.name='LAB_REACTION_PORTS';model.add(root);const ports=new T.InstancedMesh(new T.CylinderGeometry(.065,.08,.08,6),new T.MeshStandardMaterial({color:0x344d54,metalness:.7,roughness:.35}),RCS_PORTS.length),geometry=new T.ConeGeometry(.11,1,7,1,true);geometry.rotateZ(Math.PI);
+ const plumes=new T.InstancedMesh(geometry,new T.MeshBasicMaterial({color:0xacf9ff,transparent:true,opacity:.4,depthWrite:false,blending:T.AdditiveBlending}),RCS_PORTS.length),o=new T.Object3D(),Y=new T.Vector3(0,1,0);root.add(ports,plumes);plumes.instanceMatrix.setUsage(T.DynamicDrawUsage);ports.frustumCulled=plumes.frustumCulled=false;
+ const poses=RCS_PORTS.map((p,i)=>{const position=p.p.clone().add(new T.Vector3(0,.44,0)),quaternion=new T.Quaternion().setFromUnitVectors(Y,p.d.clone().negate());o.position.copy(position);o.quaternion.copy(quaternion);o.scale.setScalar(1);o.updateMatrix();ports.setMatrixAt(i,o.matrix);return {position,quaternion,exhaust:p.d.clone().negate()};});ports.instanceMatrix.needsUpdate=true;
+ return {root,update(s,enabled=true){plumes.visible=enabled;for(let i=0;i<poses.length;i++){const f=s.rcs?.forces[i].length()||0,p=poses[i],length=.15+f*.22;o.position.copy(p.position).addScaledVector(p.exhaust,length/2+.05);o.quaternion.copy(p.quaternion);o.scale.set(.45+f*.16,length,.45+f*.16);if(f<.02)o.scale.setScalar(0);o.updateMatrix();plumes.setMatrixAt(i,o.matrix);}plumes.instanceMatrix.needsUpdate=true;}};
+}

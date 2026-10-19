@@ -1,3 +1,4 @@
+import {createReactionEffects} from './reaction-effects.js';
 import * as T from '../upstream/stalheart/vendor/three.module.js';
 import {solidSupport} from './collisions.js';
 import {gimbalAngles} from './thrusters.js';
@@ -18,10 +19,10 @@ export class RoverRig {
   this.fx=createColdGasSystem(T,model,{texture,dust:false,groundY:-Infinity,maxPlumeParticles:320});scene.add(this.fx.group);this.fx.clear();
   const enable=this.fx.setEnabled.bind(this.fx);this.fx.setEnabled=value=>{enable(value);this.fx.setLeakEnabled(value);this.fx.group.visible=Boolean(value);if(!value)this.fx.clear();};this.fx.setEnabled(true);
   this.leaks={NEG_X:0,POS_X:0,REAR:0};
-  this.displays=createOnboardDisplays(T,model);this.stats={activePlumeCount:0,activeDustCount:0};
+  this.reactions=createReactionEffects(model);this.displays=createOnboardDisplays(T,model);this.stats={activePlumeCount:0,activeDustCount:0};
  }
  update(sim,speed){
-  const damage=sim.damage,health=damage.effects;
+  const damage=sim.damage,health=damage.effects;this.reactions.update(sim,this.fx.group.visible);
   if(this.damageRevision!==damage.revision){
    this.damageRevision=damage.revision;applyLocalizedDamage(this.model,this.damageBank,damage.states,{showDebris:false});
    // Keep core damage independent of the worst component; preserve per-racer paint.

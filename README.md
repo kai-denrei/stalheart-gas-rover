@@ -13,7 +13,7 @@ Node 22+; no package installation, external runtime services, or sibling checkou
 
 For the five-rover race, open **[The Last Leap](https://kai-denrei.github.io/stalheart-gas-rover/?mode=race)** or use the mode selector. Touch fourteen gates, clear the sinkholes, then boost onto a raised platform and stop inside one of three sequentially claimed podium circles. The gates use animated flags from [jelaludo’s CTF kit](https://jelaludo.github.io/SentryTowers_A6/ctf-flags/), with the 火 and 力 variants rendered in plain colors. [Race rules and controls](docs/race-mode.md).
 
-For **[Kick-Flip practice](https://kai-denrei.github.io/stalheart-gas-rover/?mode=kickflip)**, boost into the air, use **Shift+A/D** for a fast roll burst, release to coast, then counter with the opposite combination. A full airborne 360° earns a brief CRT-style callout. [Trick controls and scoring](docs/kick-flip-mode.md).
+For **[Kick-Flip practice](https://kai-denrei.github.io/stalheart-gas-rover/?mode=kickflip)**, boost into the air, use **Q/E** for a fast roll burst, release to coast, then counter with the opposite roll key. A full airborne 360° earns a brief CRT-style callout. [Trick controls and scoring](docs/kick-flip-mode.md). [Flight, braking and traction](docs/flight-and-traction.md).
 
 Click **Enter proving ground**. Start with a short run-up on W, tap/hold Space before the rim, then use S to reduce forward speed in flight. Releasing Space lets gravity bring you down. Keep gas for the landing. Timing is experimental; repeated short attempts are the point of the lab.
 
@@ -22,6 +22,8 @@ Click **Enter proving ground**. Start with a short run-up on W, tap/hold Space b
 | W / S | Drive / brake then reverse; forward / backward jets airborne |
 | A / D | Steer; sideways jets airborne |
 | Space | Upward boost |
+| Shift | Ground handbrake; airborne downward thrust |
+| X / C | Air brake / stabilize and level (uses gas) |
 | Up / Down | Nose up / down |
 | Left / Right | Yaw left / right |
 | Q / E | Roll |
@@ -47,7 +49,7 @@ npm run check            # asset hashes, module syntax and local imports
 npm run test:browser     # Chrome acceptance against the running local server
 npm run test:race        # full five-rover race with actual rendered obstacle collisions
 npm run test:city        # city LOD, opening holes, LANCER disco, audio lifecycle and FPS
-npm run test:kick        # Shift+D, full rotation, counter-thrust and CRT callout
+npm run test:kick        # E, full rotation, counter-thrust and CRT callout
 ```
 
 Browser checks use installed Google Chrome, with an isolated profile and cleanup. Set `CHROME` for another Chrome executable and `LAB_URL` if using a different server port. Screenshots and the browser report go to `artifacts/`.

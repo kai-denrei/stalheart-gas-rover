@@ -35,12 +35,12 @@ export function resolveRoverPair(ra,rb){
  if(!hit)return false;
  ra.stunts?.clearFlight();rb.stunts?.clearFlight();
  let points=contacts(ha,hb,hit);if(!points.length)points=[ha.center.clone().add(hb.center).multiplyScalar(.5)];const n=hit.n;
- const manifold=points.map(p=>{const ar=p.clone().sub(a.pos),br=p.clone().sub(b.pos),closing=-velocity(a,ar).sub(velocity(b,br)).dot(n);return {p,ar,br,closing,bounce:closing>2?closing*.08:0,normal:0,tangent:V()};});
+ const manifold=points.map(p=>{const ar=p.clone().sub(a.pos).multiplyScalar(.55),br=p.clone().sub(b.pos).multiplyScalar(.55),closing=-velocity(a,ar).sub(velocity(b,br)).dot(n);return {p,ar,br,closing,bounce:closing>2?closing*.02:0,normal:0,tangent:V()};});
  for(let iteration=0;iteration<10;iteration++)for(const c of manifold){const rel=velocity(a,c.ar).sub(velocity(b,c.br)),vn=rel.dot(n),old=c.normal;c.normal=Math.max(0,old+(c.bounce-vn)/denominator(a,b,c.ar,c.br,n));apply(a,b,c.ar,c.br,n.clone().multiplyScalar(c.normal-old));
-  const tangent=velocity(a,c.ar).sub(velocity(b,c.br)).projectOnPlane(n),speed=tangent.length();if(speed<1e-7)continue;tangent.divideScalar(speed);const next=c.tangent.clone().addScaledVector(tangent,-speed/denominator(a,b,c.ar,c.br,tangent)).clampLength(0,c.normal*.38);apply(a,b,c.ar,c.br,next.clone().sub(c.tangent));c.tangent.copy(next);
+  const tangent=velocity(a,c.ar).sub(velocity(b,c.br)).projectOnPlane(n),speed=tangent.length();if(speed<1e-7)continue;tangent.divideScalar(speed);const next=c.tangent.clone().addScaledVector(tangent,-speed/denominator(a,b,c.ar,c.br,tangent)).clampLength(0,c.normal*.16);apply(a,b,c.ar,c.br,next.clone().sub(c.tangent));c.tangent.copy(next);
  }
- const correction=Math.min(.35,Math.max(0,hit.depth-.003)*.4);a.pos.addScaledVector(n,correction);b.pos.addScaledVector(n,-correction);
- for(const [s,normal] of [[a,n],[b,n.clone().negate()]]){s.kickFlight=false;s.kickInput=0;s.bodyContacts++;if(normal.dot(upAt(s.pos))>.65&&V(0,1).applyQuaternion(s.q).dot(normal)>.7){s.supportTime=.1;s.grounded=true;}}
+ const correction=Math.min(.2,Math.max(0,hit.depth-.003)*.4);a.pos.addScaledVector(n,correction);b.pos.addScaledVector(n,-correction);
+ for(const [s,normal] of [[a,n],[b,n.clone().negate()]]){s.kickFlight=false;s.kickInput=0;s.trickAxes?.fill(false);s.bodyContacts++;if(normal.dot(upAt(s.pos))>.65&&V(0,1).applyQuaternion(s.q).dot(normal)>.7){s.supportTime=.1;s.grounded=true;}}
  const impact=manifold.reduce((best,c)=>c.closing>best.closing?c:best,manifold[0]);
  if(impact.closing>1.5)for(const [s,id,normal] of [[a,rb.id,n],[b,ra.id,n.clone().negate()]]){const detail={speed:impact.closing,point:impact.p.toArray(),normal:normal.toArray(),collider:'rover-'+id};s.receiveImpact(detail);if(!s.collisionCooldown){s.lastCollision={...detail,time:s.time,severity:impact.closing>=12?'heavy':impact.closing>=6?'moderate':'light'};s.event('collision',s.lastCollision);s.collisionCooldown=.3;s.impact=Math.min(1,impact.closing/15);}}
  return true;

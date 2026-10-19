@@ -69,7 +69,7 @@ Run `npm run test:city` for browser checks of visible warning/opening, shared ph
 
 ## Rear-wheel drift and player claims
 
-Shift brakes the rear wheels and reduces rear lateral grip while the front axle retains bite. Countersteer during the slide and release Shift to recover traction; bounded rear tyre marks show the path. This applies in driving and racing. Kick-Flip mode retains Shift+A/D as its airborne trick control.
+Shift brakes the rear wheels and reduces rear lateral grip while the front axle retains bite. Countersteer during the slide and release Shift to recover traction; bounded rear tyre marks show the path. This applies in driving and racing. Kick-Flip mode retains Q/E as its airborne trick control.
 
 The claim regression exposed a slightly off-center physical landing whose wheels appeared inside the old ring while the full bumper footprint was outside it. Wider 4.8 m rings fit the new 10 m square podiums; the entire rover still has to fit. Static wheel support now holds a resting rover without tiny contact-bias velocities repeatedly interrupting the 1.25-second hold. Input, external impulses and lost wheel support wake it again. Close to the finish, the HUD identifies the next missing gate, wrong podium, incomplete landing, movement or footprint problem. Every gate is still mandatory. Player-ID-zero ownership is tested through real falling/landing/stopping physics on all three tiers and in the browser.
 

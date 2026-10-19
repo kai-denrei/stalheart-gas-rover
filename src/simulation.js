@@ -3,12 +3,13 @@ import {DEFAULTS,RADIUS,CENTER,point,frameAt,upAt,terrainSample,localOnSphere} f
 import {allocate,INERTIA} from './thrusters.js';
 import {nearColliders,sphereContact,ROVER_SOLIDS} from './collisions.js';
 import {RoverMotion} from './motion.js';
+import {reactionBurn} from './reaction-thrusters.js';
 import {RoverDamage} from './damage.js';
 export const STEP=1/120;
 const V=()=>new Vector3();
 const WHEELS=[-.98,.98].flatMap(x=>[-1.44,-.42,1.44].map(z=>new Vector3(x,-.44,z)));
 const HULL=[-1,1].flatMap(x=>[-1.9,1.9].flatMap(z=>[.2,.96].map(y=>new Vector3(x,y,z))));
-export function commands(){return {drive:0,steer:0,lift:0,pitch:0,yaw:0,roll:0,kick:0,brake:0};}
+export function commands(){return {drive:0,steer:0,lift:0,pitch:0,yaw:0,roll:0,kick:0,brake:0,down:0,airBrake:0,stabilize:0,acro:false};}
 export class Simulation {
  constructor(world){this.damage=new RoverDamage();this.damageEnabled=true;this.world=world;this.tune={...DEFAULTS};this.pos=V();this.vel=V();this.q=new Quaternion();this.omega=V();this.time=0;this.checkpoint=0;this.events=[];this.motion=new RoverMotion(this);this.reset();}
  event(type,detail={}){this.events.push({type,time:this.time,...detail});if(this.events.length>40)this.events.shift();}
@@ -16,7 +17,7 @@ export class Simulation {
   // A new opening can scatter solid debris over a pad. Pick a clear point inside
   // the checkpoint ring instead of resetting the rover inside a boulder.
   for(const radius of [0,2,3.5]){let found=false;for(let i=0;i<(radius?12:1);i++){const angle=i*Math.PI/6,p=pad.origin.clone().addScaledVector(pad.frame.up,.46).addScaledVector(pad.frame.east,Math.cos(angle)*radius).addScaledVector(pad.frame.north,Math.sin(angle)*radius),near=nearColliders(this.world,p,3.5);if(!ROVER_SOLIDS.some(shape=>{const c=shape.center.clone().applyQuaternion(pad.frame.q).add(p);return near.some(solid=>sphereContact(solid,c,shape.radius));})){this.pos.copy(p);found=true;break;}}if(found)break;}
-  this.vel.set(0,0,0);this.omega.set(0,0,0);this.spent=0;this.exhausted=null;this.grounded=true;this.supportTime=.1;this.contactCount=6;this.bodyContacts=0;this.inverted=0;this.tilt=0;this.age=0;this.padTime=0;this.refilled=true;this.burn=allocate(V(),V(),this.tune.lift/8);this.airtime=0;this.peak=0;this.impact=0;this.steering=0;this.drift=0;this.parked=false;this.wheelSpin=Array(6).fill(0);this.lastCollision=null;this.collisionCooldown=0;this.kickFlight=false;this.kickAngle=0;this.kickTurns=0;this.kickInput=0;this.kickTotal??=0;this.enemyPrevious=null;this.lastReason=reason;this.event('reset',{reason});this.motion.capture();}
+  this.vel.set(0,0,0);this.omega.set(0,0,0);this.spent=0;this.exhausted=null;this.grounded=true;this.supportTime=.1;this.contactCount=6;this.bodyContacts=0;this.inverted=0;this.tilt=0;this.age=0;this.padTime=0;this.refilled=true;this.burn=allocate(V(),V(),this.tune.lift/8);this.airtime=0;this.peak=0;this.impact=0;this.steering=0;this.drift=0;this.wheelContact=Array(6).fill(true);this.traction=1;this.trickAxes=[false,false,false];this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];this.rcs=reactionBurn(V(),V());this.parked=false;this.wheelSpin=Array(6).fill(0);this.lastCollision=null;this.collisionCooldown=0;this.kickFlight=false;this.kickAngle=0;this.kickTurns=0;this.kickInput=0;this.kickTotal??=0;this.figureTotal??=0;this.enemyPrevious=null;this.lastReason=reason;this.event('reset',{reason});this.motion.capture();}
  receiveImpact(hit){
   if(!this.damageEnabled)return null;
   const local=hit.local||(hit.point?new Vector3().fromArray(hit.point).sub(this.pos).applyQuaternion(this.q.clone().invert()).toArray():[0,0,0]);
@@ -27,7 +28,7 @@ export class Simulation {
  get reserve(){return Math.max(0,this.tune.capacity-this.spent);}
  inertiaInv(worldVector){return worldVector.clone().applyQuaternion(this.q.clone().invert()).divide(INERTIA).applyQuaternion(this.q);}
  impulse(j,r){this.vel.add(j);this.omega.add(this.inertiaInv(new Vector3().crossVectors(r,j)));}
- contact(p,n,penetration,grip=0){const r=p.clone().sub(this.pos),velocity=this.vel.clone().add(new Vector3().crossVectors(this.omega,r));const vn=velocity.dot(n);const cross=new Vector3().crossVectors(r,n);const denom=1+n.dot(new Vector3().crossVectors(this.inertiaInv(cross),r));const bias=Math.max(0,penetration-.008)*.22/STEP;const impulse=Math.max(0,(-vn+bias)/denom);if(impulse>0){this.impulse(n.clone().multiplyScalar(Math.min(impulse,20)),r);
+ contact(p,n,penetration,grip=0,fixture=false){const r=p.clone().sub(this.pos).multiplyScalar(fixture?.5:1),velocity=this.vel.clone().add(new Vector3().crossVectors(this.omega,r));const vn=velocity.dot(n);const cross=new Vector3().crossVectors(r,n);const denom=1+n.dot(new Vector3().crossVectors(this.inertiaInv(cross),r));const bias=fixture?0:Math.min(.35,Math.max(0,penetration-.008)*.12/STEP);const impulse=Math.max(0,(-vn+bias)/denom);if(impulse>0){this.impulse(n.clone().multiplyScalar(Math.min(impulse,20)),r);
   if(grip){const tangent=this.vel.clone().add(new Vector3().crossVectors(this.omega,r)).projectOnPlane(n),speed=tangent.length();if(speed>1e-6){tangent.divideScalar(speed);const denomT=1+tangent.dot(new Vector3().crossVectors(this.inertiaInv(new Vector3().crossVectors(r,tangent)),r));this.impulse(tangent.multiplyScalar(-Math.min(speed/denomT,impulse*grip)),r);}}
  }return -vn;}
  step(input,dt=STEP){
@@ -40,25 +41,32 @@ export class Simulation {
   this.time+=dt;this.age+=dt;this.impact*=Math.exp(-dt*9);
   const up=upAt(this.pos),bodyUp=new Vector3(0,1,0).applyQuaternion(this.q),bodyForward=new Vector3(0,0,1).applyQuaternion(this.q),right=new Vector3(1,0,0).applyQuaternion(this.q);
   const inv=this.q.clone().invert(),wasGround=this.grounded,groundMode=this.grounded&&input.lift===0;
-  const force=new Vector3(groundMode?0:-input.steer*6,input.lift*this.tune.lift*(firingKick?.45:1),groundMode?0:input.drive*6);
-  const angular=this.omega.clone().applyQuaternion(inv);
-  const targetAccel=new Vector3(input.pitch*2.4,input.yaw*2.1,firingKick?firingKick*24:input.roll*2.8);
-  if(!groundMode&&this.tune.assistance!=='manual'){
-   const damping=angular.clone().multiplyScalar(-3.4);
-   if(input.pitch)damping.x*=.3;if(input.yaw)damping.y*=.3;if(input.roll)damping.z*=.3;if(this.kickFlight)damping.z=0;
+  const force=new Vector3(0,input.lift*this.tune.lift,0),angular=this.omega.clone().applyQuaternion(inv);
+  const clearAir=!this.grounded&&this.contactCount===0&&this.bodyContacts===0;
+  if(clearAir){if(firingKick)this.trickAxes[2]=true;if(input.acro&&input.pitch)this.trickAxes[0]=true;if(input.acro&&input.yaw){this.trickAxes[1]=true;this.figureLabels[1]??=Math.abs(bodyForward.dot(up))>.65?'Face-up Spin':'Flat Spin';}}
+  if(input.stabilize){this.trickAxes.fill(false);this.kickFlight=false;this.kickAngle=0;this.kickTurns=0;this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];}
+  const targetAccel=input.stabilize?V():new Vector3(input.pitch*4.5,input.yaw*4,firingKick?firingKick*5.4:input.roll*2.1);
+  if(!groundMode&&(this.tune.assistance!=='manual'||input.stabilize)){
+   const damping=angular.clone().multiplyScalar(input.stabilize?-5:-3.4);
+   for(let i=0;i<3;i++)if(this.trickAxes[i])damping.setComponent(i,0);
    targetAccel.add(damping);
-   if(this.tune.assistance==='stabilized'){
-    const level=new Vector3().crossVectors(bodyUp,up).applyQuaternion(inv).multiplyScalar(5.5);
-    if(!input.pitch)targetAccel.x+=level.x;if(!input.roll&&!this.kickFlight)targetAccel.z+=level.z;
+   if(this.tune.assistance==='stabilized'||input.stabilize){const level=new Vector3().crossVectors(bodyUp,up);if(input.stabilize){const correction=new Quaternion().setFromUnitVectors(bodyUp,up);level.set(correction.x,correction.y,correction.z);const length=level.length();if(length>1e-8)level.multiplyScalar(2*Math.atan2(length,correction.w)/length);}level.applyQuaternion(inv).multiplyScalar(5.5);
+    if((input.stabilize||!input.pitch)&&!this.trickAxes[0])targetAccel.x+=level.x;if((input.stabilize||!input.roll)&&!this.trickAxes[2])targetAccel.z+=level.z;
    }
   }
-  targetAccel.clampLength(0,firingKick?24:5);
-  let burn=allocate(force,targetAccel.multiply(INERTIA),this.tune.lift/8,health);
+  targetAccel.clampLength(0,9);
+  // Existing eight gimbals provide lift. Balanced RCS couples can rotate without
+  // secretly lifting, and opposed jets can brake or push down in any attitude.
+  let burn=allocate(force,V(),this.tune.lift/8,health);
+  const correction=groundMode?V():new Vector3(-input.steer*7,0,input.drive*7).addScaledVector(up.clone().applyQuaternion(inv),-(input.down||0)*8);
+  if(!groundMode&&input.airBrake)correction.add(this.vel.clone().multiplyScalar(-2.8).clampLength(0,8).applyQuaternion(inv));
+  this.rcs=groundMode?reactionBurn(V(),V()):reactionBurn(correction,targetAccel.multiply(INERTIA),health);
   if(groundMode)burn=allocate(V(),V(),this.tune.lift/8);
+  burn.force.add(this.rcs.force);burn.torque.add(this.rcs.torque);burn.effort+=this.rcs.effort;
   this.spent+=Math.min(this.reserve,health.leakRate*dt);
   const wanted=burn.effort/this.tune.lift*this.tune.gasRate*dt;
   const fraction=this.tune.unlimited||wanted===0?1:Math.min(1,this.reserve/wanted);
-  for(const f of burn.forces)f.multiplyScalar(fraction);burn.force.multiplyScalar(fraction);burn.torque.multiplyScalar(fraction);burn.effort*=fraction;
+  for(const f of burn.forces)f.multiplyScalar(fraction);burn.force.multiplyScalar(fraction);burn.torque.multiplyScalar(fraction);burn.effort*=fraction;for(const f of this.rcs.forces)f.multiplyScalar(fraction);this.rcs.force.multiplyScalar(fraction);this.rcs.torque.multiplyScalar(fraction);this.rcs.effort*=fraction;
   this.spent+=wanted*fraction;
   if(this.spent>=this.tune.capacity-1e-8&&!this.exhausted){this.exhausted={time:this.time,position:this.pos.toArray()};this.event('empty');}
   this.burn=burn;
@@ -67,17 +75,22 @@ export class Simulation {
   this.omega.addScaledVector(burn.torque.clone().divide(INERTIA).applyQuaternion(this.q),dt);
   if(groundMode){
    const f=bodyForward.clone().projectOnPlane(up).normalize(),r=right.clone().projectOnPlane(up).normalize(),speed=this.vel.dot(f);
+   const traction=this.wheelContact.filter(Boolean).length/6;this.traction=traction;
    const desired=input.drive>0?(this.tune.driveSpeed||18)*input.drive:input.drive<0?7*input.drive:0;
    let accel=input.drive?Math.max(-8,Math.min(6,(desired-speed)*2)):-speed*.45;
    const handbrake=Math.max(0,Math.min(1,input.brake||0)),powerDrift=Math.max(0,input.drive)*Math.min(1,Math.abs(input.steer)*1.7)*Math.min(1,Math.max(0,(speed-5.5)/6.5))*.98,wantDrift=Math.max(powerDrift,handbrake*Math.min(1,Math.max(0,(Math.abs(speed)-2)/4)));
    this.drift+=(wantDrift-this.drift)*Math.min(1,dt*(wantDrift>this.drift?10:2.8));
    if(handbrake)accel=input.drive?accel-Math.sign(speed)*2:-Math.max(-12,Math.min(12,speed/dt));
-   this.vel.addScaledVector(f,accel*health.drive*dt).addScaledVector(r,-this.vel.dot(r)*Math.min(1,dt*7*health.grip*(1-this.drift)));
+   this.vel.addScaledVector(f,accel*health.drive*traction*dt).addScaledVector(r,-this.vel.dot(r)*Math.min(1,dt*7*health.grip*traction*(1-this.drift)));
    // Axle forces: front tyres retain bite while the accelerating or braked rear axle loses lateral grip.
-   for(const [z,grip] of [[1.15,4.5],[-1.15,.16]]){const lever=f.clone().multiplyScalar(z),slip=this.vel.clone().add(new Vector3().crossVectors(this.omega,lever)).dot(r),force=Math.max(-grip,Math.min(grip,-slip*grip))*this.drift*health.grip;this.impulse(r.clone().multiplyScalar(force*dt),lever);}
+   for(const [z,grip] of [[1.15,4.5],[-1.15,.16]]){const lever=f.clone().multiplyScalar(z),slip=this.vel.clone().add(new Vector3().crossVectors(this.omega,lever)).dot(r),force=Math.max(-grip,Math.min(grip,-slip*grip))*this.drift*health.grip*traction;this.impulse(r.clone().multiplyScalar(force*dt),lever);}
    if(this.damage.wreck)this.vel.addScaledVector(f,-speed*Math.min(1,dt*1.5));
    const targetYaw=-input.steer*(.55+Math.min(Math.abs(speed)/10,1)*.65)*(speed<-.5?-1:1)*health.steer+health.pull*Math.max(-1.5,Math.min(1.5,speed/10));
-   this.omega.addScaledVector(up,(targetYaw-this.omega.dot(up))*Math.min(1,dt*(9-5.5*this.drift)*health.grip));
+   this.omega.addScaledVector(up,(targetYaw-this.omega.dot(up))*Math.min(1,dt*(9-5.5*this.drift)*health.grip*traction));
+   // Speed and lateral acceleration unload the inside tyres physically. There
+   // is no random grip switch: contact returns when the chassis levels again.
+   const roll=Math.atan2(bodyUp.dot(r.clone().negate()),bodyUp.dot(up)),lean=Math.max(0,Math.min(1,(Math.abs(speed)-11)/11))*Math.max(-1,Math.min(1,this.omega.dot(up)))*.22;
+   this.omega.addScaledVector(f,((lean-roll)*40-this.omega.dot(f)*5)*dt);
   }
   if(!groundMode)this.drift*=Math.exp(-dt*8);
   this.pos.addScaledVector(this.vel,dt);
@@ -99,7 +112,7 @@ export class Simulation {
    let deepest=0,correction=null;
    for(const shape of ROVER_SOLIDS){const center=shape.center.clone().applyQuaternion(this.q).add(this.pos);
     for(const solid of solids){const hit=sphereContact(solid,center,shape.radius);if(!hit)continue;
-     const closing=this.contact(hit.point,hit.normal,hit.depth,.18);maxImpact=Math.max(maxImpact,closing);
+     const closing=this.contact(hit.point,hit.normal,hit.depth,.08,true);maxImpact=Math.max(maxImpact,closing);
      if(pass===0){if(shape.wheel!==undefined&&hit.normal.dot(up)>.45)supported.add(shape.wheel);else bodyContacts++;}
      const impactSpeed=Math.max(0,-incomingVel.clone().add(new Vector3().crossVectors(incomingOmega,hit.point.clone().sub(this.pos))).dot(hit.normal));
      if(impactSpeed>(collision?.speed||0))collision={speed:impactSpeed,point:hit.point.toArray(),normal:hit.normal.toArray(),collider:solid.id,zone:shape.zone};
@@ -109,7 +122,12 @@ export class Simulation {
    if(deepest>.008)this.pos.addScaledVector(correction,Math.min(.045,(deepest-.008)*.3));
   }
   if(this.age>.3){for(const hit of terrainHits.values())this.receiveImpact(hit);if(collision)this.receiveImpact(collision);}
-  wheelContacts=supported.size;
+  wheelContacts=supported.size;this.wheelContact=Array.from({length:6},(_,i)=>supported.has(i));this.traction=wheelContacts/6;
+  if(wheelContacts||bodyContacts){this.trickAxes.fill(false);this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];}
+  else {const delta=previousQ.clone().invert().multiply(this.q);if(delta.w<0){delta.x*=-1;delta.y*=-1;delta.z*=-1;delta.w*=-1;}
+   const length=Math.hypot(delta.x,delta.y,delta.z),scale=length>1e-9?2*Math.atan2(length,delta.w)/length:2;
+   for(let axis=0;axis<2;axis++)if(this.trickAxes[axis]){this.figureAngles[axis]+=(axis===0?delta.x:delta.y)*scale;const turns=Math.floor(Math.abs(this.figureAngles[axis])/(2*Math.PI));if(turns>this.figureTurns[axis]){this.figureTotal+=turns-this.figureTurns[axis];this.figureTurns[axis]=turns;const label=axis===0?(this.figureAngles[0]>0?'Front Flip':'Back Flip'):this.figureLabels[1]||'Flat Spin';this.event('figure',{axis,label,turns,total:this.kickTotal+this.figureTotal});}}
+  }
   if(this.kickFlight){
    if(wheelContacts||bodyContacts){this.kickFlight=false;this.kickInput=0;}
    else{
@@ -123,7 +141,7 @@ export class Simulation {
   if(collision&&collision.speed>1.5&&this.collisionCooldown===0){this.lastCollision={...collision,time:this.time,severity:collision.speed>=12?'heavy':collision.speed>=6?'moderate':'light'};this.event('collision',this.lastCollision);this.impact=Math.max(this.impact,Math.min(1,collision.speed/15));this.collisionCooldown=.3;}
 
   // Integrate wheel roll from actual hub velocity, in simulation time (pause-safe).
-  for(let i=0;i<6;i++){const p=WHEELS[i],v=this.vel.clone().add(new Vector3().crossVectors(this.omega,p.clone().applyQuaternion(this.q))).applyQuaternion(this.q.clone().invert());const angle=p.z>1?this.steering:0;if(wheelContacts&&this.damage.states['WHEEL_'+['RL','ML','FL','RR','MR','FR'][i]]<3)this.wheelSpin[i]+=(v.z*Math.cos(angle)+v.x*Math.sin(angle))*dt/.48*(p.z<0?(input.brake?1-this.drift:1+this.drift*.12*Math.max(0,input.drive)):1);}
+  for(let i=0;i<6;i++){const p=WHEELS[i],v=this.vel.clone().add(new Vector3().crossVectors(this.omega,p.clone().applyQuaternion(this.q))).applyQuaternion(this.q.clone().invert());const angle=p.z>1?this.steering:0;if(this.wheelContact[i]&&this.damage.states['WHEEL_'+['RL','ML','FL','RR','MR','FR'][i]]<3)this.wheelSpin[i]+=(v.z*Math.cos(angle)+v.x*Math.sin(angle))*dt/.48*(p.z<0?(input.brake?1-this.drift:1+this.drift*.12*Math.max(0,input.drive)):1);}
   this.contactCount=wheelContacts;this.bodyContacts=bodyContacts;this.supportTime=wheelContacts>=2?.10:Math.max(0,this.supportTime-dt);this.grounded=this.supportTime>0&&this.vel.dot(up)<1.1;
   // Static tyre friction catches the last tiny roll instead of leaving a perpetual crawl on a tilted deck.
   this.parked=this.grounded&&wheelContacts>=4&&!input.drive&&!input.steer&&!input.lift&&this.vel.clone().projectOnPlane(up).length()<.12&&Math.abs(this.vel.dot(up))<.3&&this.omega.length()<.12;
@@ -140,5 +158,5 @@ export class Simulation {
   else {this.padTime=0;this.refilled=false;}
   if((this.contactCount+this.bodyContacts)>1&&this.tilt>100&&this.vel.length()<.5){this.inverted=(this.inverted||0)+dt;if(this.inverted>4){this.inverted=0;this.reset('OVERTURNED');}}else this.inverted=0;
  }
- snapshot(){return {drift:this.drift,damage:{enabled:this.damageEnabled,...this.damage.snapshot()},kick:{active:this.kickFlight,angle:this.kickAngle,turns:this.kickTurns,total:this.kickTotal},time:this.time,position:this.pos.toArray(),velocity:this.vel.toArray(),quaternion:this.q.toArray(),angularVelocity:this.omega.toArray(),grounded:this.grounded,contacts:this.contactCount,gas:this.reserve,spent:this.spent,exhausted:this.exhausted,altitude:this.altitude,tilt:this.tilt,checkpoint:this.checkpoint,collision:this.lastCollision,burn:this.burn.effort,events:this.events.slice(-8)};}
+ snapshot(){return {drift:this.drift,traction:this.traction,wheelContact:[...this.wheelContact],figures:{angles:[...this.figureAngles],turns:[...this.figureTurns]},damage:{enabled:this.damageEnabled,...this.damage.snapshot()},kick:{active:this.kickFlight,angle:this.kickAngle,turns:this.kickTurns,total:this.kickTotal},time:this.time,position:this.pos.toArray(),velocity:this.vel.toArray(),quaternion:this.q.toArray(),angularVelocity:this.omega.toArray(),grounded:this.grounded,contacts:this.contactCount,gas:this.reserve,spent:this.spent,exhausted:this.exhausted,altitude:this.altitude,tilt:this.tilt,checkpoint:this.checkpoint,collision:this.lastCollision,burn:this.burn.effort,events:this.events.slice(-8)};}
 }
