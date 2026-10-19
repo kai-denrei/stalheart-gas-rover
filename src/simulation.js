@@ -69,11 +69,11 @@ export class Simulation {
    const f=bodyForward.clone().projectOnPlane(up).normalize(),r=right.clone().projectOnPlane(up).normalize(),speed=this.vel.dot(f);
    const desired=input.drive>0?(this.tune.driveSpeed||18)*input.drive:input.drive<0?7*input.drive:0;
    let accel=input.drive?Math.max(-8,Math.min(6,(desired-speed)*2)):-speed*.45;
-   const handbrake=Math.max(0,Math.min(1,input.brake||0)),wantDrift=handbrake*Math.min(1,Math.max(0,(Math.abs(speed)-2)/4));
+   const handbrake=Math.max(0,Math.min(1,input.brake||0)),powerDrift=Math.max(0,input.drive)*Math.min(1,Math.abs(input.steer)*1.4)*Math.min(1,Math.max(0,(speed-7)/8))*.88,wantDrift=Math.max(powerDrift,handbrake*Math.min(1,Math.max(0,(Math.abs(speed)-2)/4)));
    this.drift+=(wantDrift-this.drift)*Math.min(1,dt*(wantDrift>this.drift?8:3));
    if(handbrake)accel=input.drive?accel-Math.sign(speed)*2:-Math.max(-12,Math.min(12,speed/dt));
    this.vel.addScaledVector(f,accel*health.drive*dt).addScaledVector(r,-this.vel.dot(r)*Math.min(1,dt*9*health.grip*(1-this.drift)));
-   // Axle forces: front tyres retain bite while the braked rear axle loses lateral grip.
+   // Axle forces: front tyres retain bite while the accelerating or braked rear axle loses lateral grip.
    for(const [z,grip] of [[1.15,4.5],[-1.15,.35]]){const lever=f.clone().multiplyScalar(z),slip=this.vel.clone().add(new Vector3().crossVectors(this.omega,lever)).dot(r),force=Math.max(-grip,Math.min(grip,-slip*grip))*this.drift*health.grip;this.impulse(r.clone().multiplyScalar(force*dt),lever);}
    if(this.damage.wreck)this.vel.addScaledVector(f,-speed*Math.min(1,dt*1.5));
    const targetYaw=-input.steer*(.55+Math.min(Math.abs(speed)/10,1)*.65)*(speed<-.5?-1:1)*health.steer+health.pull*Math.max(-1.5,Math.min(1.5,speed/10));
@@ -123,7 +123,7 @@ export class Simulation {
   if(collision&&collision.speed>1.5&&this.collisionCooldown===0){this.lastCollision={...collision,time:this.time,severity:collision.speed>=12?'heavy':collision.speed>=6?'moderate':'light'};this.event('collision',this.lastCollision);this.impact=Math.max(this.impact,Math.min(1,collision.speed/15));this.collisionCooldown=.3;}
 
   // Integrate wheel roll from actual hub velocity, in simulation time (pause-safe).
-  for(let i=0;i<6;i++){const p=WHEELS[i],v=this.vel.clone().add(new Vector3().crossVectors(this.omega,p.clone().applyQuaternion(this.q))).applyQuaternion(this.q.clone().invert());const angle=p.z>1?this.steering:0;if(wheelContacts&&this.damage.states['WHEEL_'+['RL','ML','FL','RR','MR','FR'][i]]<3)this.wheelSpin[i]+=(v.z*Math.cos(angle)+v.x*Math.sin(angle))*dt/.48*(p.z<0?1-this.drift:1);}
+  for(let i=0;i<6;i++){const p=WHEELS[i],v=this.vel.clone().add(new Vector3().crossVectors(this.omega,p.clone().applyQuaternion(this.q))).applyQuaternion(this.q.clone().invert());const angle=p.z>1?this.steering:0;if(wheelContacts&&this.damage.states['WHEEL_'+['RL','ML','FL','RR','MR','FR'][i]]<3)this.wheelSpin[i]+=(v.z*Math.cos(angle)+v.x*Math.sin(angle))*dt/.48*(p.z<0?(input.brake?1-this.drift:1+this.drift*.12*Math.max(0,input.drive)):1);}
   this.contactCount=wheelContacts;this.bodyContacts=bodyContacts;this.supportTime=wheelContacts>=2?.10:Math.max(0,this.supportTime-dt);this.grounded=this.supportTime>0&&this.vel.dot(up)<1.1;
   // Static tyre friction catches the last tiny roll instead of leaving a perpetual crawl on a tilted deck.
   this.parked=this.grounded&&wheelContacts>=4&&!input.drive&&!input.steer&&!input.lift&&this.vel.clone().projectOnPlane(up).length()<.12&&Math.abs(this.vel.dot(up))<.3&&this.omega.length()<.12;

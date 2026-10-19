@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';import {writeFile} from 'node:fs/promises';import {browser} from './browser-session.mjs';
-const b=await browser('http://localhost:8166/?mode=race');const checks=[];
+const b=await browser('http://localhost:8166/?mode=race',{watchdogMs:300000});const checks=[];
 try{
  await b.evaluate(`new Promise((resolve,reject)=>{const end=Date.now()+30000;const f=()=>window.roverLab?.ready()?resolve(true):Date.now()>end?reject(Error(document.getElementById('loadText').textContent)):setTimeout(f,100);f();})`);
  const initial=await b.evaluate(`(()=>{const l=roverLab;return {racers:l.race.racers.length,models:l.view.raceView.rivals.length,phase:l.race.phase,colliders:l.world.colliders.length,colors:l.view.raceView.rivals.map(v=>v.group.getObjectByName('CHASSIS_ARMOR_BODY').material.color.getHex()),gas:l.sim.reserve,locked:document.getElementById('unlimited').disabled};})()`);assert.equal(initial.racers,5);assert.equal(initial.models,4);assert.equal(new Set(initial.colors).size,4);assert.equal(initial.gas,160);assert.ok(initial.locked);checks.push('five distinct loaded rover models; equal finite reserve; fixed race rules');

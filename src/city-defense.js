@@ -1,3 +1,4 @@
+import {BOSS,crowdTraits,crowdMotion} from './crowd-variation.js';
 import {MISSILE_DEFAULTS} from '../upstream/stalheart/src/content/missile-defaults.js';
 import {TOWER_BY_KEY} from '../upstream/stalheart/src/towers.js';
 import {Vector3} from '../upstream/stalheart/vendor/three.module.js';
@@ -29,31 +30,34 @@ export class CityDefense {
  constructor(world,guns){this.world=world;this.guns=guns;this.budget=crowdBudget();this.spatial=new CombatSpatial(world);this.reset();}
  setLoad(limit=360,adaptive=true){this.budget=crowdBudget(Math.max(40,Math.min(BATTLE.capacity,limit)),adaptive);}
  frame(ms){crowdFrame(this.budget,ms,this.enemies.filter(e=>!e.dead).length);}
- reset(){this.time=0;this.accumulator=0;this.nextWave=2;this.wave=0;this.serial=0;this.enemies=[];this.shots=[];this.projectiles=[];this.pending=[];this.stats={spawned:0,killed:0,escaped:0,nearTrack:0,fired:0,blocked:0,runOver:0,peak:0,missilePhases:{},impacts:0};for(const g of this.guns){g.next=g.id*.05;g.target=null;g.beam=null;g.lock=makeLock();g.heat=0;g.overheated=false;g.engaged=false;g.engagedAt=null;g.rejected=new Map();}this.generation=this.world.race.hazardGeneration;}
+ reset(){this.time=0;this.accumulator=0;this.nextWave=2;this.nextBoss=BOSS.first;this.bossSpawns=0;this.wave=0;this.serial=0;this.enemies=[];this.shots=[];this.projectiles=[];this.pending=[];this.stats={spawned:0,killed:0,escaped:0,nearTrack:0,fired:0,blocked:0,runOver:0,peak:0,missilePhases:{},impacts:0};for(const g of this.guns){g.next=g.id*.05;g.target=null;g.beam=null;g.lock=makeLock();g.heat=0;g.overheated=false;g.engaged=false;g.engagedAt=null;g.rejected=new Map();}this.generation=this.world.race.hazardGeneration;}
  spawn(){
   // Four broad incoming lanes, alternating sides, queued rather than discarded
   // when the measured crowd cap is full.
   for(let i=0;i<BATTLE.waveSize;i++){if(this.pending.length>=BATTLE.capacity*2)break;const side=(i%2)?-1:1,lane=(Math.floor(i/2)+this.wave)%4,z=[12,85,168,244][lane]+((Math.floor(i/8)%6)-2.5)*4.5,x=(side<0?-100:250)+side*(Math.floor(i/48)*8+(this.wave%3)*3);this.pending.push({x,z,side,phase:i*.71+this.wave});}this.wave++;this.release();
  }
- release(){let n=0;while(this.pending.length&&this.enemies.length<this.budget.cap&&n++<BATTLE.release){const s=this.pending.shift(),kind=this.serial%83===82&&this.enemies.filter(e=>e.kind==='gorogoro').length<4?'gorogoro':'reed',e={id:++this.serial,x:s.x,z:s.z,px:s.x,pz:s.z,goal:s.side<0?160:0,direction:-s.side,speed:kind==='gorogoro'?3:3.3+(this.serial%5)*.23,hp:kind==='gorogoro'?14:3,kind,dead:0,age:0,near:false,phase:s.phase,position:point(s.x,s.z,.8),velocity:new Vector3()};this.enemies.push(e);this.stats.spawned++;}this.stats.peak=Math.max(this.stats.peak,this.enemies.length);}
- kill(e,reason='shot'){if(e.dead)return;e.hp=0;e.dead=Math.max(.0001,this.time);this.stats.killed++;if(reason==='rover')this.stats.runOver++;}
+ release(){let n=0;while(this.pending.length&&this.enemies.length<this.budget.cap&&n++<BATTLE.release){const s=this.pending.shift(),ordinal=this.stats.spawned,kind=ordinal%19===18&&this.enemies.filter(e=>e.kind==='gorogoro').length<8?'gorogoro':ordinal%5<2?'cutis':'reed';this.addEnemy(s,kind);}this.stats.peak=Math.max(this.stats.peak,this.enemies.length);}
+ addEnemy(s,kind){const traits=crowdTraits(++this.serial),boss=kind==='nih-daira',e={...traits,id:this.serial,x:s.x,z:s.z,px:s.x,pz:s.z,goal:s.side<0?180:-20,direction:-s.side,speed:(boss?1.7:kind==='gorogoro'?3:kind==='cutis'?2.8:3.8)*traits.pace,hp:boss?BOSS.hp:kind==='gorogoro'?14:kind==='cutis'?1.5:3,kind,dead:0,age:0,near:false,position:point(s.x,s.z,boss?2:.8),velocity:new Vector3()};this.enemies.push(e);this.stats.spawned++;return e;}
+ spawnBoss(){if(this.time<this.nextBoss||this.enemies.some(e=>e.kind==='nih-daira')||this.enemies.length>=this.budget.cap)return;const side=this.bossSpawns%2?-1:1;this.addEnemy({x:side<0?-90:240,z:145,side},'nih-daira');this.bossSpawns++;this.nextBoss=this.time+BOSS.cooldown;}
+
+ kill(e,reason='shot'){if(e.dead)return;e.hp=0;e.dead=Math.max(.0001,this.time);this.stats.killed++;if(e.kind==='nih-daira')this.nextBoss=this.time+BOSS.cooldown;if(reason==='rover')this.stats.runOver++;}
  blast(position,radius,damage){let hit=0;for(const e of this.enemies){if(e.dead)continue;const d=e.position.distanceTo(position);if(d>radius)continue;e.hp-=damage*(1-(d/radius)**2);e.hit=this.time;if(e.hp<=0)this.kill(e);hit++;}return hit;}
  step(dt,race){if(this.generation!==this.world.race.hazardGeneration)this.reset();if(!['racing','finished'].includes(race.phase))return;this.accumulator+=dt;while(this.accumulator>=BATTLE.step){this.accumulator-=BATTLE.step;this.tick(BATTLE.step,race);}}
  tick(dt,race){
-  this.time+=dt;this.spatial.rebuild();if(this.time>=this.nextWave){this.spawn();this.nextWave=this.time+BATTLE.interval;}this.release();this.shots=this.shots.filter(s=>this.time-s.time<.3);
+  this.time+=dt;this.spatial.rebuild();this.spawnBoss();if(this.time>=this.nextWave){this.spawn();this.nextWave=this.time+BATTLE.interval;}this.release();this.shots=this.shots.filter(s=>this.time-s.time<.3);
   for(const e of this.enemies){e.px=e.x;e.pz=e.z;e.age+=dt;if(e.dead)continue;
-   const slow=(e.slowUntil||0)>this.time?TOWER_BY_KEY.relay.slowFactor:1;const moved=this.moveEnemy?.(e,dt*slow);let nx=moved?.x??e.x+e.direction*e.speed*dt*slow,nz=moved?.z??e.z;
+   const slow=(e.slowUntil||0)>this.time?TOWER_BY_KEY.relay.slowFactor:1;const moved=this.moveEnemy?.(e,dt*slow),motion=crowdMotion(e,this.time);let nx=moved?.x??e.x+e.direction*motion.speed*dt*slow,nz=moved?.z??e.z+motion.side*dt*slow;
    if(!e.solids||e.solidsRevision!==this.spatial.revision||Math.hypot(e.x-e.solidsX,e.z-e.solidsZ)>5){e.solids=this.spatial.region(e.x,e.z,8);e.solidsX=e.x;e.solidsZ=e.z;e.solidsRevision=this.spatial.revision;}
    const blockedAt=(x,z)=>{const p=point(x,z,.7);for(const c of e.solids)if(sphereContact(c,p,.7))return true;return false;};
    if(blockedAt(nx,nz)){nx=e.x;nz=e.z+((e.id%2)*2-1)*e.speed*dt*slow;}
    if(!blockedAt(nx,nz)){e.x=nx;e.z=nz;}
-   const old=e.position.clone();e.position.copy(point(e.x,e.z,.8));e.velocity.copy(e.position).sub(old).divideScalar(dt);
+   const old=e.position.clone();e.position.copy(point(e.x,e.z,e.kind==='nih-daira'?2:.8));e.velocity.copy(e.position).sub(old).divideScalar(dt);
    // Only probe terrain near an active sinkhole, not hundreds of times across
    // empty spherical ground. All deaths and targeting remain actual bodies.
    if(this.world.holes.some(h=>h.radius>0&&Math.hypot(e.x-h.x,e.z-h.z)<h.r+3)&&terrainSample(this.world,e.position,false).throat){this.kill(e);continue;}
    if(!e.near&&ROUTE.slice(1).some((b,i)=>segmentDistance(e.x,e.z,ROUTE[i],b)<12)){e.near=true;this.stats.nearTrack++;}
-   for(const r of race.racers){if(r.place||r.penalty||r.sim.vel.lengthSq()<9)continue;if(r.sim.pos.distanceToSquared(e.position)<5){this.kill(e,'rover');break;}}
-   if(e.direction*(e.goal-e.x)<0||e.age>80){e.gone=true;this.stats.escaped++;}
+   for(const r of race.racers){if(r.place||r.penalty||r.sim.vel.lengthSq()<9)continue;if(e.kind!=='nih-daira'&&r.sim.pos.distanceToSquared(e.position)<5){this.kill(e,'rover');break;}}
+   if(e.direction*(e.goal-e.x)<0||e.age>(e.kind==='nih-daira'?125:80)){e.gone=true;if(e.kind==='nih-daira')this.nextBoss=this.time+BOSS.cooldown;this.stats.escaped++;}
   }
   this.enemies=this.enemies.filter(e=>!e.gone&&(!e.dead||this.time-e.dead<1.6));
   this.byId=new Map(this.enemies.map(e=>[e.id,e]));
@@ -69,7 +73,7 @@ export class CityDefense {
    if(g.type==='relay'){g.engaged=false;for(const e of this.enemies)if(!e.dead&&e.position.distanceToSquared(g.origin)<g.range*g.range){e.slowUntil=this.time+TOWER_BY_KEY.relay.slowDur;g.engaged=true;}continue;}
    const missile=g.type==='quiver'||g.type==='heptapod',missileTune=g.type==='heptapod'?MISSILE_DEFAULTS.heptapod:QUIVER;
    g.heat=coolHeat(g.heat,dt,SENTRY_HEAT.rotor);if(g.overheated&&g.heat<SENTRY_HEAT.rotor.resume)g.overheated=false;
-   let e=this.byId.get(g.target);if(!e||e.dead||e.position.distanceToSquared(g.origin)>g.range*g.range){e=null;let best=g.range*g.range;for(const v of this.enemies){if(v.dead||(g.rejected.get(v.id)||0)>this.time)continue;const d=v.position.distanceToSquared(g.origin);if(d<best){best=d;e=v;}if(g.type==='needle'&&v.kind==='gorogoro'&&d<g.range*g.range){e=v;break;}}g.target=e?.id??null;g.lock=makeLock();}
+   let e=this.byId.get(g.target);if(!e||e.dead||e.position.distanceToSquared(g.origin)>g.range*g.range){e=null;let best=g.range*g.range;for(const v of this.enemies){if(v.dead||(g.rejected.get(v.id)||0)>this.time)continue;const d=v.position.distanceToSquared(g.origin);if(d<best){best=d;e=v;}if(g.type==='needle'&&['gorogoro','nih-daira'].includes(v.kind)&&d<g.range*g.range){e=v;break;}}g.target=e?.id??null;g.lock=makeLock();}
    if(!e){g.beam=null;g.engaged=false;g.engagedAt=null;continue;}if(!g.engaged)g.engagedAt=this.time;g.engaged=true;
    const target=g.type==='rotor'?new Vector3().fromArray(leadPoint(e.position.toArray(),e.velocity.toArray(),g.origin.toArray(),150)):e.position.clone(),from=g.aim?g.aim(target):g.origin;
    if(missile)stepMissileLock(g.lock,dt,e,Math.hypot(e.x-g.x,e.z-g.z),from?0:99999,{...missileTune,maxRange:g.range});
@@ -94,5 +98,5 @@ export class CityDefense {
    g.fire?.();this.onShot?.(g.type,from);if(missile){g.lock=makeLock();g.target=null;}
   }
  }
- snapshot(){return {time:this.time,capacity:BATTLE.capacity,cap:this.budget.cap,adaptive:this.budget.adaptive,queued:this.pending.length,waves:this.wave,projectiles:this.projectiles.length,gorogoro:this.enemies.filter(e=>e.kind==='gorogoro'&&!e.dead).length,alive:this.enemies.filter(e=>!e.dead).length,bodies:this.enemies.length,guns:this.guns.length,...this.stats,missiles:this.projectiles.filter(p=>p.flight).map(p=>({id:p.id,phase:p.phase,ignition:p.ignition,age:p.age,position:p.position.toArray()}))};}
+ snapshot(){return {bossSpawns:this.bossSpawns,kinds:Object.fromEntries(['reed','cutis','gorogoro','nih-daira'].map(k=>[k,this.enemies.filter(e=>e.kind===k&&!e.dead).length])),time:this.time,capacity:BATTLE.capacity,cap:this.budget.cap,adaptive:this.budget.adaptive,queued:this.pending.length,waves:this.wave,projectiles:this.projectiles.length,gorogoro:this.enemies.filter(e=>e.kind==='gorogoro'&&!e.dead).length,alive:this.enemies.filter(e=>!e.dead).length,bodies:this.enemies.length,guns:this.guns.length,...this.stats,missiles:this.projectiles.filter(p=>p.flight).map(p=>({id:p.id,phase:p.phase,ignition:p.ignition,age:p.age,position:p.position.toArray()}))};}
 }

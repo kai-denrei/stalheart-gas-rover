@@ -51,7 +51,7 @@ function hud(){if(race&&(race.racers[0].place||race.phase==='finished')&&!view.i
  $('damageSummary').classList.toggle('damaged',damaged>0);
  $('damageDetail').textContent=!sim.damageEnabled?'Collision damage is disabled for trick practice.':`${sim.damage.hits} hits · Drive ${Math.round(health.drive*100)}% · Grip ${Math.round(health.grip*100)}% · Leak ${health.leakRate.toFixed(1)}/s. ${racing?'Recovery repairs with a time penalty.':'R recovers and repairs; pads refill gas only.'}`;
  const c=coords(sim.pos);$('location').textContent=`${c.x.toFixed(0)} E / ${c.z.toFixed(0)} N · PAD ${sim.checkpoint}`;
- if(race){const b=view.raceView.defense.snapshot();$('battleStats').textContent=`ENEMIES ${b.alive} / ${b.cap} · VISIBLE ${b.near+b.far+b.gorogoro} · QUEUED ${b.queued}`;}const perf=view.performance.snapshot();$('fps').innerHTML=`${Math.round(perf.fps)} <small>FPS</small>`;$('frameTime').textContent=`${perf.frame.toFixed(1)} ms / frame`;
+ if(race){const b=view.raceView.defense.snapshot();$('battleStats').textContent=`ENEMIES ${b.alive} / ${b.cap} · VISIBLE ${b.near+b.far+b.gorogoro+b.ambient.visible} · QUEUED ${b.queued}`;}const perf=view.performance.snapshot();$('fps').innerHTML=`${Math.round(perf.fps)} <small>FPS</small>`;$('frameTime').textContent=`${perf.frame.toFixed(1)} ms / frame`;
  $('perfBreakdown').textContent=`SIM ${perf.sim.toFixed(1)} · DRAW ${perf.render.toFixed(1)} · GPU ${perf.gpu===null?'n/a':perf.gpu.toFixed(1)} ms`;
  $('perfDetail').textContent=`P95 ${perf.p95.toFixed(1)} ms · ${perf.dpr??view.renderer.getPixelRatio()}× · ${perf.calls??0} draws`;
  $('performance').classList.toggle('slow',perf.fps>0&&perf.fps<45);

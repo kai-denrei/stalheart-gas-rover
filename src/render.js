@@ -13,7 +13,6 @@ import {createStalheartSky} from './sky.js';
 import {PerformanceMonitor} from './performance.js';
 const green=0xaff3ce,amber=0xffbf7b;
 LOOKS.roverLab={...LOOKS.tronColors,floors:{...LOOKS.tronColors.floors,room:[.12,.18,.17]},walls:{top:[.14,.18,.17],side:[.09,.13,.13]},edges:{color:0xa9d4b4,opacity:.5,additive:false}};
-function label(text,size=22,color='#b6dacb'){const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=100;const ctx=canvas.getContext('2d');ctx.font='500 38px monospace';ctx.textAlign='center';ctx.fillStyle=color;ctx.fillText(text,512,62);const map=new T.CanvasTexture(canvas);const sprite=new T.Sprite(new T.SpriteMaterial({map,transparent:true,depthTest:true}));sprite.scale.set(size,size/10.24,1);return sprite;}
 export class Presentation {
  constructor(canvas,world,sim){
   this.world=world;this.sim=sim;this.scene=new T.Scene();this.scene.background=new T.Color(0x101d28);this.scene.fog=new T.FogExp2(0x172b35,.0018);
@@ -49,12 +48,9 @@ export class Presentation {
    const disk=new T.Mesh(new T.CylinderGeometry(6,6,.08,64),new T.MeshStandardMaterial({color:0x344b4a,roughness:.75,metalness:.4}));disk.position.y=.03;group.add(disk);
    const ring=new T.Mesh(new T.RingGeometry(5.7,5.82,64),new T.MeshBasicMaterial({color:green,side:T.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.position.y=.085;group.add(ring);
    const crossMat=new T.MeshBasicMaterial({color:0x9cd7c0});for(const a of [0,Math.PI/2]){const m=new T.Mesh(new T.PlaneGeometry(2.4,.1),crossMat);m.rotation.set(-Math.PI/2,0,a);m.position.y=.09;group.add(m);}
-   const name=label(`${String(i).padStart(2,'0')}  ${p.name}`,12);name.position.set(0,2.4,6.5);group.add(name);
    for(const x of [-6,6]){const post=new T.Mesh(new T.CylinderGeometry(.08,.12,1.2,6),new T.MeshStandardMaterial({color:0x80918b}));post.position.set(x,.6,0);group.add(post);const cap=new T.Mesh(new T.SphereGeometry(.12,8,8),new T.MeshBasicMaterial({color:green}));cap.position.set(x,1.25,0);group.add(cap);}
   }
   for(const r of this.world.rocks){const m=new T.Mesh(new T.BoxGeometry(r.w,r.h,r.d),new T.MeshStandardMaterial({color:0x425053,roughness:1}));m.position.copy(r.origin).addScaledVector(r.frame.up,r.h/2);m.quaternion.copy(r.frame.q);this.scene.add(m);const edges=new T.LineSegments(new T.EdgesGeometry(m.geometry),new T.LineBasicMaterial({color:0x70918a,transparent:true,opacity:.3}));m.add(edges);}
-  this.holeLabels=[];
-  for(const h of this.world.holes){const text=label(h.name,19,'#e6bc8a');text.position.copy(point(h.x,h.z+h.r+5,2));this.scene.add(text);this.holeLabels.push(text);}
   // Approach strip gives the first jump a readable runway without constraining the vehicle.
   for(let z=8;z<24;z+=3){for(const x of [-4.5,4.5]){const g=new T.Mesh(new T.BoxGeometry(.12,.035,.9),new T.MeshBasicMaterial({color:0xd3e2b6}));g.position.copy(point(x,z,.05));g.quaternion.copy(frameAt(g.position).q);this.scene.add(g);}}
  }
@@ -76,7 +72,7 @@ export class Presentation {
  syncRaceHazards(){
   if(this.hazardGeneration===this.world.race.hazardGeneration)return;this.hazardGeneration=this.world.race.hazardGeneration;this.driftTrails?.reset();
   this.effects.forEach((fx,i)=>{const h=this.world.holes[i];if(!h.dormant)return;h.rendered=true;
-   this.world.colliders=this.world.colliders.filter(c=>c.owner!=='sinkhole-'+i);fx.reset();fx.group.visible=false;fx.raceTriggered=false;fx.collisionReady=false;fx.collisionStamp=null;fx.collisionCheck=0;Object.assign(fx.tune,{preRoll:TREMOR.warning,duration:TREMOR.warning+TREMOR.opening});this.holeLabels[i].visible=false;
+   this.world.colliders=this.world.colliders.filter(c=>c.owner!=='sinkhole-'+i);fx.reset();fx.group.visible=false;fx.raceTriggered=false;fx.collisionReady=false;fx.collisionStamp=null;fx.collisionCheck=0;Object.assign(fx.tune,{preRoll:TREMOR.warning,duration:TREMOR.warning+TREMOR.opening});
   });
   for(const u of this.floorUniforms)u.value=this.world.holes.map(h=>h.radius);
  }
@@ -92,7 +88,7 @@ export class Presentation {
   for(let i=0;i<this.effects.length;i++){const fx=this.effects[i],h=this.world.holes[i];
    if(this.world.race&&h.dormant){
     if(h.phase==='dormant')continue;
-    if(!fx.raceTriggered){fx.group.visible=true;fx.trigger();fx.raceTriggered=true;this.holeLabels[i].visible=true;this.onTremor?.();}
+    if(!fx.raceTriggered){fx.group.visible=true;fx.trigger();fx.raceTriggered=true;this.onTremor?.();}
     if(h.age<60)fx.update(dt,h.age);h.radius=fx.hole.value*h.r;
    }else {if(h.age<60){h.age+=dt;fx.update(dt,h.age);}h.radius=fx.hole.value*h.r;}
    if(!fx.collisionReady&&h.age>(fx.collisionCheck||0)+.5){fx.collisionCheck=h.age;const stamp=sinkholeStamp(fx);if(h.age>3&&stamp===fx.collisionStamp){this.world.colliders.push(...bakeSinkholeColliders(fx,'sinkhole-'+i));fx.collisionReady=true;}fx.collisionStamp=stamp;}

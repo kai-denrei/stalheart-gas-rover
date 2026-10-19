@@ -1516,6 +1516,254 @@
       "bytes": 11955,
       "kind": "copy",
       "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/cutis-maku/config.js",
+      "path": "upstream/stalheart/src/fx/cutis-maku/config.js",
+      "sha256": "9466b27c11962e9e2697e0534c8ff5b4901db5f98795a94bcf223301885f5c38",
+      "bytes": 9992,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/cutis-maku/swarm.js",
+      "path": "upstream/stalheart/src/fx/cutis-maku/swarm.js",
+      "sha256": "db96aa70e1a8228f4086ecb12cf4bbf8eb2588ad2bb4985b4086f49964646db5",
+      "bytes": 30789,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/cutis-maku/convex.js",
+      "path": "upstream/stalheart/src/fx/cutis-maku/convex.js",
+      "sha256": "ad6daa1a4fc80dcbb46fabbea55c0e34a15c083b853eb0810dc08ab422f30532",
+      "bytes": 883,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/cutis-maku/shaders.js",
+      "path": "upstream/stalheart/src/fx/cutis-maku/shaders.js",
+      "sha256": "4e3c466a65a1d49099d9e4aac065e72b2c64b77de64f2f2f8e507ff39a42b8eb",
+      "bytes": 20250,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/cutis-maku/material.js",
+      "path": "upstream/stalheart/src/fx/cutis-maku/material.js",
+      "sha256": "b43bd19d0468152b75f6aecce0b6e0ef073f1e167c3acbca57eb421e038d84b6",
+      "bytes": 4740,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/cutis-maku/geometry.js",
+      "path": "upstream/stalheart/src/fx/cutis-maku/geometry.js",
+      "sha256": "978518d74b10321bed9bc12d96f6f553b54c4a04c2d8a71bc2fe06b2a29ac086",
+      "bytes": 14690,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/creature-cutis.js",
+      "path": "upstream/stalheart/src/fx/creature-cutis.js",
+      "sha256": "b94bec3c7b8c2d6c085d044fc9efd8b9b38fbd168044dcf19ffe558bb9fbeac8",
+      "bytes": 7695,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/soft-body-kernel.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/soft-body-kernel.js",
+      "sha256": "d954181f0c5893407a48862a79e9a9430b3037afa9c13912219ae28bd642c77b",
+      "bytes": 27186,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/deform-surface.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/deform-surface.js",
+      "sha256": "1c40fbeab9e2d328840fde5c0531813583db814c16f77a41ff22b344c16bf21e",
+      "bytes": 3119,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/constants.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/constants.js",
+      "sha256": "40045116a769e0ed891ee9fa829f5abf747986bee336d5fd7643a7e19fcda837",
+      "bytes": 531,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/soft-body.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/soft-body.js",
+      "sha256": "341ed164b5e8ae230033967793a9ab4446d3b483852ffa78a04e76ace1a16a24",
+      "bytes": 18539,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/fixed-step.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/fixed-step.js",
+      "sha256": "efb23e4089228712a78479a4af586c63abee2090dee254c2602524ef99c2a44e",
+      "bytes": 1113,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/cage-model.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/cage-model.js",
+      "sha256": "134c764467c63f65b7217ab3cdbf527e68c331c63584a3dab808714de3504601",
+      "bytes": 2807,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/prey-shapes.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/prey-shapes.js",
+      "sha256": "1f47525ef19d7a61a012a554e7becf513c15de1ed86c6a7e79f39fb2aff20b39",
+      "bytes": 2804,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/cradle.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/cradle.js",
+      "sha256": "5c25c61e3724243325269470996f5b6124f3ce601ace08c043d05e6a96cc4b55",
+      "bytes": 4478,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/traction.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/traction.js",
+      "sha256": "c8249d2f9b5a71787c1b4bb03160a398a76bebefe0011a2ae52cceb94018fc44",
+      "bytes": 2205,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/limb-separation.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/limb-separation.js",
+      "sha256": "3f6d0b3aa7613f4022beec5a726ac6a15d85fa0d77d9db6afd0e4bcb1dc5dc9c",
+      "bytes": 2712,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/motion-settings.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/motion-settings.js",
+      "sha256": "443bb19025f2207efa01e35f3511c917252e089b97a687c8a59d0d72ee744ed6",
+      "bytes": 3265,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/gait.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/gait.js",
+      "sha256": "7001cf7a8f19e3dde9708ffe5ed7f02f0fea918ca825507414c12fe50febc9c0",
+      "bytes": 3989,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/pursuit.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/pursuit.js",
+      "sha256": "68cbd4950a72da24a40694989bf1614ab5364259f9b1f5e82fb068d02b31673d",
+      "bytes": 4324,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/arena.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/arena.js",
+      "sha256": "aa1fb036db73079f836571faffb11d92396a9e7d98df822b6f55a8349817358e",
+      "bytes": 302,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/feeding.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/feeding.js",
+      "sha256": "ee91d89dbd12ab853c4efa9ac32f090da7c07caf5c3343b421685be628252054",
+      "bytes": 4752,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/behavior.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/behavior.js",
+      "sha256": "44bf99518791dcecee84e45fa9adb30f55ee30aaed0fe46dd71af240674f8668",
+      "bytes": 11776,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/content/nih-dairia.js",
+      "path": "upstream/stalheart/src/content/nih-dairia.js",
+      "sha256": "a6029106ec07136e7a5f8b66e5fb8eba29638e23b2d96cb5dfaab87a927d5117",
+      "bytes": 2756,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/skin.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/skin.js",
+      "sha256": "4fe0d8df80f9b90acd2c703a1b6223dbbde28a8380a76761ccbab1a2a38d7425",
+      "bytes": 1344,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/appearance.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/appearance.js",
+      "sha256": "31564f168734d154e1f5edf1c7a795f312800654f02b5697aa155be8254fbc2b",
+      "bytes": 3612,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/creature.js",
+      "path": "upstream/stalheart/src/fx/nih-dairia/creature.js",
+      "sha256": "69a111ce62dbd597f2bdc939718d7b68dd7f86229fdc1d92f6d964c02dcaccbf",
+      "bytes": 2981,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/creatures/nih-dairia/nih-dairia.bin",
+      "path": "assets/creatures/nih-dairia/nih-dairia.bin",
+      "sha256": "4c72a5f07eeffd32251655bc8e07add99066737bea6791f4aa499af638e5f1b8",
+      "bytes": 2184544,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/creatures/nih-dairia/nih-dairia.json",
+      "path": "assets/creatures/nih-dairia/nih-dairia.json",
+      "sha256": "5784989fa7d4162d58c8f823c5897099eb543ea36dc2e6557c17b075aab645da",
+      "bytes": 1859,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/LICENSE",
+      "path": "upstream/stalheart/src/fx/nih-dairia/LICENSE",
+      "sha256": "8b1ba204bb69a0ade2bfcf65ef294a920f6bb361b317dba43c7ef29d96332b9b",
+      "bytes": 35148,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/cutis-maku/LICENSE",
+      "path": "upstream/stalheart/src/fx/cutis-maku/LICENSE",
+      "sha256": "8b1ba204bb69a0ade2bfcf65ef294a920f6bb361b317dba43c7ef29d96332b9b",
+      "bytes": 35148,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
     }
   ],
   "flagsRevision": "7466a4a15ecd6b520dc405316cbeaa58a4e211a2",
@@ -1523,5 +1771,6 @@
   "raceCityRevision": "7466a4a15ecd6b520dc405316cbeaa58a4e211a2",
   "raceCelebrationRevision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
   "combatExpansionRevision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
-  "battleExpansionRevision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+  "battleExpansionRevision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
+  "creatureCrowdsRevision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
 }
