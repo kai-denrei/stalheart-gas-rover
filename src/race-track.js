@@ -1,5 +1,5 @@
 import * as T from '../upstream/stalheart/vendor/three.module.js';
-import {point,frameAt} from './world.js';
+import {point} from './world.js';
 
 // The same polyline/capsule union as the penalty boundary, rendered analytically
 // instead of coloring one-metre cells. Intersections cannot double their paint.
@@ -63,10 +63,5 @@ export function createRaceTrack(view){
  };
  material.customProgramCacheKey=()=> 'race-asphalt-kerbs-v1-'+segments.length;
  const road=new T.Mesh(geometry,material);road.name='Circuit / continuous asphalt + kerbs';view.scene.add(road);
- // A single batch of restrained directional chevrons, lifted above the asphalt.
- const arrow=new T.BufferGeometry();arrow.setAttribute('position',new T.Float32BufferAttribute([-.5,0,-.5,0,0,.65,.5,0,-.5],3));
- const matrices=[];
- for(const s of segments)for(let distance=10;distance<s.length-4;distance+=14){const t=distance/s.length,x=T.MathUtils.lerp(s.a[0],s.b[0],t),z=T.MathUtils.lerp(s.a[1],s.b[1],t);if(Math.hypot(x-world.race.deck.x,z-world.race.deck.z)<world.race.deck.d/2||world.holes.some(h=>Math.hypot(x-h.x,z-h.z)<h.r+3))continue;const p=point(x,z,.145),q=frameAt(p).q.multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),Math.atan2(s.b[0]-s.a[0],s.b[1]-s.a[1])));matrices.push(new T.Matrix4().compose(p,q,new T.Vector3(1,1,1)));}
- const arrows=new T.InstancedMesh(arrow,new T.MeshBasicMaterial({color:0x70837f,side:T.DoubleSide}),matrices.length);matrices.forEach((m,i)=>arrows.setMatrixAt(i,m));arrows.computeBoundingSphere();arrows.name='Circuit / direction chevrons';view.scene.add(arrows);
- return {road,arrows,segments};
+ return {road,segments};
 }

@@ -51,7 +51,11 @@ export class CityDefense {
  step(dt,race){if(this.generation!==this.world.race.hazardGeneration)this.reset();if(!['racing','finished'].includes(race.phase))return;this.accumulator+=dt;while(this.accumulator>=BATTLE.step){this.accumulator-=BATTLE.step;this.tick(BATTLE.step,race);}}
  tick(dt,race){
   this.time+=dt;this.spatial.rebuild();this.spawnBoss();if(this.time>=this.nextWave){this.spawn();this.nextWave=this.time+BATTLE.interval;}this.release();this.shots=this.shots.filter(s=>this.time-s.time<.3);
-  for(const e of this.enemies){e.px=e.x;e.pz=e.z;e.age+=dt;if(e.dead)continue;
+  for(const e of this.enemies){e.px=e.x;e.pz=e.z;e.age+=dt;if(e.dead){
+    // Preserve the contact impulse briefly on a rammed corpse. Boss remains
+    // retain their separate articulated destruction simulation.
+    if(e.kind!=='nih-daira'&&e.knock&&this.time-e.dead<.45){const mapped=coords(e.position.clone().addScaledVector(e.knock,dt)),next=avoidHoles(this.world,e,mapped.x-e.x,mapped.z-e.z);e.x=next.x;e.z=next.z;e.position.copy(point(e.x,e.z,enemyBody(e).height));e.knock.multiplyScalar(Math.exp(-dt*7));}continue;
+   }
    e.previousGait=e.gaitTime??e.phase??0;
    const slow=(e.slowUntil||0)>this.time?TOWER_BY_KEY.relay.slowFactor:1;const moved=this.moveEnemy?.(e,dt*slow),motion=crowdMotion(e,this.time),reed=e.kind==='reed'?reedAdvance(e,dt*slow):null;let dx=moved?moved.x-e.x:e.direction*(reed??motion.speed*dt*slow),dz=moved?moved.z-e.z:motion.side*dt*slow;if(e.knock){const c=point(e.x,e.z).addScaledVector(e.knock,dt),mapped=coords(c);dx+=mapped.x-e.x;dz+=mapped.z-e.z;e.knock.multiplyScalar(Math.exp(-dt*7));}const next=avoidHoles(this.world,e,dx,dz);let nx=next.x,nz=next.z;
    if(!e.solids||e.solidsRevision!==this.spatial.revision||Math.hypot(e.x-e.solidsX,e.z-e.solidsZ)>5){e.solids=this.spatial.region(e.x,e.z,8);e.solidsX=e.x;e.solidsZ=e.z;e.solidsRevision=this.spatial.revision;}

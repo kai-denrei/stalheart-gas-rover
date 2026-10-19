@@ -28,7 +28,7 @@ The animated cloth remains cloth; no large invisible box spans the flag or gate 
 
 ## Circuit
 
-The original route, gate locations, penalty boundary and sinkholes are retained. The road is a spherical mesh with a continuous distance-based asphalt/paint shader, replacing the one-metre yellow border cells. It includes white edge lines, alternating red/white kerbs at corners, green straight shoulders, subtle asphalt/rubber variation, a chequered start stripe and outlined starting slots. Gate contact strips are thin cyan/green lines. Direction chevrons share one instanced draw call.
+The original route, gate locations, penalty boundary and sinkholes are retained. The road is a spherical mesh with a continuous distance-based asphalt/paint shader, replacing the one-metre yellow border cells. It includes white edge lines, alternating red/white kerbs at corners, green straight shoulders, subtle asphalt/rubber variation, a chequered start stripe and outlined starting slots. Gate strips are thin cyan/green lines. Decorative direction chevrons were removed in the race readability update.
 
 The road uses the same polyline/capsule union as the race boundary and the existing dynamic sinkhole cutout uniforms. Unit coverage samples its painted boundary against the penalty predicate and checks corner kerb selection.
 

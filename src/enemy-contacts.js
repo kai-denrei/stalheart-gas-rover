@@ -25,6 +25,7 @@ export function resolveEnemyContact(r,e,defense){
   e.contacts.set(r.id,defense.time+.65);e.hp-=closing*closing*.055;e.hit=defense.time;
   const detail={speed:closing*Math.min(1.3,.65+body.mass*.3),point:p.toArray(),normal:n.toArray(),collider:'enemy-'+e.id,zone:hit.shape.zone};s.receiveImpact(detail);
   s.lastCollision={...detail,time:s.time,severity:closing>=12?'heavy':closing>=6?'moderate':'light'};s.event('collision',s.lastCollision);s.impact=Math.min(1,closing/15);r.stunts?.clearFlight();defense.stats.enemyContacts=(defense.stats.enemyContacts||0)+1;
+  defense.onRoverImpact?.(r,e,p,n,closing);
   if(e.hp<=0)defense.kill(e,'rover');
  }
  return true;

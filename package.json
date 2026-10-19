@@ -23,7 +23,8 @@
     "test:expedition": "node scripts/expedition-browser-test.mjs",
     "test:remains": "node scripts/remains-browser-test.mjs",
     "test:interactions": "node scripts/enemy-interactions-browser-test.mjs",
-    "test:flight": "node scripts/flight-control-browser-test.mjs"
+    "test:flight": "node scripts/flight-control-browser-test.mjs",
+    "test:divide-polish": "node scripts/divide-polish-browser-test.mjs"
   },
   "engines": {
     "node": ">=22"

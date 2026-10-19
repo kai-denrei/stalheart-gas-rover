@@ -25,7 +25,7 @@ export function pilot(racer,race,dt){
   if(s.grounded&&local.y>deck.h&&s.pos.distanceTo(landing)<1.1&&v.length()<.3)return c;
  }else{
   const g=race.world.race.gates[racer.gate];target=g.origin.clone().addScaledVector(g.frame.east,g.dz*racer.lane*.3).addScaledVector(g.frame.north,-g.dx*racer.lane*.3);
-  // Keep every jump inside the corridor; the gate after it requires wheel contact.
+  // Keep every jump inside the corridor and aim through the next gate.
   const nextHole=race.world.holes.find(h=>{if(h.phase==='dormant')return false;const d=h.origin.clone().sub(s.pos).projectOnPlane(up);return d.dot(fwd)>0&&d.length()<h.r+10&&Math.abs(d.dot(right))<h.r+2;});
   const obstacle=nearColliders(race.world,s.pos,18).some(rock=>{if(rock.id==='finish-platform'||rock.id.startsWith('podium-')||rock.id.startsWith('gantry-'))return false;if(rock.owner==='city')return [2,4,6,8].some(t=>sphereContact(rock,s.pos.clone().addScaledVector(fwd,t),1.3));const d=rock.center.clone().sub(s.pos),height=d.dot(up);d.projectOnPlane(up);return height+rock.radius>.15&&d.dot(fwd)>1&&d.dot(fwd)<8+rock.radius&&Math.abs(d.dot(right))<rock.radius+1.4;});
   if((nextHole||obstacle)&&s.grounded&&!(racer.hop>0)){racer.hop=.42;}

@@ -15,9 +15,9 @@ The course has straights, right-angle corners, two tight hairpins, seven solid r
 - **Arrow keys / Q/E:** pitch, yaw and roll corrections.
 - **R:** recover to the last validated gate, refill, and wait three seconds.
 - **P:** pause; **V:** camera; mouse drag/scroll changes the view.
-- **Restart race:** reset all five rovers and start a shared three-second countdown.
+- **Restart race:** reset all five rovers and start a shared five-second countdown.
 
-Fourteen gates must be touched **in order with a wheel near the ground**. Flying over one does not validate it. Return and touch a missed gate; the next gate remains cyan until then. Crossing the last gate validates the course but does not finish the race.
+Gates must be crossed **in order between the flags**, on the ground or airborne. Swept validation catches fast crossings; there is no altitude ceiling. Return through a missed gate; the next gate remains cyan until then. Crossing the last gate validates the course but does not finish the race.
 
 Leaving the 18 m wide road corridor for more than 0.7 seconds triggers a three-second recovery at the last validated gate. Falling into a throat, a severe crash or overturning uses the same recovery. Checkpoint progress is preserved; gas is replenished. AI recovery from exhausted gas or being stuck also incurs this penalty. The same recovery is available to the player with R. The platform approach broadens to the deck footprint.
 
@@ -84,3 +84,11 @@ The Reed surface and its exposed tetrahedral distance mesh come from Stalheart�
 Validation commands: `npm run test:drift` (real Shift/W/D input and tyre marks), `npm run test:expansion` (physical human claim, gantry hook, working guns and waves), plus existing full-race/city/damage/trick checks. Reports and images are in `artifacts/drift-browser-report.json`, `artifacts/expansion-browser-report.json`, `artifacts/expansion-*.png`, and the usual race performance files.
 
 Next stage requested by the owner: heavier enemies and distant Gunship/SOL support. The current pass contains only small Reed streams and dome sentries.
+
+## Race readability update
+
+The Great Divide black-hole formation keeps its compass bearing and is raised above Base 2’s local horizon to frame the finish gantry. Decorative direction chevrons and leftover proving-ground runway strips are removed from races; kerbs, flags and service pads remain.
+
+The five-light start sequence and beeps use the physical board only, without a duplicate countdown HUD. Recovery displays a large `PENALTY 3`, `2`, `1` with its reason. The duration remains three seconds.
+
+Damaging rover–alien contacts produce red envelopes around both bodies plus a short expanding contact ring. The effect is capped at 16 simultaneous impacts, uses two instanced batches, and follows the existing contact cooldown. Actual impulse recoil remains mass-dependent; killed small bodies carry their knockback briefly before settling.

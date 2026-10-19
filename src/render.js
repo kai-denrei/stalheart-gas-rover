@@ -23,7 +23,7 @@ export class Presentation {
   this.exhaustionMarker=new T.Mesh(new T.OctahedronGeometry(.5),new T.MeshBasicMaterial({color:0xffb575,wireframe:true}));this.exhaustionMarker.visible=false;this.scene.add(this.exhaustionMarker);
   this.drawFixtures();
  }
- async load(){this.sky=createStalheartSky(this.renderer,this.scene);await Promise.all([this.loadGround(),this.loadRover()]);await this.loadSinkholes();this.renderer.compile(this.scene,this.camera);}
+ async load(){this.sky=createStalheartSky(this.renderer,this.scene,this.world);await Promise.all([this.loadGround(),this.loadRover()]);await this.loadSinkholes();this.renderer.compile(this.scene,this.camera);}
  async loadGround(){
   const data=await fetch('./assets/planet-grid.bin').then(r=>r.arrayBuffer()),header=new Uint32Array(data,0,2),verts=new Float32Array(data,8,header[0]),quads=new Uint32Array(data,8+header[0]*4,header[1]);
   const positions=new Float32Array(verts.length);for(let i=0;i<verts.length;i+=3){positions[i]=verts[i]*RADIUS;positions[i+1]=verts[i+1]*RADIUS-RADIUS;positions[i+2]=verts[i+2]*RADIUS;}
@@ -52,7 +52,7 @@ export class Presentation {
   }
   for(const r of this.world.rocks){const m=new T.Mesh(new T.BoxGeometry(r.w,r.h,r.d),new T.MeshStandardMaterial({color:0x425053,roughness:1}));m.position.copy(r.origin).addScaledVector(r.frame.up,r.h/2);m.quaternion.copy(r.frame.q);this.scene.add(m);const edges=new T.LineSegments(new T.EdgesGeometry(m.geometry),new T.LineBasicMaterial({color:0x70918a,transparent:true,opacity:.3}));m.add(edges);}
   // Approach strip gives the first jump a readable runway without constraining the vehicle.
-  for(let z=8;z<24;z+=3){for(const x of [-4.5,4.5]){const g=new T.Mesh(new T.BoxGeometry(.12,.035,.9),new T.MeshBasicMaterial({color:0xd3e2b6}));g.position.copy(point(x,z,.05));g.quaternion.copy(frameAt(g.position).q);this.scene.add(g);}}
+  if(!this.world.race)for(let z=8;z<24;z+=3){for(const x of [-4.5,4.5]){const g=new T.Mesh(new T.BoxGeometry(.12,.035,.9),new T.MeshBasicMaterial({color:0xd3e2b6}));g.position.copy(point(x,z,.05));g.quaternion.copy(frameAt(g.position).q);this.scene.add(g);}}
  }
  async loadRover(){
   const variants=await Promise.all([0,1,2,3].map(d=>new GLTFLoader().loadAsync(`./assets/recon-rover/damage/r47x_recon_rover_d${d}_lod1.glb`)));this.damageBank=Object.fromEntries(variants.map((g,d)=>[d,g.scene]));this.rover=new T.Group();this.model=this.damageBank[0].clone(true);this.roverTemplate=this.world.race?this.model.clone(true):null;this.model.position.y=-.44;this.rover.add(this.model);this.scene.add(this.rover);const oldPlumes=this.model.getObjectByName('COLD_GAS_PLUMES');if(oldPlumes)oldPlumes.visible=false;
