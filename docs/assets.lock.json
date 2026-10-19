@@ -1734,6 +1734,70 @@
       "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
     },
     {
+      "source": "src/domain/boss-carcass.js",
+      "path": "upstream/stalheart/src/domain/boss-carcass.js",
+      "sha256": "8eb1c53f2e3e3c8202900bbf376abeb7b94d2a951b85015df97195fb65e4fc5b",
+      "bytes": 13383,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "vendor/Pass.js",
+      "path": "upstream/stalheart/vendor/Pass.js",
+      "sha256": "c2721d740ba32976d7656e3fd5c9d654e7b2cf0b0428775212cfcacf65cc76d9",
+      "bytes": 1718,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "vendor/ShaderPass.js",
+      "path": "upstream/stalheart/vendor/ShaderPass.js",
+      "sha256": "dda7d6000b68597aa06777c3ee589d8087f3f48170424b0dc99804addbe742a9",
+      "bytes": 1588,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/flir-pass.js",
+      "path": "upstream/stalheart/src/fx/flir-pass.js",
+      "sha256": "228971a54a17ef437aa15fd0529bf67fc98bf3d435d01026355450ad29ef62e1",
+      "bytes": 4605,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/thermal-heat.js",
+      "path": "upstream/stalheart/src/fx/thermal-heat.js",
+      "sha256": "07fd7deac9286240f6b7555730a4cc3ff3146cf322e3aa1dac10c62699196f2d",
+      "bytes": 2738,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/labs/boss/carcass.js",
+      "path": "upstream/stalheart/src/labs/boss/carcass.js",
+      "sha256": "34f7e9698e304ef411262c65ddc62fda252d5f0dd38402c8870576d5127163e4",
+      "bytes": 20570,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/labs/boss/remains.js",
+      "path": "upstream/stalheart/src/labs/boss/remains.js",
+      "sha256": "738471a84f1321ba364ed8528b4ff69130e5e0b88275354ee264907457af65e4",
+      "bytes": 17392,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/content/boss-fight.js",
+      "path": "upstream/stalheart/src/content/boss-fight.js",
+      "sha256": "f145ef9a4085cd5759d34784a71c556ea1d0a1c68be7ab094cffaaa3cec53e7e",
+      "bytes": 25136,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
       "source": "assets/creatures/nih-dairia/nih-dairia.bin",
       "path": "assets/creatures/nih-dairia/nih-dairia.bin",
       "sha256": "4c72a5f07eeffd32251655bc8e07add99066737bea6791f4aa499af638e5f1b8",

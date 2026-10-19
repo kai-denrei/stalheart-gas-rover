@@ -17,7 +17,7 @@ export async function createAutoSol88(view,race,defense,effects,aircraft=[]){
  reset();
  return {group,model:gltf.scene,laser,get state(){return state;},step(dt){
   if(generation!==view.world.race.hazardGeneration)reset();if(!['racing','finished'].includes(race.phase))return;
-  time+=dt;mixer.update(dt);const a=time*.019+1.1;group.position.copy(point(80+Math.cos(a)*45,140+Math.sin(a)*45,SOL_ALTITUDE));group.quaternion.copy(frameAt(group.position).q);group.updateWorldMatrix(true,true);
+  time+=dt;mixer.update(dt);const a=time*.019+1.1,focus=view.world.race.course.id==='expedition'?coords(race.racers[0].sim.pos):{x:80,z:140};group.position.copy(point(focus.x+Math.cos(a)*45,focus.z+Math.sin(a)*45,SOL_ALTITUDE));group.quaternion.copy(frameAt(group.position).q);group.updateWorldMatrix(true,true);
   const source=group.position.clone(),safe=p=>sol88Safe(view.world,race,p,view.isao,source,defense.guns,view.raceView?.traffic,aircraft);let restart=false;
   const event=stepLaser(state,dt,orbit,beam);if(event==='arrive'){passes++;countdown=LASER_AUTO.countdown;target=null;retarget=0;play('Convergence');play('Aperture_Open');}if(event==='close'){target=null;play('Recovery');play('Aperture_Close');}
   countdown=Math.max(0,countdown-dt);retarget-=dt;

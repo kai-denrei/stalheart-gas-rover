@@ -4,7 +4,7 @@ import {TOWER_BY_KEY} from '../upstream/stalheart/src/towers.js';
 import {Vector3} from '../upstream/stalheart/vendor/three.module.js';
 import {point,terrainSample,upAt} from './world.js';
 import {sphereContact} from './collisions.js';
-import {ROUTE,segmentDistance} from './race-world.js';
+import {segmentDistance} from './race-world.js';
 import {BATTLE,QUIVER,crowdBudget,crowdFrame} from './battle-rules.js';
 import {CombatSpatial} from './combat-spatial.js';
 import {launchQuiver,advanceQuiver} from './quiver-flight.js';
@@ -34,14 +34,16 @@ export class CityDefense {
  spawn(){
   // Four broad incoming lanes, alternating sides, queued rather than discarded
   // when the measured crowd cap is full.
-  for(let i=0;i<BATTLE.waveSize;i++){if(this.pending.length>=BATTLE.capacity*2)break;const side=(i%2)?-1:1,lane=(Math.floor(i/2)+this.wave)%4,z=[12,85,168,244][lane]+((Math.floor(i/8)%6)-2.5)*4.5,x=(side<0?-100:250)+side*(Math.floor(i/48)*8+(this.wave%3)*3);this.pending.push({x,z,side,phase:i*.71+this.wave});}this.wave++;this.release();
+  for(let i=0;i<BATTLE.waveSize;i++){if(this.pending.length>=BATTLE.capacity*2)break;const side=(i%2)?-1:1,lane=(Math.floor(i/2)+this.wave)%4,z=[12,85,168,244][lane]+((Math.floor(i/8)%6)-2.5)*4.5,x=(side<0?-100:250)+side*(Math.floor(i/48)*8+(this.wave%3)*3);let sx=x,sz=z,goal=side<0?180:-20;
+   if(this.world.race.course.id==='expedition'){const sector=(Math.floor(i/8)+this.wave)%3;if(sector===1){sx+=420;sz-=270;goal+=420;}if(sector===2){sx=side<0?70:350;sz=-210+(i%6)*11;goal=side<0?335:65;}}
+   this.pending.push({x:sx,z:sz,side,goal,phase:i*.71+this.wave});}this.wave++;this.release();
  }
  release(){let n=0;while(this.pending.length&&this.enemies.length<this.budget.cap&&n++<BATTLE.release){const s=this.pending.shift(),ordinal=this.stats.spawned,kind=ordinal%19===18&&this.enemies.filter(e=>e.kind==='gorogoro').length<8?'gorogoro':ordinal%5<2?'cutis':'reed';this.addEnemy(s,kind);}this.stats.peak=Math.max(this.stats.peak,this.enemies.length);}
- addEnemy(s,kind){const traits=crowdTraits(++this.serial),boss=kind==='nih-daira',e={...traits,id:this.serial,x:s.x,z:s.z,px:s.x,pz:s.z,goal:s.side<0?180:-20,direction:-s.side,speed:(boss?1.7:kind==='gorogoro'?3:kind==='cutis'?2.8:3.8)*traits.pace,hp:boss?BOSS.hp:kind==='gorogoro'?14:kind==='cutis'?1.5:3,kind,dead:0,age:0,near:false,position:point(s.x,s.z,boss?2:.8),velocity:new Vector3()};this.enemies.push(e);this.stats.spawned++;return e;}
- spawnBoss(){if(this.time<this.nextBoss||this.enemies.some(e=>e.kind==='nih-daira')||this.enemies.length>=this.budget.cap)return;const side=this.bossSpawns%2?-1:1;this.addEnemy({x:side<0?-90:240,z:145,side},'nih-daira');this.bossSpawns++;this.nextBoss=this.time+BOSS.cooldown;}
+ addEnemy(s,kind){const traits=crowdTraits(++this.serial),boss=kind==='nih-daira',e={...traits,id:this.serial,x:s.x,z:s.z,px:s.x,pz:s.z,goal:s.goal??(s.side<0?180:-20),direction:-s.side,speed:(boss?1.7:kind==='gorogoro'?3:kind==='cutis'?2.8:3.8)*traits.pace,hp:boss?BOSS.hp:kind==='gorogoro'?14:kind==='cutis'?1.5:3,kind,dead:0,age:0,near:false,position:point(s.x,s.z,boss?2:.8),velocity:new Vector3()};this.enemies.push(e);this.stats.spawned++;return e;}
+ spawnBoss(){if(this.time<this.nextBoss||this.enemies.some(e=>e.kind==='nih-daira')||this.enemies.length>=this.budget.cap)return;const side=this.bossSpawns%2?-1:1;const front=this.world.race.course.id==='expedition'?this.bossSpawns%3:0;this.addEnemy({x:(side<0?-90:240)+(front===1?420:front===2?160:0),z:front===1?-125:front===2?-200:145,side,goal:(side<0?180:-20)+(front===1?420:front===2?160:0)},'nih-daira');this.bossSpawns++;this.nextBoss=this.time+BOSS.cooldown;}
 
  kill(e,reason='shot'){if(e.dead)return;e.hp=0;e.dead=Math.max(.0001,this.time);this.stats.killed++;if(e.kind==='nih-daira')this.nextBoss=this.time+BOSS.cooldown;if(reason==='rover')this.stats.runOver++;}
- blast(position,radius,damage){let hit=0;for(const e of this.enemies){if(e.dead)continue;const d=e.position.distanceTo(position);if(d>radius)continue;e.hp-=damage*(1-(d/radius)**2);e.hit=this.time;if(e.hp<=0)this.kill(e);hit++;}return hit;}
+ blast(position,radius,damage,kind='bofors'){this.onRemainsHit?.(position,radius,kind);let hit=0;for(const e of this.enemies){if(e.dead)continue;const d=e.position.distanceTo(position);if(d>radius)continue;e.hp-=damage*(1-(d/radius)**2);e.hit=this.time;if(e.hp<=0)this.kill(e);hit++;}return hit;}
  step(dt,race){if(this.generation!==this.world.race.hazardGeneration)this.reset();if(!['racing','finished'].includes(race.phase))return;this.accumulator+=dt;while(this.accumulator>=BATTLE.step){this.accumulator-=BATTLE.step;this.tick(BATTLE.step,race);}}
  tick(dt,race){
   this.time+=dt;this.spatial.rebuild();this.spawnBoss();if(this.time>=this.nextWave){this.spawn();this.nextWave=this.time+BATTLE.interval;}this.release();this.shots=this.shots.filter(s=>this.time-s.time<.3);
@@ -55,18 +57,18 @@ export class CityDefense {
    // Only probe terrain near an active sinkhole, not hundreds of times across
    // empty spherical ground. All deaths and targeting remain actual bodies.
    if(this.world.holes.some(h=>h.radius>0&&Math.hypot(e.x-h.x,e.z-h.z)<h.r+3)&&terrainSample(this.world,e.position,false).throat){this.kill(e);continue;}
-   if(!e.near&&ROUTE.slice(1).some((b,i)=>segmentDistance(e.x,e.z,ROUTE[i],b)<12)){e.near=true;this.stats.nearTrack++;}
+   if(!e.near&&this.world.race.route.slice(1).some((b,i)=>segmentDistance(e.x,e.z,this.world.race.route[i],b)<12)){e.near=true;this.stats.nearTrack++;}
    for(const r of race.racers){if(r.place||r.penalty||r.sim.vel.lengthSq()<9)continue;if(e.kind!=='nih-daira'&&r.sim.pos.distanceToSquared(e.position)<5){this.kill(e,'rover');break;}}
    if(e.direction*(e.goal-e.x)<0||e.age>(e.kind==='nih-daira'?125:80)){e.gone=true;if(e.kind==='nih-daira')this.nextBoss=this.time+BOSS.cooldown;this.stats.escaped++;}
   }
-  this.enemies=this.enemies.filter(e=>!e.gone&&(!e.dead||this.time-e.dead<1.6));
+  this.enemies=this.enemies.filter(e=>!e.gone&&(!e.dead||this.time-e.dead<(e.kind==='nih-daira'?BOSS.corpse:1.6)));
   this.byId=new Map(this.enemies.map(e=>[e.id,e]));
   for(const p of this.projectiles){const e=this.byId.get(p.target);p.previous.copy(p.position);p.age+=dt;let arrived=false;
    if(p.flight){const pose=advanceQuiver(p.flight,dt,e&&!e.dead?e.position:undefined);Object.assign(p,{ignition:pose.ignition,phase:pose.phase});p.direction.copy(pose.direction);p.position.copy(pose.position);arrived=pose.done;this.stats.missilePhases[p.phase]=(this.stats.missilePhases[p.phase]||0)+1;if(p.ignition&&!p.ignited){p.ignited=true;this.onIgnition?.(p.position);}}
    else if(p.arc){const t=Math.min(1,p.age/p.duration);p.position.copy(p.from).lerp(p.to,t).addScaledVector(p.up,4*p.arc*t*(1-t));arrived=t===1;}
    else {const delta=p.to.clone().sub(p.position),distance=delta.length(),travel=p.speed*dt;p.position.addScaledVector(delta,Math.min(1,travel/Math.max(distance,.0001)));arrived=distance<=travel;}
    const obstructed=segmentBlocked(this.world,p.previous,p.position,this.spatial),friendly=race.racers.some(r=>segmentNear(p.previous,p.position,r.sim.pos,2));
-   if(arrived||obstructed||friendly||p.age>12){p.done=true;this.onImpact?.(p.type,p.position);this.stats.impacts++;if(!obstructed&&!friendly)this.blast(p.position,['quiver','heptapod','mortar'].includes(p.type)?12:2,p.damage);}
+   if(arrived||obstructed||friendly||p.age>12){p.done=true;this.onImpact?.(p.type,p.position);this.stats.impacts++;if(!obstructed&&!friendly)this.blast(p.position,['quiver','heptapod','mortar'].includes(p.type)?12:2,p.damage,['quiver','mortar'].includes(p.type)?'bofors':'rotary');}
   }this.projectiles=this.projectiles.filter(p=>!p.done);
   for(const g of this.guns){
    for(const [id,until] of g.rejected)if(until<=this.time)g.rejected.delete(id);

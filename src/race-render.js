@@ -1,3 +1,5 @@
+import {createWilderness} from './race-wilderness.js';
+import {gridPose} from './race-courses.js';
 import {createBaseTraffic} from './base-traffic.js';
 import {createRaceStart} from './race-start.js';
 import * as T from '../upstream/stalheart/vendor/three.module.js';
@@ -15,8 +17,8 @@ function mesh(g,color){return new T.Mesh(g,new T.MeshStandardMaterial({color,rou
 export class RacePresentation {
  constructor(view,race){this.view=view;this.race=race;this.rivals=[];this.gates=[];this.spots=[];this.warnings=[];const scene=view.scene,w=race.world;
   for(const h of w.holes){if(!h.dormant)continue;const points=[];for(let i=0;i<12;i++){const a=i*Math.PI/6;for(let k=0;k<4;k++){const r=h.r*(.25+k*.3),r2=r+h.r*.25,b=a+(k%2?.08:-.08);points.push(Math.cos(a)*r,0,Math.sin(a)*r,Math.cos(b)*r2,0,Math.sin(b)*r2);}}const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(points,3));const cracks=new T.LineSegments(geo,new T.LineBasicMaterial({color:0xffbb65,transparent:true,opacity:1}));const group=new T.Group();group.position.copy(h.origin).addScaledVector(h.frame.up,.13);group.quaternion.copy(h.frame.q);group.add(cracks);scene.add(group);group.visible=false;this.warnings.push({h,group,cracks});}
-  for(const g of view.padGroups)g.visible=false;
-  this.track=createRaceTrack(view);
+  for(const [i,g] of view.padGroups.entries())g.visible=!!w.pads[i].service;
+  this.track=createRaceTrack(view);this.wilderness=createWilderness(view);
   for(const gate of w.race.gates){const group=new T.Group();group.position.copy(gate.origin);group.quaternion.copy(gate.frame.q).multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),Math.atan2(gate.dx,gate.dz)));scene.add(group);const mat=new T.MeshBasicMaterial({color:0x4b7270});const strip=new T.Mesh(new T.BoxGeometry(15,.035,.22),mat);strip.position.y=.16;group.add(strip);
    this.gates.push({group,mat});
   }
@@ -27,7 +29,7 @@ export class RacePresentation {
    const bubble=new T.Mesh(new T.SphereGeometry(w.race.rules.bubbleRadius,32,16),new T.MeshBasicMaterial({color:0xaff3ce,transparent:true,opacity:.13,depthWrite:false}));bubble.position.copy(spot.local);dg.add(bubble);bubble.visible=false;
    const wire=new T.LineSegments(new T.WireframeGeometry(new T.SphereGeometry(w.race.rules.bubbleRadius,16,8)),new T.LineBasicMaterial({color:0xaff3ce,transparent:true,opacity:.12}));bubble.add(wire);this.spots.push({ring,tag,bubble,wire});
   }
-  for(const r of race.racers){const grid=new T.LineSegments(new T.EdgesGeometry(new T.BoxGeometry(3.3,.015,5.6)),new T.LineBasicMaterial({color:r.color}));grid.position.copy(point(r.lane,-40-(r.id>=3?7:0),.16));grid.quaternion.copy(frameAt(grid.position).q);scene.add(grid);if(!r.id)continue;
+  for(const r of race.racers){const grid=new T.LineSegments(new T.EdgesGeometry(new T.BoxGeometry(3.3,.015,5.6)),new T.LineBasicMaterial({color:r.color}));const pose=gridPose(w,r);grid.position.copy(point(pose.x,pose.z,.16));grid.quaternion.copy(frameAt(grid.position).q).multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),pose.heading));scene.add(grid);if(!r.id)continue;
    const model=view.roverTemplate.clone(true);model.position.y=-.44;model.traverse(o=>{if(o.isMesh){o.material=o.material.clone();if(o.name==='CHASSIS_ARMOR_BODY'){o.material.color.set(r.color);o.material.roughness=.55;}}});model.getObjectByName('COLD_GAS_PLUMES').visible=false;
    const group=new T.Group();group.add(model);scene.add(group);const instruments=createRoverInstruments(model),rig=new RoverRig(model,scene,w,view.puffTexture,view.damageBank);this.rivals.push({r,group,rig,instruments});
   }

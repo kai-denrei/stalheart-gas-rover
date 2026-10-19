@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';import {writeFile} from 'node:fs/promises';import {browser} from './browser-session.mjs';
+const b=await browser('http://localhost:8166/?mode=race');const report={};
+try{
+ await b.evaluate(`new Promise((r,j)=>{const end=Date.now()+24000;const f=()=>window.roverLab?.ready()?r(true):Date.now()>end?j(Error(document.getElementById('loadText').textContent)):setTimeout(f,100);f()})`);
+ await b.call('Runtime.evaluate',{expression:"document.getElementById('start').click();roverLab.pause()",userGesture:true});
+ await b.evaluate(`(()=>{const l=roverLab,d=l.view.raceView.defense;l.race.phase='racing';l.race.racers.forEach(r=>r.penalty=9999);d.defense.nextWave=d.defense.nextBoss=9999;d.defense.guns.forEach(g=>g.next=9999);d.orbital.step=()=>{};d.defense.addEnemy({x:220,z:100,side:1},'nih-daira');l.step({},1);d.defense.kill(d.defense.enemies[0]);l.step({},3);})()`);
+ report.initial=await b.evaluate('roverLab.view.raceView.defense.ambient.remains.state()');assert.ok(report.initial.faded);assert.ok(report.initial.standing>20);assert.equal(report.initial.stage,0);
+ await b.evaluate(`(async()=>{const {point,upAt}=await import('./src/world.js'),v=roverLab.view,remains=v.raceView.defense.ambient.remains,center=remains.frame().centre;v.camera.position.copy(point(201,80,16));v.camera.up.copy(upAt(center));v.camera.lookAt(center);v.reviewRender=v.render;v.render=()=>v.renderer.render(v.scene,v.camera);v.render();})()`);await b.screenshot('artifacts/nih-daira-remains.png');
+ report.hit=await b.evaluate(`(async()=>{const {point}=await import('./src/world.js'),l=roverLab,d=l.view.raceView.defense,r=d.ambient.remains,p=r.state().pieces.find(p=>p.kind==='segment'&&p.j===3).plane;for(let i=0;i<5;i++)d.defense.blast(point(...p),3,1,'bofors');l.step({},2);return r.state();})()`);assert.ok(report.hit.cut>0);assert.ok(report.hit.severed.length>0);
+ await b.screenshot('artifacts/nih-daira-severed.png');
+ await b.evaluate('roverLab.step({},12)');report.persist=await b.evaluate('({body:roverLab.view.raceView.defense.defense.enemies.some(e=>e.dead),remains:roverLab.view.raceView.defense.ambient.remains.stats()})');assert.ok(report.persist.body&&report.persist.remains.present);
+ report.nuke=await b.evaluate(`(async()=>{const {point,coords}=await import('./src/world.js'),d=roverLab.view.raceView.defense,r=d.ambient.remains,p=coords(r.frame().centre);d.defense.blast(point(p.x,p.z),55,100,'nuke');roverLab.step({},3);return r.state();})()`);assert.ok(report.nuke.cracked);assert.ok(report.nuke.pieces.some(p=>p.state==='gone'));
+ await b.evaluate('roverLab.race.start();roverLab.step({},.01)');assert.equal(await b.evaluate('roverLab.view.raceView.defense.ambient.remains.present()'),false);
+ assert.equal(b.errors.length,0,JSON.stringify(b.errors));report.errors=b.errors;await writeFile('artifacts/remains-browser-report.json',JSON.stringify(report,null,2));console.log({initial:report.initial.label,hit:report.hit.label,severed:report.hit.severed.length,nuke:report.nuke.label,errors:b.errors});
+}finally{await b.close();}

@@ -17,7 +17,8 @@ export function createRaceTrack(view){
  const world=view.world,segments=trackSegments(world),width=world.race.rules.halfWidth,positions=[],uv=[];
  // Two-metre tessellation only follows planet curvature; all paint edges are
  // fragment-shader distances, antialiased in screen pixels with derivatives.
- for(let x=-12;x<164;x+=2)for(let z=-52;z<234;z+=2){
+ const xs=segments.flatMap(s=>[s.a[0],s.b[0]]),zs=segments.flatMap(s=>[s.a[1],s.b[1]]),x0=Math.floor((Math.min(...xs)-width-3)/2)*2,x1=Math.max(...xs)+width+3,z0=Math.floor((Math.min(...zs)-width-12)/2)*2,z1=Math.max(...zs)+width+3;
+ for(let x=x0;x<x1;x+=2)for(let z=z0;z<z1;z+=2){
   if(sampleTrack(segments,x+1,z+1).distance>width+2)continue;
   for(const [dx,dz] of [[0,0],[0,2],[2,2],[0,0],[2,2],[2,0]]){positions.push(...point(x+dx,z+dz,.12).toArray());uv.push(x+dx,z+dz);}
  }
@@ -25,11 +26,12 @@ export function createRaceTrack(view){
  const material=new T.MeshStandardMaterial({color:0xffffff,roughness:.96,metalness:0,side:T.DoubleSide});view.patchFloor(material);const floorCompile=material.onBeforeCompile;
  material.onBeforeCompile=shader=>{
   floorCompile(shader);
+  const [a,b]=world.race.route,d=new T.Vector2(b[0]-a[0],b[1]-a[1]).normalize();shader.uniforms.uStart={value:new T.Vector4(a[0],a[1],d.x,d.y)};
   shader.uniforms.uTrackSegments={value:segments.map(s=>new T.Vector4(...s.a,...s.b))};
   shader.uniforms.uTrackInfo={value:segments.map(s=>new T.Vector4(s.progress,s.length,Number(s.startCorner),Number(s.endCorner)))};
   shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nattribute vec2 trackCoord; varying vec2 vTrack;').replace('#include <begin_vertex>','#include <begin_vertex>\nvTrack=trackCoord;');
   shader.fragmentShader=shader.fragmentShader.replace('#include <common>',`#include <common>
-   varying vec2 vTrack; uniform vec4 uTrackSegments[${segments.length}]; uniform vec4 uTrackInfo[${segments.length}];
+   varying vec2 vTrack; uniform vec4 uStart; uniform vec4 uTrackSegments[${segments.length}]; uniform vec4 uTrackInfo[${segments.length}];
    float trackNoise(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
   `).replace('#include <color_fragment>',`#include <color_fragment>
    float roadDist=10000.0,along=0.0,kerb=0.0;
@@ -45,14 +47,16 @@ export function createRaceTrack(view){
    vec3 asphalt=vec3(.045,.061,.068)*(0.94+.12*grain);
    float rubber=exp(-pow((roadDist-1.15)*1.6,2.0))*.12;
    vec3 paint=asphalt*(1.0-rubber);
+   ${world.race.course.id==='expedition'?'float wild=step(45.0,vTrack.x)*(1.0-step(380.0,vTrack.x))*step(vTrack.y,-80.0);paint=mix(paint,vec3(.14,.095,.055)*(0.85+.3*grain),wild);':''}
    float edge=smoothstep(${(width-1.18).toFixed(2)}-aa,${(width-1.18).toFixed(2)}+aa,roadDist);
    float stripe=smoothstep(.48,.52,fract(along/5.2));
    vec3 curb=mix(vec3(.68,.025,.018),vec3(.84,.86,.81),stripe);
    paint=mix(paint,mix(vec3(.025,.13,.11),curb,kerb),edge);
    float line=1.0-smoothstep(.085,.085+aa,abs(roadDist-${(width-1.4).toFixed(2)}));
    paint=mix(paint,vec3(.82,.86,.83),line);
-   float startBand=(1.0-smoothstep(.9,.9+fwidth(vTrack.y),abs(vTrack.y+29.0)))*(1.0-step(7.45,abs(vTrack.x)));
-   float check=mod(floor((vTrack.x+8.0)/.9)+floor((vTrack.y+29.9)/.9),2.0);
+   vec2 local=vTrack-uStart.xy;vec2 grid=vec2(dot(local,vec2(uStart.w,-uStart.z)),dot(local,uStart.zw)-11.0);
+   float startBand=(1.0-smoothstep(.9,.9+fwidth(grid.y),abs(grid.y)))*(1.0-step(7.45,abs(grid.x)));
+   float check=mod(floor((grid.x+8.0)/.9)+floor((grid.y+.9)/.9),2.0);
    paint=mix(paint,mix(vec3(.015),vec3(.9),check),startBand);
    diffuseColor.rgb*=paint;
   `);
@@ -62,7 +66,7 @@ export function createRaceTrack(view){
  // A single batch of restrained directional chevrons, lifted above the asphalt.
  const arrow=new T.BufferGeometry();arrow.setAttribute('position',new T.Float32BufferAttribute([-.5,0,-.5,0,0,.65,.5,0,-.5],3));
  const matrices=[];
- for(const s of segments)for(let distance=10;distance<s.length-4;distance+=14){const t=distance/s.length,x=T.MathUtils.lerp(s.a[0],s.b[0],t),z=T.MathUtils.lerp(s.a[1],s.b[1],t);if(z>226||world.holes.some(h=>Math.hypot(x-h.x,z-h.z)<h.r+3))continue;const p=point(x,z,.145),q=frameAt(p).q.multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),Math.atan2(s.b[0]-s.a[0],s.b[1]-s.a[1])));matrices.push(new T.Matrix4().compose(p,q,new T.Vector3(1,1,1)));}
+ for(const s of segments)for(let distance=10;distance<s.length-4;distance+=14){const t=distance/s.length,x=T.MathUtils.lerp(s.a[0],s.b[0],t),z=T.MathUtils.lerp(s.a[1],s.b[1],t);if(Math.hypot(x-world.race.deck.x,z-world.race.deck.z)<world.race.deck.d/2||world.holes.some(h=>Math.hypot(x-h.x,z-h.z)<h.r+3))continue;const p=point(x,z,.145),q=frameAt(p).q.multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),Math.atan2(s.b[0]-s.a[0],s.b[1]-s.a[1])));matrices.push(new T.Matrix4().compose(p,q,new T.Vector3(1,1,1)));}
  const arrows=new T.InstancedMesh(arrow,new T.MeshBasicMaterial({color:0x70837f,side:T.DoubleSide}),matrices.length);matrices.forEach((m,i)=>arrows.setMatrixAt(i,m));arrows.computeBoundingSphere();arrows.name='Circuit / direction chevrons';view.scene.add(arrows);
  return {road,arrows,segments};
 }

@@ -1,5 +1,5 @@
 import {Vector3} from '../upstream/stalheart/vendor/three.module.js';
-import {sphereContact} from './collisions.js';
+import {sphereContact,nearColliders} from './collisions.js';
 import {commands} from './simulation.js';
 import {coords,upAt} from './world.js';
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
@@ -7,6 +7,8 @@ export function pilot(racer,race,dt){
  const s=racer.sim,c=commands(),p=coords(s.pos),up=upAt(s.pos),fwd=new Vector3(0,0,1).applyQuaternion(s.q).projectOnPlane(up).normalize(),right=new Vector3().crossVectors(up,fwd),v=s.vel.clone().projectOnPlane(up);
  const final=racer.gate===race.world.race.gates.length,spot=race.world.race.spots.find(x=>x.owner===null),deck=race.world.race.deck;
  if(!spot||s.damage.wreck)return c;
+ // Service pads use the same stop-and-refill rule as the human rover.
+ if(s.grounded&&s.reserve<s.tune.capacity*.7&&race.world.pads.some(p=>p.service&&s.pos.distanceTo(p.origin)<4.5)){c.brake=1;return c;}
  let target,desiredHeight=.38,air=false;
  if(final){
   const local=s.pos.clone().sub(deck.origin).applyQuaternion(deck.frame.q.clone().invert());
@@ -25,16 +27,16 @@ export function pilot(racer,race,dt){
   const g=race.world.race.gates[racer.gate];target=g.origin.clone().addScaledVector(g.frame.east,g.dz*racer.lane*.3).addScaledVector(g.frame.north,-g.dx*racer.lane*.3);
   // Keep every jump inside the corridor; the gate after it requires wheel contact.
   const nextHole=race.world.holes.find(h=>{if(h.phase==='dormant')return false;const d=h.origin.clone().sub(s.pos).projectOnPlane(up);return d.dot(fwd)>0&&d.length()<h.r+10&&Math.abs(d.dot(right))<h.r+2;});
-  const obstacle=race.world.colliders.some(rock=>{if(rock.id==='finish-platform'||rock.id.startsWith('podium-')||rock.id.startsWith('gantry-'))return false;if(rock.owner==='city')return [2,4,6,8].some(t=>sphereContact(rock,s.pos.clone().addScaledVector(fwd,t),1.3));const d=rock.center.clone().sub(s.pos),height=d.dot(up);d.projectOnPlane(up);return height+rock.radius>.15&&d.dot(fwd)>1&&d.dot(fwd)<8+rock.radius&&Math.abs(d.dot(right))<rock.radius+1.4;});
+  const obstacle=nearColliders(race.world,s.pos,18).some(rock=>{if(rock.id==='finish-platform'||rock.id.startsWith('podium-')||rock.id.startsWith('gantry-'))return false;if(rock.owner==='city')return [2,4,6,8].some(t=>sphereContact(rock,s.pos.clone().addScaledVector(fwd,t),1.3));const d=rock.center.clone().sub(s.pos),height=d.dot(up);d.projectOnPlane(up);return height+rock.radius>.15&&d.dot(fwd)>1&&d.dot(fwd)<8+rock.radius&&Math.abs(d.dot(right))<rock.radius+1.4;});
   if((nextHole||obstacle)&&s.grounded&&!(racer.hop>0)){racer.hop=.42;}
   racer.hop=Math.max(0,(racer.hop||0)-dt);
   air=!s.grounded||racer.hop>0;
-  if(racer.hop>0)desiredHeight=4;
-  const over=race.world.holes.some(h=>h.phase!=='dormant'&&Math.hypot(p.x-h.x,p.z-h.z)<h.r+2);if(over)desiredHeight=Math.max(desiredHeight,3);
+  if(racer.hop>0)desiredHeight=nextHole?.r>20?14:4;
+  const over=race.world.holes.find(h=>h.phase!=='dormant'&&Math.hypot(p.x-h.x,p.z-h.z)<h.r+6);if(over)desiredHeight=Math.max(desiredHeight,over.r>20?14:3);
  }
  const diff=target.clone().sub(s.pos).projectOnPlane(up),distance=diff.length(),heading=Math.atan2(diff.dot(right),diff.dot(fwd));
  if(air){
-  const max=final?7:8,desired=diff.clone().multiplyScalar(final?1.1:.55).clampLength(0,max),acc=desired.sub(v).multiplyScalar(.85);
+  const crossing=race.world.holes.some(h=>h.r>20&&Math.hypot(p.x-h.x,p.z-h.z)<h.r+18);const max=final?7:crossing?16:8,desired=diff.clone().multiplyScalar(final?1.1:.55).clampLength(0,max),acc=desired.sub(v).multiplyScalar(.85);
   c.drive=clamp(acc.dot(fwd)/6,-1,1);c.steer=clamp(-acc.dot(right)/6,-1,1);
   const height=final?s.pos.clone().sub(deck.origin).dot(deck.frame.up):p.h,vy=s.vel.dot(up);
   c.lift=clamp((s.tune.gravity+(desiredHeight-height)*2.2-vy*2.8)/s.tune.lift,0,1);

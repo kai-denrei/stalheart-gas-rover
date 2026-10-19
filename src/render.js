@@ -35,11 +35,11 @@ export class Presentation {
  }
  patchFloor(material){const holes=this.world.holes;const frames=holes.map(h=>new T.Matrix4().compose(h.origin,h.frame.q,new T.Vector3(1,1,1)).invert());this.floorUniforms??=[];const radii={value:holes.map(h=>h.radius)};this.floorUniforms.push(radii);
   material.onBeforeCompile=shader=>{
-   shader.uniforms.uHoleFrames={value:frames};shader.uniforms.uHoleRadii=radii;
+   shader.uniforms.uHoleCenters={value:holes.map(h=>h.origin)};shader.uniforms.uHoleFrames={value:frames};shader.uniforms.uHoleRadii=radii;
    shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vLabWorld;').replace('#include <project_vertex>','#include <project_vertex>\nvLabWorld=(modelMatrix*vec4(transformed,1.0)).xyz;');
-   shader.fragmentShader=shader.fragmentShader.replace('#include <common>',`#include <common>\nvarying vec3 vLabWorld;uniform mat4 uHoleFrames[4];uniform float uHoleRadii[4];\n${SINKHOLE_BOUNDARY_GLSL}`)
-    .replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>\nfor(int i=0;i<4;i++){vec3 p=(uHoleFrames[i]*vec4(vLabWorld,1.0)).xyz;p.y+=${RADIUS.toFixed(8)};float d=length(p.xz);float arc=atan(d,p.y)*${RADIUS.toFixed(8)};if(arc<uHoleRadii[i]*sinkholeRim(atan(p.z,p.x)))discard;}`);
-  };material.customProgramCacheKey=()=> 'rover-four-independent-sinkholes-v1';
+   shader.fragmentShader=shader.fragmentShader.replace('#include <common>',`#include <common>\nvarying vec3 vLabWorld;uniform vec3 uHoleCenters[${holes.length}];uniform mat4 uHoleFrames[${holes.length}];uniform float uHoleRadii[${holes.length}];\n${SINKHOLE_BOUNDARY_GLSL}`)
+    .replace('#include <clipping_planes_fragment>',`#include <clipping_planes_fragment>\nfor(int i=0;i<${holes.length};i++){vec3 hd=vLabWorld-uHoleCenters[i];float reach=uHoleRadii[i]*1.4+3.0;if(dot(hd,hd)>reach*reach)continue;vec3 p=(uHoleFrames[i]*vec4(vLabWorld,1.0)).xyz;p.y+=${RADIUS.toFixed(8)};float d=length(p.xz);float arc=atan(d,p.y)*${RADIUS.toFixed(8)};if(arc<uHoleRadii[i]*sinkholeRim(atan(p.z,p.x)))discard;}`);
+  };material.customProgramCacheKey=()=> 'rover-independent-sinkholes-v3-'+holes.length;
  }
  drawFixtures(){
   this.padGroups=[];

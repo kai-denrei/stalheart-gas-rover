@@ -19,7 +19,9 @@
     "test:stunts": "node scripts/stunt-browser-test.mjs",
     "test:base": "node scripts/base-update-browser-test.mjs",
     "test:battle": "node scripts/battle-browser-test.mjs",
-    "test:crowds": "node scripts/crowd-update-browser-test.mjs"
+    "test:crowds": "node scripts/crowd-update-browser-test.mjs",
+    "test:expedition": "node scripts/expedition-browser-test.mjs",
+    "test:remains": "node scripts/remains-browser-test.mjs"
   },
   "engines": {
     "node": ">=22"
