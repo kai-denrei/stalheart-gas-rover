@@ -33,7 +33,8 @@ export async function createAutoSol88(view,race,defense,effects,aircraft=[]){
    if(yaw){const p=yaw.parent.worldToLocal(contact.clone()).sub(yaw.position);yaw.rotation.y=Math.atan2(p.x,p.z);yaw.updateWorldMatrix(true,true);}if(pitch){const p=pitch.parent.worldToLocal(contact.clone()).sub(pitch.position);pitch.rotation.x=-Math.atan2(p.y,Math.hypot(p.x,p.z));}group.updateWorldMatrix(true,true);
    const aperture=gltf.scene.getObjectByName('APERTURE').getWorldPosition(new T.Vector3());if(!sol88Safe(view.world,race,contact,view.isao,aperture,defense.guns,view.raceView?.traffic,aircraft)){laser.lift();wasBurning=false;state.burning=false;state.contacts.clear();laser.tick(dt);return;}laser.setSource(aperture.toArray());if(!wasBurning){laser.lay(contact,upAt(contact));play('Firing_Cycle');}else laser.aim(contact,upAt(contact));
    const things=defense.enemies.filter(e=>!e.dead).map(e=>({id:e.id,kind:['gorogoro','nih-daira'].includes(e.kind)?'hard':'soft',pos:e.position.toArray(),enemy:e}));
-   for(const hit of burnContacts(state,inFootprint(contact.toArray(),beam.radius,things),dt,LASER_BURN)){defense.kill(hit.thing.enemy);kills++;}burnSeconds+=dt;
+   const footprint=inFootprint(contact.toArray(),beam.radius,things);for(const hit of footprint)if(hit.enemy.kind!=='nih-daira'){defense.kill(hit.enemy,'sol');kills++;}
+   for(const hit of burnContacts(state,footprint.filter(hit=>hit.enemy.kind==='nih-daira'),dt,LASER_BURN)){defense.kill(hit.thing.enemy);kills++;}burnSeconds+=dt;
    plume+=dt;if(plume>=1/LASER_AUTO.plumeRate){plume=0;effects.spawn('rotary',contact.clone().addScaledVector(upAt(contact),LASER_AUTO.plumeLift),.8);}
   }else {state.contacts.clear();if(wasBurning)laser.lift();}
   wasBurning=burning;laser.tick(dt);

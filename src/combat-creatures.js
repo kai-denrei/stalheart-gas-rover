@@ -11,8 +11,8 @@ export async function reedMotionMaterial(geometry,phase,clock,rate){
  material.onBeforeCompile=s=>{s.uniforms.reedTime=clock;s.uniforms.reedMotion={value:texture};
  const code=`uniform float reedTime;uniform sampler2D reedMotion;attribute float reedPhase;attribute float reedRate;attribute float reedVertex;
  vec3 reedFetch(float frame,float normals){float x=mod(reedVertex,${meta.width}.0),y=floor(reedVertex/${meta.width}.0)+(frame+normals*${meta.frames}.0)*${meta.height}.0;return texture2D(reedMotion,(vec2(x,y)+.5)/vec2(${meta.width}.0,${meta.height*meta.frames*2}.0)).xyz;}
- vec3 reedPose(float normals){float f=mod(reedTime*reedRate+reedPhase,${(meta.frames/meta.fps-.35).toFixed(4)})*${meta.fps}.0;float a=floor(f),b=min(a+1.,${meta.frames-1}.);vec3 p=mix(reedFetch(a,normals),reedFetch(b,normals),fract(f));float blend=smoothstep(${meta.frames-14}.,${meta.frames-7}.,f);return mix(p,reedFetch(0.,normals),blend);}`;
- s.vertexShader=s.vertexShader.replace('#include <common>','#include <common>\n'+code).replace('#include <beginnormal_vertex>','vec3 objectNormal=normalize(reedPose(1.));').replace('#include <begin_vertex>','vec3 transformed=reedPose(0.);');};material.customProgramCacheKey=()=> 'reed-solver-motion-v2';return {material,meta};
+ vec3 reedPose(float normals){float f=mod(reedPhase,${(meta.frames/meta.fps).toFixed(4)})*${meta.fps}.0;float a=floor(f),b=min(a+1.,${meta.frames-1}.);vec3 p=mix(reedFetch(a,normals),reedFetch(b,normals),fract(f));float blend=smoothstep(${meta.frames-14}.,${meta.frames-7}.,f);return mix(p,reedFetch(0.,normals),blend);}`;
+ s.vertexShader=s.vertexShader.replace('#include <common>','#include <common>\n'+code).replace('#include <beginnormal_vertex>','vec3 objectNormal=normalize(reedPose(1.));').replace('#include <begin_vertex>','vec3 transformed=reedPose(0.);');};material.customProgramCacheKey=()=> 'reed-anchored-root-motion-v3';return {material,meta};
 }
 export function createGorogoroPool(view,root,defense){
  const config={...GOROGORO_DEFAULT_CONFIG,r0:1.6,reach:5,cycleDuration:5,rollDuration:1.8,landingPause:.6,skinTint:0x6d7868,coreTint:0xff182c,membraneOpacity:.3},actors=Array.from({length:8},()=>{

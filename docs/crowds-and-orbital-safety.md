@@ -10,7 +10,21 @@ Both SOL platforms orbit at 1,100 m, above a tighter footprint. Before firing an
 
 The Heptapod mount becomes a second NEEDLE sniper; seven Quivers remain. World-space floating labels are removed, including rover names, sinkhole/gate names and finish/disco banners. Podium numbers are painted on the podium surfaces; HUD callouts and physical scoreboards remain.
 
-Powered turns above 7 m/s progressively release rear traction, reaching full power-drift strength around 15 m/s. Front tyres retain bite, while releasing steering restores grip. SHIFT retains the stronger handbrake drift. Rear wheel presentation distinguishes throttle wheelspin from braking.
+Powered turns above 5.5 m/s progressively release rear traction, reaching full power-drift strength around 12 m/s. Strong throttle/steering now reaches 98% traction release, with less rear axle grip and a longer slide. Front tyres retain bite, while releasing steering restores grip. SHIFT retains the stronger handbrake drift. Rear wheel presentation distinguishes throttle wheelspin from braking.
+
+## Enemy contacts and grounded movement (19 October update)
+
+All four enemy families avoid the entire irregular sinkhole bowl, with a conservative rim margin. Trembling holes reserve their future footprint. Walkers caught within the warning zone retreat outward; an opening that overtakes a creature kills it rather than leaving it walking over empty ground. New arrivals are placed outside active holes.
+
+Living enemies collide with the rover's compound chassis/wheel shapes. Impacts transfer momentum and damage both parties, with different masses for weak Cutis, Reeds, red cores and the boss. Repeated resting contacts have a damage cooldown; a rover above the body clears it. Protected podium owners and recovering racers are excluded. The boss's large body pushes back instead of being an instant run-over kill.
+
+The Reed motion bake uses the original soft-body solver with a lab adapter that anchors contacting front probes during the pull phase. A seeded RNG varies reach length, spread and reach/pull/pause durations at each burst. Recorded root travel drives gameplay movement and the same pose clock drives both mesh detail levels. Size and individual pace scale the clock consistently, and blocked Reeds stop their pose clock. This keeps the existing two instanced draw pools rather than adding hundreds of live CPU solvers. Regenerate with `node scripts/bake-reed-motion.mjs`; it writes the texture, metadata and `src/reed-gait-data.js` together.
+
+Both SOL platforms kill non-boss enemies immediately on contact, including Gorogoro. Nih-Dairia keeps its previous SOL damage/dwell rules.
+
+Gunship support checks friendly dome/corridor/gantry/flag/podium geometry, sentries, rovers, ISAO and SH02 along the shot and around its blast. An obstructed target waits for another angle; no empty fallback shot is fired. The actual scattered muzzle-to-impact line is checked again before launch. Nuclear drops also sample their full ballistic/ignition/dive trajectory before release. The three finale strikes can shift farther into the empty background if a city structure blocks the original aim point. The orbit runs at 0.13 rad/s (about 48 seconds per circuit, previously 114). Moving friendlies at a normal round's impact can suppress its blast.
+
+Focused validation: 130 unit tests, rendered impacts against all four families, SOL non-boss lethality, safe Gunship paths, and race/celebration checks. Latest 1440×913 performance samples held 60 FPS with 618 live enemies at the canyon and 615 at Base 2 (16.7–16.8 ms p95).
 
 ## Source and licensing
 

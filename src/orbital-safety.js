@@ -17,3 +17,16 @@ export function orbitalSafe(world,race,target,{source=null,isao=null,guns=[],tra
  // Avoid horizon-skimming strikes even if their endpoints are unobstructed.
  return !source||source.clone().sub(target).normalize().dot(upAt(target))>.82;
 }
+
+const friendlyCache=new WeakMap();
+export function gunshipSafe(world,race,target,{source,isao=null,guns=[],traffic=null,aircraft=[],radius=4.5,minElevation=.12}={}){
+ if(!source||source.clone().sub(target).normalize().dot(upAt(target))<minElevation)return false;
+ let cached=friendlyCache.get(world);if(!cached||cached.count!==world.colliders.length){cached={count:world.colliders.length,solids:world.colliders.filter(c=>c.owner==='city'||c.owner==='race-flags'||/finish-platform|podium|gantry|pad-/.test(c.id))};friendlyCache.set(world,cached);}
+ const friend=(p,r=0)=>target.distanceToSquared(p)<(radius+3+r)**2||segmentNear(source,target,p,1+r);
+ if(cached.solids.some(c=>friend(c.center,c.radius)))return false;
+ if(race.racers.some(r=>!r.pendingRespawn&&friend(r.sim.pos,2)))return false;
+ if(isao?.spawned&&friend(isao.position,2))return false;
+ if(guns.some(g=>friend(g.origin,3)))return false;
+ if(traffic?.ship?.visible&&friend(traffic.ship.getWorldPosition(target.clone()),18))return false;
+ return !aircraft.some(ship=>ship.visible&&friend(ship.getWorldPosition(target.clone()),15));
+}

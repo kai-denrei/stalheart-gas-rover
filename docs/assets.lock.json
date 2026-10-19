@@ -1203,7 +1203,7 @@
     {
       "source": "scripts/bake-reed-motion.mjs",
       "path": "assets/city-combat/reed-motion.bin",
-      "sha256": "6b66adea5fcb8b70de628b95b92d1b72e68b4f277232a7ffd865e07480803986",
+      "sha256": "c4101fe7a9b9d3418e438f1d0a81003b8be6ac27c2dcb1d29426739ab79a9099",
       "bytes": 19660800,
       "kind": "solver-bake",
       "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
@@ -1211,8 +1211,8 @@
     {
       "source": "scripts/bake-reed-motion.mjs",
       "path": "assets/city-combat/reed-motion.json",
-      "sha256": "8f8537c2d30e6c4d78f78c496449129f037abd8299da93ed5a2c903dd7517ab7",
-      "bytes": 282,
+      "sha256": "d42d424751d292b38e1caf482694b801685e3cde8a3ba8fedeca766d7f80d9f5",
+      "bytes": 303,
       "kind": "solver-bake",
       "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
     },
