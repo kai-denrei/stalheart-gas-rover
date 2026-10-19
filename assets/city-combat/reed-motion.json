@@ -1,0 +1,12 @@
+{
+  "width": 1024,
+  "height": 10,
+  "frames": 120,
+  "fps": 20,
+  "vertices": 9408,
+  "scale": 24,
+  "normalOffset": 1200,
+  "format": "RGBA16F",
+  "source": "Stalheart Below Creature Lab soft-body solver; centered locomotion, 0.35 s loop blend",
+  "movement": 6.804185450077057
+}

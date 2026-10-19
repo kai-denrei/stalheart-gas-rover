@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {createRaceWorld} from '../src/race-world.js';
+import {Race} from '../src/race.js';
+import {Simulation,commands} from '../src/simulation.js';
+import {point,groundHeight} from '../src/world.js';
+import {TREMOR,stepRaceHazards} from '../src/race-hazards.js';
+function setup(){const world=createRaceWorld(),race=new Race(world,new Simulation(world));return {world,race,h:world.holes[1]};}
+test('two dormant race holes have continuous solid ground, including their exact centers',()=>{const {world}=setup();assert.equal(world.holes.filter(h=>h.phase==='dormant').length,2);for(const h of world.holes.filter(h=>h.dormant)){assert.equal(h.radius,0);assert.equal(groundHeight(world,point(h.x,h.z)).height,0);}});
+test('any rival can trigger a tremor; warning precedes continuous opening and repeats cannot retrigger',()=>{const {world,race,h}=setup();race.racers[3].sim.pos.copy(point(h.x,h.z-25,.5));stepRaceHazards(race,.1);assert.equal(h.triggeredBy,3);assert.equal(h.phase,'trembling');assert.equal(h.radius,0);stepRaceHazards(race,TREMOR.warning-.1);assert.equal(h.radius,0);stepRaceHazards(race,1);assert.equal(h.phase,'opening');assert.ok(Math.abs(h.radius-h.r/2)<1e-8);stepRaceHazards(race,1);assert.equal(h.phase,'open');assert.equal(h.radius,h.r);stepRaceHazards(race,5);assert.equal(race.events.filter(e=>e.type==='tremor').length,1);assert.equal(groundHeight(world,h.origin).height,-Infinity);});
+test('countdown does not trigger hazards; recovery preserves openings, race restart restores solid ground',()=>{const {world,race,h}=setup();race.start();race.racers[0].sim.pos.copy(point(h.x,h.z,.5));race.step(commands(),.1);assert.equal(h.phase,'dormant');race.phase='racing';stepRaceHazards(race,4);race.recover(race.racers[0]);assert.equal(h.phase,'open');const generation=world.race.hazardGeneration;race.start();assert.equal(h.phase,'dormant');assert.equal(h.radius,0);assert.equal(world.race.hazardGeneration,generation+1);});
+test('finish advances only celebration time, leaving race results frozen, and restart clears that clock',()=>{const {race}=setup();race.phase='finished';race.time=123;const before=race.racers.map(r=>r.sim.pos.toArray());race.step(commands(),3);assert.equal(race.time,123);assert.equal(race.celebrationTime,3);assert.deepEqual(race.racers.map(r=>r.sim.pos.toArray()),before);race.start();assert.equal(race.celebrationTime,0);});

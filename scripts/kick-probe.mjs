@@ -1,0 +1,3 @@
+import {Simulation,commands,STEP} from '../src/simulation.js';import {createWorld,point,frameAt,coords} from '../src/world.js';
+const s=new Simulation(createWorld());s.pos.copy(point(0,-25,.46));s.q.copy(frameAt(s.pos).q);let counter=false,stop=false;
+for(let i=0;i<1200;i++){const t=i*STEP,c=commands();if(t<1.1)c.lift=1;else if(t<1.85)c.kick=1;else if(s.kickAngle>5.45&&!stop){c.kick=-1;counter=true;}if(counter&&s.omega.clone().applyQuaternion(s.q.clone().invert()).z<.12){stop=true;c.kick=0;}s.step(c);if(i%60===0)console.log(JSON.stringify({t,h:coords(s.pos).h,roll:s.kickAngle*180/Math.PI,tilt:s.tilt,rate:s.omega.clone().applyQuaternion(s.q.clone().invert()).z,ground:s.grounded,gas:s.reserve,total:s.kickTotal,reason:s.lastReason}));}

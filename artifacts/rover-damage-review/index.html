@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R–47X / Impact trials</title><link rel="icon" href="data:,"><link rel="stylesheet" href="./review.css">
+<body><canvas id="scene" aria-label="Interactive rover impact preview"></canvas>
+<aside>
+  <small>STÅLHEART / DAMAGE LAB</small><h1>How much is too much?</h1>
+  <p>Controlled impact trials. Each starts with a fresh rover; damage appears at contact.</p>
+  <p><a href="./accumulation.html">New: repeated hits → accumulated wreck</a></p>
+  <label for="scenario">Impact test</label><select id="scenario"></select>
+  <p id="description"></p>
+  <label for="speed">Impact speed <output id="speed-value"></output></label>
+  <input id="speed" type="range" min="1" max="24" step="0.5" value="2">
+  <label for="profile">Damage sensitivity</label><select id="profile"><option value="forgiving">Forgiving · proposed starting point</option><option value="sensitive">Sensitive · compare earlier damage</option></select>
+  <p id="thresholds" class="hint"></p>
+  <div class="row"><button id="replay">Replay hit</button><button id="series">Run all 8</button></div>
+  <div class="row"><button id="play">Pause</button><select id="rate" aria-label="Playback speed"><option value="0.25">¼ speed</option><option value="0.5" selected>½ speed</option><option value="1">Real time</option></select></div>
+  <label for="timeline">Timeline <output id="time-value"></output></label><input id="timeline" type="range" min="0" max="6" step="0.01" value="0">
+  <div class="row"><button id="contact">At impact</button><button id="after">Settled result</button></div>
+  <label class="check"><input id="before" type="checkbox"> Show intact rover at the same pose</label>
+  <label class="check"><input id="global" type="checkbox"> Compare supplied chassis escalation</label>
+  <p class="hint">Escalation applies the worst component stage to the entire chassis. Off by default.</p>
+  <details><summary>Inspect asset stages manually</summary><label for="zone">Component</label><select id="zone"></select><label for="level">Stage</label><select id="level"><option value="0">D0 · Intact</option><option value="1">D1 · Battered</option><option value="2">D2 · Damaged</option><option value="3">D3 · Destroyed</option></select><button id="manual">Inspect this component</button><p class="hint">Manual inspection stops the trial. Replay restores impact-driven damage.</p></details>
+  <p class="row"><button id="front">Front</button><button id="rear">Rear</button><button id="side">Side</button></p>
+  <p class="hint">Drag to orbit · Scroll to zoom<br>Simplified impact response, gravity 2.8 m/s². Thresholds are tuning proposals. No gameplay damage enabled.</p>
+  <a href="../../?mode=race">Return to the race</a>
+</aside>
+<section id="readout" aria-live="polite"><small id="phase">LOADING</small><h2 id="result">Preparing impact bank…</h2><p id="metrics"></p><p id="comparison"></p></section>
+<div id="loading">Loading four local damage models…</div>
+<script type="module" src="./review.js"></script></body></html>

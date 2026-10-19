@@ -1,0 +1,1708 @@
+{
+  "module_files": {
+    "../dome-colony/biosphere_d0_lod0.glb": {
+      "bytes": 665996,
+      "triangles": 12184,
+      "draw_calls": 8,
+      "sha256": "8219e2a1292119f301235f55218ca13e74a8a707f21f30267ad45d3a4fb3dc45"
+    },
+    "../dome-colony/biosphere_d0_lod1.glb": {
+      "bytes": 362524,
+      "triangles": 6344,
+      "draw_calls": 8,
+      "sha256": "476635f5033d6da590e1676c22a39f897a0e5956e17950b298c43f41613513a9"
+    },
+    "../dome-colony/biosphere_d0_lod2.glb": {
+      "bytes": 110316,
+      "triangles": 2192,
+      "draw_calls": 1,
+      "sha256": "bbcd122c25617303de08619339bf87b22953722f8b5b5f1415a44c562761601f"
+    },
+    "../dome-colony/fabrication_d0_lod0.glb": {
+      "bytes": 519864,
+      "triangles": 10904,
+      "draw_calls": 8,
+      "sha256": "f0d160c07b46cba1d56022585db4c92fd61762a3c4353771b53ee9dcf2cf74d3"
+    },
+    "../dome-colony/fabrication_d0_lod1.glb": {
+      "bytes": 289352,
+      "triangles": 5704,
+      "draw_calls": 8,
+      "sha256": "c9b6684660ec330e9f5b01c0f32b18d984edde57495793216673637e67d1cc79"
+    },
+    "../dome-colony/fabrication_d0_lod2.glb": {
+      "bytes": 110316,
+      "triangles": 2192,
+      "draw_calls": 1,
+      "sha256": "ec933e0ca30f0bdc6a883267dc0e63fd49a77c56ffa2e5ae05dcdb49857da650"
+    },
+    "../dome-colony/habitat_d0_lod0.glb": {
+      "bytes": 557108,
+      "triangles": 11496,
+      "draw_calls": 8,
+      "sha256": "b687f2f394b7215af9a10a0424e8548f8cfcf049e1bc7c8e4eab29b8dbf8c932"
+    },
+    "../dome-colony/habitat_d0_lod1.glb": {
+      "bytes": 298756,
+      "triangles": 5880,
+      "draw_calls": 8,
+      "sha256": "7b8e231fea26d39e6df62eb1dd5c7dbf89908253330af34497caaa9fbaeb18fc"
+    },
+    "../dome-colony/habitat_d0_lod2.glb": {
+      "bytes": 116820,
+      "triangles": 2304,
+      "draw_calls": 1,
+      "sha256": "9d2bd16e978dbcb95236b2ebe90fbe17ef634af347a5b217259901c4fe6a4372"
+    },
+    "../dome-colony/research_d0_lod0.glb": {
+      "bytes": 551252,
+      "triangles": 11816,
+      "draw_calls": 8,
+      "sha256": "72ba9c991c7be46b3b340fcdb7fa0c7c9f031e92870387e5414d5ecfcbb3c764"
+    },
+    "../dome-colony/research_d0_lod1.glb": {
+      "bytes": 304036,
+      "triangles": 6232,
+      "draw_calls": 8,
+      "sha256": "8084a012971e5c5c6b39a35a34e84a344d889f26170aa35c2c2b63b06d89f8ee"
+    },
+    "../dome-colony/research_d0_lod2.glb": {
+      "bytes": 116820,
+      "triangles": 2304,
+      "draw_calls": 1,
+      "sha256": "e0e50d2bd7610e9521efa533474080f04911c3cac94591963085b0d4bf711293"
+    },
+    "../dome-colony/power_d0_lod0.glb": {
+      "bytes": 560248,
+      "triangles": 11768,
+      "draw_calls": 8,
+      "sha256": "e322bd2099aa7d5d57654039cea9505c7b84dbf6481aaf6f6323e7e7d45ba06e"
+    },
+    "../dome-colony/power_d0_lod1.glb": {
+      "bytes": 309384,
+      "triangles": 6248,
+      "draw_calls": 8,
+      "sha256": "0b014c0fab356bdf2e49ad71a35557ff13805b93b8ecb4b805e8a2d790a6351b"
+    },
+    "../dome-colony/power_d0_lod2.glb": {
+      "bytes": 116816,
+      "triangles": 2304,
+      "draw_calls": 1,
+      "sha256": "7055ac81f30f10cd448629d4fe00787dbec326ccff0dea9c8f3ee4d465b0f520"
+    },
+    "../dome-colony/logistics_d0_lod0.glb": {
+      "bytes": 556892,
+      "triangles": 11496,
+      "draw_calls": 8,
+      "sha256": "76a6e43fab7d96ceea4bf051c4774fb4c09694abc52bb9a00c24d5fc6d34d020"
+    },
+    "../dome-colony/logistics_d0_lod1.glb": {
+      "bytes": 321004,
+      "triangles": 6168,
+      "draw_calls": 8,
+      "sha256": "172ae45d92ff111c5b7b4ac093cadeb60dcf47693c75515b1f39754d8b7e3b39"
+    },
+    "../dome-colony/logistics_d0_lod2.glb": {
+      "bytes": 116820,
+      "triangles": 2304,
+      "draw_calls": 1,
+      "sha256": "993a712d48d74cd5c189b428a5a424acbde08c906de0d03d0c444160330aa07b"
+    },
+    "../dome-colony/bridge_d0_lod0.glb": {
+      "bytes": 68632,
+      "triangles": 1428,
+      "draw_calls": 2,
+      "sha256": "cd55b1f854e8235b275aa5fd21dfe929a6e7e2210eded45422a5eb55bf51e0bd"
+    },
+    "../dome-colony/bridge_d0_lod1.glb": {
+      "bytes": 39240,
+      "triangles": 756,
+      "draw_calls": 2,
+      "sha256": "5ec93ef4019d4bd2166244dcaa387d6f2175b3b3a13447ce6c7faee119ae99fe"
+    },
+    "../dome-colony/bridge_d0_lod2.glb": {
+      "bytes": 36800,
+      "triangles": 740,
+      "draw_calls": 1,
+      "sha256": "791b09a6f36a6c4a742956a41ea1acf7f7427f945a77e2b0bffe3a22aa4d0560"
+    },
+    "../dome-colony/bridge_long_d0_lod0.glb": {
+      "bytes": 94032,
+      "triangles": 1988,
+      "draw_calls": 2,
+      "sha256": "e996766494a316182709b45105f0c4840560f85e4df4afd47efa423db37ee731"
+    },
+    "../dome-colony/bridge_long_d0_lod1.glb": {
+      "bytes": 53892,
+      "triangles": 1060,
+      "draw_calls": 2,
+      "sha256": "6f136c45bc1b6bb2004231e72efe1e36a6a1688fb8ddda1f67775b5047395759"
+    },
+    "../dome-colony/bridge_long_d0_lod2.glb": {
+      "bytes": 51448,
+      "triangles": 1044,
+      "draw_calls": 1,
+      "sha256": "e0ca7a4e0d964037d19b4b2a61dcb0d9d9f51e59ed8af7a9632829a022fe1d04"
+    }
+  },
+  "schema": "dome-city/composition-v1",
+  "status": "diorama_candidate_not_game_integration",
+  "derived_composition": true,
+  "credit": "Models by jelaludo",
+  "units": "metres",
+  "up": "+Y",
+  "source_of_truth": "Individual plain GLBs; this file places references without merging or rescaling originals.",
+  "footprint_m": [
+    220,
+    220
+  ],
+  "grid_spacing_m": 80,
+  "domes": [
+    {
+      "id": "DOME_11",
+      "module": "habitat",
+      "position": [
+        -80,
+        0,
+        -80
+      ],
+      "open_ports": [
+        "E",
+        "N"
+      ],
+      "sentry": true
+    },
+    {
+      "id": "DOME_12",
+      "module": "research",
+      "position": [
+        0,
+        0,
+        -80
+      ],
+      "open_ports": [
+        "W",
+        "E",
+        "N"
+      ],
+      "sentry": false
+    },
+    {
+      "id": "DOME_13",
+      "module": "logistics",
+      "position": [
+        80,
+        0,
+        -80
+      ],
+      "open_ports": [
+        "W",
+        "N"
+      ],
+      "sentry": true
+    },
+    {
+      "id": "DOME_21",
+      "module": "biosphere",
+      "position": [
+        -80,
+        0,
+        0
+      ],
+      "open_ports": [
+        "S",
+        "E",
+        "N"
+      ],
+      "sentry": false
+    },
+    {
+      "id": "DOME_22",
+      "module": "power",
+      "position": [
+        0,
+        0,
+        0
+      ],
+      "open_ports": [
+        "S",
+        "W",
+        "E",
+        "N"
+      ],
+      "sentry": false
+    },
+    {
+      "id": "DOME_23",
+      "module": "fabrication",
+      "position": [
+        80,
+        0,
+        0
+      ],
+      "open_ports": [
+        "S",
+        "W",
+        "N"
+      ],
+      "sentry": false
+    },
+    {
+      "id": "DOME_31",
+      "module": "habitat",
+      "position": [
+        -80,
+        0,
+        80
+      ],
+      "open_ports": [
+        "S",
+        "E"
+      ],
+      "sentry": true
+    },
+    {
+      "id": "DOME_32",
+      "module": "biosphere",
+      "position": [
+        0,
+        0,
+        80
+      ],
+      "open_ports": [
+        "S",
+        "W",
+        "E"
+      ],
+      "sentry": false
+    },
+    {
+      "id": "DOME_33",
+      "module": "logistics",
+      "position": [
+        80,
+        0,
+        80
+      ],
+      "open_ports": [
+        "S",
+        "W"
+      ],
+      "sentry": true
+    }
+  ],
+  "connections": [
+    {
+      "id": "LINK_E_11",
+      "module": "bridge_long",
+      "from": "DOME_11",
+      "to": "DOME_12",
+      "from_port": "E",
+      "to_port": "W",
+      "position": [
+        -40,
+        0,
+        -80
+      ],
+      "yaw": 0
+    },
+    {
+      "id": "LINK_N_11",
+      "module": "bridge_long",
+      "from": "DOME_11",
+      "to": "DOME_21",
+      "from_port": "N",
+      "to_port": "S",
+      "position": [
+        -80,
+        0,
+        -40
+      ],
+      "yaw": -1.5707963267948966
+    },
+    {
+      "id": "LINK_E_12",
+      "module": "bridge_long",
+      "from": "DOME_12",
+      "to": "DOME_13",
+      "from_port": "E",
+      "to_port": "W",
+      "position": [
+        40,
+        0,
+        -80
+      ],
+      "yaw": 0
+    },
+    {
+      "id": "LINK_N_12",
+      "module": "bridge_long",
+      "from": "DOME_12",
+      "to": "DOME_22",
+      "from_port": "N",
+      "to_port": "S",
+      "position": [
+        0,
+        0,
+        -40
+      ],
+      "yaw": -1.5707963267948966
+    },
+    {
+      "id": "LINK_N_13",
+      "module": "bridge_long",
+      "from": "DOME_13",
+      "to": "DOME_23",
+      "from_port": "N",
+      "to_port": "S",
+      "position": [
+        80,
+        0,
+        -40
+      ],
+      "yaw": -1.5707963267948966
+    },
+    {
+      "id": "LINK_E_21",
+      "module": "bridge_long",
+      "from": "DOME_21",
+      "to": "DOME_22",
+      "from_port": "E",
+      "to_port": "W",
+      "position": [
+        -40,
+        0,
+        0
+      ],
+      "yaw": 0
+    },
+    {
+      "id": "LINK_N_21",
+      "module": "bridge_long",
+      "from": "DOME_21",
+      "to": "DOME_31",
+      "from_port": "N",
+      "to_port": "S",
+      "position": [
+        -80,
+        0,
+        40
+      ],
+      "yaw": -1.5707963267948966
+    },
+    {
+      "id": "LINK_E_22",
+      "module": "bridge_long",
+      "from": "DOME_22",
+      "to": "DOME_23",
+      "from_port": "E",
+      "to_port": "W",
+      "position": [
+        40,
+        0,
+        0
+      ],
+      "yaw": 0
+    },
+    {
+      "id": "LINK_N_22",
+      "module": "bridge_long",
+      "from": "DOME_22",
+      "to": "DOME_32",
+      "from_port": "N",
+      "to_port": "S",
+      "position": [
+        0,
+        0,
+        40
+      ],
+      "yaw": -1.5707963267948966
+    },
+    {
+      "id": "LINK_N_23",
+      "module": "bridge_long",
+      "from": "DOME_23",
+      "to": "DOME_33",
+      "from_port": "N",
+      "to_port": "S",
+      "position": [
+        80,
+        0,
+        40
+      ],
+      "yaw": -1.5707963267948966
+    },
+    {
+      "id": "LINK_E_31",
+      "module": "bridge_long",
+      "from": "DOME_31",
+      "to": "DOME_32",
+      "from_port": "E",
+      "to_port": "W",
+      "position": [
+        -40,
+        0,
+        80
+      ],
+      "yaw": 0
+    },
+    {
+      "id": "LINK_E_32",
+      "module": "bridge_long",
+      "from": "DOME_32",
+      "to": "DOME_33",
+      "from_port": "E",
+      "to_port": "W",
+      "position": [
+        40,
+        0,
+        80
+      ],
+      "yaw": 0
+    }
+  ],
+  "courts": [
+    {
+      "id": "launch",
+      "label": "01 / LAUNCH COURT",
+      "position": [
+        -40,
+        0,
+        -40
+      ],
+      "domes": [
+        "DOME_11",
+        "DOME_12",
+        "DOME_21",
+        "DOME_22"
+      ],
+      "description": "ARC-01 space catapult, packed collector and drilling support."
+    },
+    {
+      "id": "fabrication",
+      "label": "02 / FABRICATION COURT",
+      "position": [
+        40,
+        0,
+        -40
+      ],
+      "domes": [
+        "DOME_12",
+        "DOME_13",
+        "DOME_22",
+        "DOME_23"
+      ],
+      "description": "Missile factory, robotic assembly line and MÖRK service garage."
+    },
+    {
+      "id": "solar",
+      "label": "03 / SOLAR SERVICES",
+      "position": [
+        -40,
+        0,
+        40
+      ],
+      "domes": [
+        "DOME_21",
+        "DOME_22",
+        "DOME_31",
+        "DOME_32"
+      ],
+      "description": "Solar power complex, heliostats, solar crucible and resource drill."
+    },
+    {
+      "id": "cargo",
+      "label": "04 / CARGO COURT",
+      "position": [
+        40,
+        0,
+        40
+      ],
+      "domes": [
+        "DOME_22",
+        "DOME_23",
+        "DOME_32",
+        "DOME_33"
+      ],
+      "description": "Hauler, armored containers and reusable ore cassettes."
+    }
+  ],
+  "references": {
+    "catapult": {
+      "label": "ARC-01 space catapult",
+      "files": [
+        "../orbital-launcher/lod0/launcher_d0_lod0.glb",
+        "../orbital-launcher/lod1/launcher_d0_lod1.glb",
+        "../orbital-launcher/lod2/launcher_d0_lod2.glb"
+      ],
+      "plot": [
+        15,
+        58
+      ]
+    },
+    "collector": {
+      "label": "SEED packed collector",
+      "files": [
+        "../orbital-launcher/lod0/satellite_d0_lod0.glb",
+        "../orbital-launcher/lod1/satellite_d0_lod1.glb",
+        "../orbital-launcher/lod2/satellite_d0_lod2.glb"
+      ],
+      "plot": [
+        5.4,
+        5
+      ]
+    },
+    "factory": {
+      "label": "Missile factory",
+      "files": [
+        "../missile-factory/missile_factory_d0_lod0.glb",
+        "../missile-factory/missile_factory_d0_lod1.glb",
+        "../missile-factory/missile_factory_d0_lod2.glb"
+      ],
+      "plot": [
+        20,
+        10
+      ]
+    },
+    "assembly": {
+      "label": "Robotic assembly line",
+      "files": [
+        "../assembly-line/robotic_assembly_line_d0_lod1.glb",
+        "../assembly-line/robotic_assembly_line_d0_lod1.glb",
+        "../assembly-line/robotic_assembly_line_d0_lod2.glb"
+      ],
+      "plot": [
+        20,
+        32
+      ],
+      "note": "Game tier retained for contextual machinery even in detailed city view."
+    },
+    "garage": {
+      "label": "MÖRK customization garage",
+      "files": [
+        "../mork-garage/lod0/mork_garage_d0_lod0.glb",
+        "../mork-garage/lod1/mork_garage_d0_lod1.glb",
+        "../mork-garage/lod2/mork_garage_d0_lod2.glb"
+      ],
+      "plot": [
+        12,
+        18
+      ]
+    },
+    "solar": {
+      "label": "Solar power complex",
+      "files": [
+        "../solar-power/lod1/solar_power_complex_d0.glb",
+        "../solar-power/lod1/solar_power_complex_d0.glb",
+        "../solar-power/lod2/solar_power_complex_d0.glb"
+      ],
+      "plot": [
+        24,
+        24
+      ],
+      "note": "Game tier retained in detailed city view; original high-detail source remains untouched."
+    },
+    "drill": {
+      "label": "drill",
+      "files": [
+        "../settlement-industry/lod0/drill_d0_lod0.glb",
+        "../settlement-industry/lod1/drill_d0_lod1.glb",
+        "../settlement-industry/lod2/drill_d0_lod2.glb"
+      ],
+      "plot": [
+        7,
+        6
+      ]
+    },
+    "hauler": {
+      "label": "hauler",
+      "files": [
+        "../settlement-industry/lod0/hauler_d0_lod0.glb",
+        "../settlement-industry/lod1/hauler_d0_lod1.glb",
+        "../settlement-industry/lod2/hauler_d0_lod2.glb"
+      ],
+      "plot": [
+        4.4,
+        12
+      ]
+    },
+    "mirror": {
+      "label": "mirror",
+      "files": [
+        "../settlement-industry/lod0/mirror_d0_lod0.glb",
+        "../settlement-industry/lod1/mirror_d0_lod1.glb",
+        "../settlement-industry/lod2/mirror_d0_lod2.glb"
+      ],
+      "plot": [
+        3.4,
+        3.4
+      ]
+    },
+    "furnace": {
+      "label": "furnace",
+      "files": [
+        "../settlement-industry/lod0/furnace_d0_lod0.glb",
+        "../settlement-industry/lod1/furnace_d0_lod1.glb",
+        "../settlement-industry/lod2/furnace_d0_lod2.glb"
+      ],
+      "plot": [
+        4,
+        4
+      ]
+    },
+    "cassette": {
+      "label": "cassette",
+      "files": [
+        "../settlement-industry/lod0/cassette_d0_lod0.glb",
+        "../settlement-industry/lod1/cassette_d0_lod1.glb",
+        "../settlement-industry/lod2/cassette_d0_lod2.glb"
+      ],
+      "plot": [
+        1.8,
+        2.4
+      ]
+    },
+    "container": {
+      "label": "Armored cargo container",
+      "files": [
+        "../warehouse-props/armored_container_d0.glb",
+        "../warehouse-props/armored_container_d0.glb",
+        "../warehouse-props/armored_container_d0.glb"
+      ],
+      "plot": [
+        5.4,
+        3.2
+      ],
+      "note": "Existing single-tier asset; reused unchanged in every city tier."
+    },
+    "mork": {
+      "label": "MÖRK patrol",
+      "files": [
+        "../hover-tank/mork_hover_tank_low_d0.glb",
+        "../hover-tank/mork_hover_tank_low_d0.glb",
+        "../hover-tank/mork_hover_tank_d0_lod2.glb"
+      ],
+      "plot": [
+        18,
+        18
+      ],
+      "note": "Articulated game tank for motion; static proxy for distance."
+    },
+    "sentry": {
+      "label": "Railgun T3",
+      "files": [
+        "../sentries/lod0/railgun_t3_d0.glb",
+        "../sentries/lod1/railgun_t3_d0.glb",
+        "../sentries/lod2/railgun_t3_d0.glb"
+      ],
+      "plot": [
+        2,
+        7
+      ]
+    }
+  },
+  "reference_files": {
+    "../orbital-launcher/lod0/launcher_d0_lod0.glb": {
+      "sha256": "ea5ea9a5970a48d4b56f08b4033c059a78549aab7ef99ffc6246cb2df4ab6483",
+      "bytes": 711516,
+      "triangles": 11784,
+      "draw_calls": 7,
+      "bounds": {
+        "min": [
+          -6.550000190734863,
+          -1.1920929132713809e-8,
+          -28.200000762939453
+        ],
+        "max": [
+          6.550000190734863,
+          26.996252059936523,
+          18.033288955688477
+        ]
+      }
+    },
+    "../orbital-launcher/lod1/launcher_d0_lod1.glb": {
+      "sha256": "f5bc4413be82ab5fb6ab9dd028d5a03f4015be62636694877f7ed2f219f49f22",
+      "bytes": 342756,
+      "triangles": 5768,
+      "draw_calls": 7,
+      "bounds": {
+        "min": [
+          -6.550000190734863,
+          -1.1920929132713809e-8,
+          -28.200000762939453
+        ],
+        "max": [
+          6.550000190734863,
+          27.01864242553711,
+          18.033288955688477
+        ]
+      }
+    },
+    "../orbital-launcher/lod2/launcher_d0_lod2.glb": {
+      "sha256": "a6f12fb0abd3b8282c29c99a350cc89dad27e0c6b74aca14335edd4850bd29fc",
+      "bytes": 165440,
+      "triangles": 2952,
+      "draw_calls": 1,
+      "bounds": {
+        "min": [
+          -6.550000190734863,
+          -1.1920929132713809e-8,
+          -28.200000762939453
+        ],
+        "max": [
+          6.550000190734863,
+          27.01864242553711,
+          18.033288955688477
+        ]
+      }
+    },
+    "../orbital-launcher/lod0/satellite_d0_lod0.glb": {
+      "sha256": "65e197a714a60ec2c41afc52d3a6552cee809f97e836bc7651cf7fddac8b88ed",
+      "bytes": 82368,
+      "triangles": 1824,
+      "draw_calls": 8,
+      "bounds": {
+        "min": [
+          -1.2384163373745751,
+          -0.0050000226205419995,
+          -1.08
+        ],
+        "max": [
+          1.2384163373745751,
+          2.1450000172561237,
+          1.9144999980926514
+        ]
+      }
+    },
+    "../orbital-launcher/lod1/satellite_d0_lod1.glb": {
+      "sha256": "f77bb59f7e45a7f4e00813a264995c87d6fa660a40980f28f336ead217139898",
+      "bytes": 55676,
+      "triangles": 1128,
+      "draw_calls": 8,
+      "bounds": {
+        "min": [
+          -1.2384163373745751,
+          -0.0050000226205419995,
+          -1.08
+        ],
+        "max": [
+          1.2384163373745751,
+          2.1450000172561237,
+          1.9144999980926514
+        ]
+      }
+    },
+    "../orbital-launcher/lod2/satellite_d0_lod2.glb": {
+      "sha256": "c266cbb363def703a9f0e8e6dcdd4ff34300d231782245ac785981463e6ffbd3",
+      "bytes": 39548,
+      "triangles": 840,
+      "draw_calls": 1,
+      "bounds": {
+        "min": [
+          -1.1570099592208862,
+          -1.3877787807814457e-17,
+          -1.0549999475479126
+        ],
+        "max": [
+          1.1570099592208862,
+          2.140000104904175,
+          1.9144999980926514
+        ]
+      }
+    },
+    "../missile-factory/missile_factory_d0_lod0.glb": {
+      "sha256": "616aa97f147f219d64b27b4a5b6ac79310baf4c0d75bbcc9c8701e832fa86195",
+      "bytes": 421688,
+      "triangles": 16904,
+      "draw_calls": 117,
+      "bounds": {
+        "min": [
+          -9.5,
+          2.6822091214739885e-9,
+          -4.300000190734863
+        ],
+        "max": [
+          9.5,
+          3.9100000858306885,
+          4.300000190734863
+        ]
+      }
+    },
+    "../missile-factory/missile_factory_d0_lod1.glb": {
+      "sha256": "fb284595a667bb53e744005e9f975d0c2810bf87807e80f7b316596630593bbd",
+      "bytes": 385852,
+      "triangles": 5092,
+      "draw_calls": 5,
+      "bounds": {
+        "min": [
+          -9.5,
+          2.6822091214739885e-9,
+          -4.300000190734863
+        ],
+        "max": [
+          9.5,
+          3.9100000858306885,
+          4.300000190734863
+        ]
+      }
+    },
+    "../missile-factory/missile_factory_d0_lod2.glb": {
+      "sha256": "851888b90f2da101c8443f742dc39ece1d02753a13e154c095ff8343f7387d02",
+      "bytes": 233224,
+      "triangles": 2988,
+      "draw_calls": 1,
+      "bounds": {
+        "min": [
+          -9.5,
+          2.6822091214739885e-9,
+          -4.300000190734863
+        ],
+        "max": [
+          9.5,
+          3.9100000858306885,
+          4.300000190734863
+        ]
+      }
+    },
+    "../assembly-line/robotic_assembly_line_d0_lod1.glb": {
+      "sha256": "9fe06af80dcdcec1ab83dd16f6446aa92d4d478ca47079f994dbbb1f30fb619c",
+      "bytes": 392648,
+      "triangles": 5186,
+      "draw_calls": 3,
+      "bounds": {
+        "min": [
+          -8.994728088378906,
+          -0.27239230275154114,
+          -13.994728088378906
+        ],
+        "max": [
+          8.992392539978027,
+          4.940000057220459,
+          14.021000862121582
+        ]
+      }
+    },
+    "../assembly-line/robotic_assembly_line_d0_lod2.glb": {
+      "sha256": "595157925ddcd5d4b6ee133f8248e79610b5271ba8413ff50a7b6a1eb4a06626",
+      "bytes": 81196,
+      "triangles": 2932,
+      "draw_calls": 1,
+      "bounds": {
+        "min": [
+          -8.994728088378906,
+          -0.2747279405593872,
+          -13.994728088378906
+        ],
+        "max": [
+          8.992392539978027,
+          4.940000057220459,
+          14.021000862121582
+        ]
+      }
+    },
+    "../mork-garage/lod0/mork_garage_d0_lod0.glb": {
+      "sha256": "198b1f3205823a04b099045e5128feee0766a8848e6b818cc4495b098ca96e7e",
+      "bytes": 226760,
+      "triangles": 2688,
+      "draw_calls": 7,
+      "bounds": {
+        "min": [
+          -6.070000171661377,
+          -5.9604643443123e-10,
+          -9.005000114440918
+        ],
+        "max": [
+          6.070000171661377,
+          4.0699999994039535,
+          9
+        ]
+      }
+    },
+    "../mork-garage/lod1/mork_garage_d0_lod1.glb": {
+      "sha256": "dde77c48d8d8b6ae0ff59279b685a3f2a2913617314a059910afa9193c568576",
+      "bytes": 150416,
+      "triangles": 1704,
+      "draw_calls": 7,
+      "bounds": {
+        "min": [
+          -6.070000171661377,
+          -5.9604643443123e-10,
+          -9.005000114440918
+        ],
+        "max": [
+          6.070000171661377,
+          4.0699999994039535,
+          9
+        ]
+      }
+    },
+    "../mork-garage/lod2/mork_garage_d0_lod2.glb": {
+      "sha256": "2508d4035a06b749b958bcef7afa4f2bd35c6bfdced12a9714698f241e2fa710",
+      "bytes": 129916,
+      "triangles": 1536,
+      "draw_calls": 1,
+      "bounds": {
+        "min": [
+          -6.070000171661377,
+          -5.9604643443123e-10,
+          -9.005000114440918
+        ],
+        "max": [
+          6.070000171661377,
+          4.0617265701293945,
+          9
+        ]
+      }
+    },
+    "../solar-power/lod1/solar_power_complex_d0.glb": {
+      "sha256": "465c19fd6394047dde9d77441714799972e887fed74199a220ab32741b6b1ebd",
+      "bytes": 339812,
+      "triangles": 3856,
+      "draw_calls": 7,
+      "bounds": {
+        "min": [
+          -8.442497968673706,
+          -0.23999999463558197,
+          -6.548820350226249
+        ],
+        "max": [
+          8.442497968673706,
+          2.6199998408555984,
+          10.000000029802322
+        ]
+      }
+    },
+    "../solar-power/lod2/solar_power_complex_d0.glb": {
+      "sha256": "91a82dcec88a7ade53d884e718d0f2bfee61c961375179a0f82dac71aa27de34",
+      "bytes": 237088,
+      "triangles": 2752,
+      "draw_calls": 1,
+      "bounds": {
+        "min": [
+          -8.395000219345093,
+          -0.23999999463558197,
+          -6.391017884016037
+        ],
+        "max": [
+          8.395000457763672,
+          2.6199998408555984,
+          10.000000029802322
+        ]
+      }
+    },
+    "../settlement-industry/lod0/drill_d0_lod0.glb": {
+      "sha256": "105f18f0b5e7a33a909daac57be3097510c60a5b8fa0c00b4b7bf37efebbf89e",
+      "bytes": 187308,
+      "triangles": 4944,
+      "draw_calls": 8,
+      "bounds": {
+        "min": [
+          -2.624999964237213,
+          -8.940696516468449e-10,
+          -2.271954614560265
+        ],
+        "max": [
+          3.000000066757202,
+          6.4099998283386235,
+          2.271954614560264
+        ]
+      }
+    },
+    "../settlement-industry/lod1/drill_d0_lod1.glb": {
+      "sha256": "bf90ee81ec77c12f9f4c11e01c1b08b10573e3ba90a60af5694567662dcce1a4",
+      "bytes": 95064,
+      "triangles": 2380,
+      "draw_calls": 8,
+      "bounds": {
+        "min": [
+          -2.6249999940395354,
+          -8.940696516468449e-10,
+          -2.271954614560265
+        ],
+        "max": [
+          3.000000066757202,
+          6.4099998283386235,
+          2.271954614560264
+        ]
+      }
+    },
+    "../settlement-industry/lod2/drill_d0_lod2.glb": {
+      "sha256": "9cd19eb320b9af8d1049957d162b5affdf6b1850df9a6bbca5aaea3bc4bb0b89",
+      "bytes": 58568,
+      "triangles": 1372,
+      "draw_calls": 1,
+      "bounds": {
+        "min": [
+          -2.625,
+          -8.940696516468449e-10,
+          -2.2719545364379883
+        ],
+        "max": [
+          3,
+          6.409999847412109,
+          2.2719545364379883
+        ]
+      }
+    },
+    "../settlement-industry/lod0/hauler_d0_lod0.glb": {
+      "sha256": "d18d902a33b52637d64e340594b049efef96895d24363ed174d3ea23b8ccb5dd",
+      "bytes": 363376,
+      "triangles": 7728,
+      "draw_calls": 10,
+      "bounds": {
+        "min": [
+          -1.965000033378601,
+          1.3411045607369942e-9,
+          -5.8250000953674315
+        ],
+        "max": [
+          1.965000033378601,
+          3.089999977350235,
+          3.9600000381469727
+        ]
+      }
+    },
+    "../settlement-industry/lod1/hauler_d0_lod1.glb": {
+      "sha256": "202b4e1936ab8e8471035b853950366c0bdd58ca7591cce3d414757b4414571d",
+      "bytes": 204012,
+      "triangles": 4284,
+      "draw_calls": 10,
+      "bounds": {
+        "min": [
+          -1.965000033378601,
+          1.3411045607369942e-9,
+          -5.8250000953674315
+        ],
+        "max": [
+          1.965000033378601,
+          3.0900000071525575,
+          3.9600000381469727
+        ]
+      }
+    },
+    "../settlement-industry/lod2/hauler_d0_lod2.glb": {
+      "sha256": "d46543fe7a9b3408accd77632b344ba391bca999dcb2c2755644f648295584ca",
+      "bytes": 73960,
+      "triangles": 1552,
+      "draw_calls": 1,
+      "bounds": {
+        "min": [
+          -1.965000033378601,
+          -1.907348590179936e-8,
+          -5.825000286102295
+        ],
+        "max": [
+          1.965000033378601,
+          3.0899999141693115,
+          3.9600000381469727
+        ]
+      }
+    },
+    "../settlement-industry/lod0/mirror_d0_lod0.glb": {
+      "sha256": "0e618bdfe67259b312b33661aa083be056170df540c28df5ddb262ebedb4e640",
+      "bytes": 32140,
+      "triangles": 648,
+      "draw_calls": 3,
+      "bounds": {
+        "min": [
+          -1.3423393964767456,
+          -2.98023217215615e-10,
+          -1.1808444642848217
+        ],
+        "max": [
+          1.3423393964767456,
+          3.484765507187264,
+          1.0049099382098898
+        ]
+      }
+    },
+    "../settlement-industry/lod1/mirror_d0_lod1.glb": {
+      "sha256": "743f9b99dc4571bcb3b9f35f0ebb657bc1cb690bf853cc2d91355639acda1762",
+      "bytes": 18036,
+      "triangles": 296,
+      "draw_calls": 3,
+      "bounds": {
+        "min": [
+          -1.3423393964767456,
+          -2.98023217215615e-10,
+          -1.1808444642848217
+        ],
+        "max": [
+          1.3423393964767456,
+          3.465702135099967,
+          0.979833298152267
+        ]
+      }
+    },
+    "../settlement-industry/lod2/mirror_d0_lod2.glb": {
+      "sha256": "45d2f0157cec02e8fa59d492d4ab8445b453120b304f3bdcbbe6adaf80fd024b",
+      "bytes": 10652,
+      "triangles": 192,
+      "draw_calls": 1,
+      "bounds": {
+        "min": [
+          -1.3423393964767456,
+          -2.98023217215615e-10,
+          -0.9798333048820496
+        ],
+        "max": [
+          1.3423393964767456,
+          3.4657020568847656,
+          0.9798333048820496
+        ]
+      }
+    },
+    "../settlement-industry/lod0/furnace_d0_lod0.glb": {
+      "sha256": "2c1e1b69b277143dbdc239e833c6318072d2d92098273c49f4004203c81bed35",
+      "bytes": 73232,
+      "triangles": 1536,
+      "draw_calls": 2,
+      "bounds": {
+        "min": [
+          -1.7799999713897705,
+          -5.9604645663569045e-9,
+          -1.5
+        ],
+        "max": [
+          1.7799999713897705,
+          3.8533434867858887,
+          1.5
+        ]
+      }
+    },
+    "../settlement-industry/lod1/furnace_d0_lod1.glb": {
+      "sha256": "a55bc348113abaae552d3d6c68b856e132f79aa6920c8071dfd4fc67275cbed7",
+      "bytes": 42100,
+      "triangles": 800,
+      "draw_calls": 2,
+      "bounds": {
+        "min": [
+          -1.7799999713897705,
+          -5.9604645663569045e-9,
+          -1.5
+        ],
+        "max": [
+          1.7799999713897705,
+          3.8533434867858887,
+          1.5
+        ]
+      }
+    },
+    "../settlement-industry/lod2/furnace_d0_lod2.glb": {
+      "sha256": "ef3f62aa8340c7839fc4b6b0b0beb36dbc799b09f6f2259df6b93f981e11affa",
+      "bytes": 22944,
+      "triangles": 432,
+      "draw_calls": 1,
+      "bounds": {
+        "min": [
+          -1.7799999713897705,
+          -5.9604645663569045e-9,
+          -1.5
+        ],
+        "max": [
+          1.7799999713897705,
+          3.8533434867858887,
+          1.5
+        ]
+      }
+    },
+    "../settlement-industry/lod0/cassette_d0_lod0.glb": {
+      "sha256": "c5eac73ed5eac2caed7a4fefb500a013683384f38f02475d38b1c4576f1afd57",
+      "bytes": 34032,
+      "triangles": 616,
+      "draw_calls": 2,
+      "bounds": {
+        "min": [
+          -0.824999988079071,
+          -3.5762786065873797e-9,
+          -1.100000023841858
+        ],
+        "max": [
+          0.824999988079071,
+          1.3524999618530273,
+          1.100000023841858
+        ]
+      }
+    },
+    "../settlement-industry/lod1/cassette_d0_lod1.glb": {
+      "sha256": "3c0243246f2aebdb44c67668e7dc74b7b82f7c53d265fa03c4fe20d352a077f5",
+      "bytes": 14756,
+      "triangles": 204,
+      "draw_calls": 2,
+      "bounds": {
+        "min": [
+          -0.824999988079071,
+          -3.5762786065873797e-9,
+          -1.100000023841858
+        ],
+        "max": [
+          0.824999988079071,
+          1.3524999618530273,
+          1.100000023841858
+        ]
+      }
+    },
+    "../settlement-industry/lod2/cassette_d0_lod2.glb": {
+      "sha256": "3ba218999196f4ddfac3efde85c5d25c837e828b51a3e8bc0901bb04694d51fb",
+      "bytes": 13944,
+      "triangles": 204,
+      "draw_calls": 1,
+      "bounds": {
+        "min": [
+          -0.824999988079071,
+          -3.5762786065873797e-9,
+          -1.100000023841858
+        ],
+        "max": [
+          0.824999988079071,
+          1.3524999618530273,
+          1.100000023841858
+        ]
+      }
+    },
+    "../warehouse-props/armored_container_d0.glb": {
+      "sha256": "e6468439f8a904e8789f4b23867879f4223e1d1d8f4cf3914c98a39fd75876c2",
+      "bytes": 268012,
+      "triangles": 4912,
+      "draw_calls": 22,
+      "bounds": {
+        "min": [
+          -2.5,
+          0,
+          -1.3049999810755253
+        ],
+        "max": [
+          2.5,
+          2.5,
+          1.219999946653843
+        ]
+      }
+    },
+    "../hover-tank/mork_hover_tank_low_d0.glb": {
+      "sha256": "213fc574e953bb71ca87f7fb86c511280b552646407da4d173d39689ad6d300c",
+      "bytes": 459080,
+      "triangles": 6742,
+      "draw_calls": 69,
+      "bounds": {
+        "min": [
+          -2.909192383289337,
+          0.00544419139623642,
+          -4.626236915588379
+        ],
+        "max": [
+          2.9099475741386414,
+          3.0159517526626587,
+          8.64112377539277
+        ]
+      }
+    },
+    "../hover-tank/mork_hover_tank_d0_lod2.glb": {
+      "sha256": "24795982205a78acd53cfa716303e89ea874b063c16779713a28eeda00498935",
+      "bytes": 222796,
+      "triangles": 1706,
+      "draw_calls": 1,
+      "bounds": {
+        "min": [
+          -2.9091923236846924,
+          0.01969178020954132,
+          -4.626236915588379
+        ],
+        "max": [
+          2.909947633743286,
+          2.8382956981658936,
+          8.64112377166748
+        ]
+      }
+    },
+    "../sentries/lod0/railgun_t3_d0.glb": {
+      "sha256": "36a898b4104cd380c3367f88cfdddbe807a74645569e2ee2273a4e68855c529b",
+      "bytes": 215872,
+      "triangles": 8060,
+      "draw_calls": 4,
+      "bounds": {
+        "min": [
+          -0.800000011920929,
+          2.6822091214739885e-9,
+          -1.0299999713897705
+        ],
+        "max": [
+          0.800000011920929,
+          1.3799999940395355,
+          3.0999999046325684
+        ]
+      }
+    },
+    "../sentries/lod1/railgun_t3_d0.glb": {
+      "sha256": "ee3bcf50556e47b645ab835e751e56c471819f6d9af7f1aa95c66950dd84546e",
+      "bytes": 51120,
+      "triangles": 572,
+      "draw_calls": 4,
+      "bounds": {
+        "min": [
+          -0.800000011920929,
+          2.6822091214739885e-9,
+          -1.0299999713897705
+        ],
+        "max": [
+          0.800000011920929,
+          1.3799999940395355,
+          3.0999999046325684
+        ]
+      }
+    },
+    "../sentries/lod2/railgun_t3_d0.glb": {
+      "sha256": "2c10c85f4c21e6c703183c5a1881f71d16944ced12749de893a2a198c0a24dbb",
+      "bytes": 48524,
+      "triangles": 560,
+      "draw_calls": 1,
+      "bounds": {
+        "min": [
+          -0.800000011920929,
+          2.6822091214739885e-9,
+          -1.0299999713897705
+        ],
+        "max": [
+          0.800000011920929,
+          1.3799999952316284,
+          3.0999999046325684
+        ]
+      }
+    }
+  },
+  "props": [
+    {
+      "id": "CATAPULT_01",
+      "ref": "catapult",
+      "position": [
+        -57,
+        0,
+        -40
+      ],
+      "yaw": 0,
+      "court": "launch"
+    },
+    {
+      "id": "COLLECTOR_01",
+      "ref": "collector",
+      "position": [
+        -22,
+        0,
+        -57
+      ],
+      "yaw": 0,
+      "court": "launch"
+    },
+    {
+      "id": "LAUNCH_DRILL",
+      "ref": "drill",
+      "position": [
+        -22,
+        0,
+        -22
+      ],
+      "yaw": 0,
+      "court": "launch"
+    },
+    {
+      "id": "FACTORY_01",
+      "ref": "factory",
+      "position": [
+        55,
+        0,
+        -58
+      ],
+      "yaw": 0,
+      "court": "fabrication"
+    },
+    {
+      "id": "ASSEMBLY_01",
+      "ref": "assembly",
+      "position": [
+        55,
+        0.28,
+        -18
+      ],
+      "yaw": 0,
+      "court": "fabrication"
+    },
+    {
+      "id": "GARAGE_01",
+      "ref": "garage",
+      "position": [
+        22,
+        0,
+        -58
+      ],
+      "yaw": 0,
+      "court": "fabrication"
+    },
+    {
+      "id": "SOLAR_01",
+      "ref": "solar",
+      "position": [
+        -57,
+        0.25,
+        54
+      ],
+      "yaw": 0,
+      "court": "solar"
+    },
+    {
+      "id": "SOLAR_DRILL",
+      "ref": "drill",
+      "position": [
+        -60,
+        0,
+        23
+      ],
+      "yaw": 0,
+      "court": "solar"
+    },
+    {
+      "id": "CRUCIBLE_01",
+      "ref": "furnace",
+      "position": [
+        -21,
+        0,
+        57
+      ],
+      "yaw": 0,
+      "court": "solar"
+    },
+    {
+      "id": "HELIOSTAT_01",
+      "ref": "mirror",
+      "position": [
+        -27,
+        0,
+        23
+      ],
+      "yaw": 0,
+      "court": "solar"
+    },
+    {
+      "id": "HELIOSTAT_02",
+      "ref": "mirror",
+      "position": [
+        -22,
+        0,
+        23
+      ],
+      "yaw": 0,
+      "court": "solar"
+    },
+    {
+      "id": "HELIOSTAT_03",
+      "ref": "mirror",
+      "position": [
+        -17,
+        0,
+        23
+      ],
+      "yaw": 0,
+      "court": "solar"
+    },
+    {
+      "id": "HELIOSTAT_04",
+      "ref": "mirror",
+      "position": [
+        -12,
+        0,
+        23
+      ],
+      "yaw": 0,
+      "court": "solar"
+    },
+    {
+      "id": "HELIOSTAT_05",
+      "ref": "mirror",
+      "position": [
+        -27,
+        0,
+        30
+      ],
+      "yaw": 0,
+      "court": "solar"
+    },
+    {
+      "id": "HELIOSTAT_06",
+      "ref": "mirror",
+      "position": [
+        -22,
+        0,
+        30
+      ],
+      "yaw": 0,
+      "court": "solar"
+    },
+    {
+      "id": "HELIOSTAT_07",
+      "ref": "mirror",
+      "position": [
+        -17,
+        0,
+        30
+      ],
+      "yaw": 0,
+      "court": "solar"
+    },
+    {
+      "id": "HAULER_01",
+      "ref": "hauler",
+      "position": [
+        23,
+        0,
+        57
+      ],
+      "yaw": 0,
+      "court": "cargo"
+    },
+    {
+      "id": "CONTAINER_01",
+      "ref": "container",
+      "position": [
+        55,
+        0,
+        57
+      ],
+      "yaw": 0,
+      "court": "cargo"
+    },
+    {
+      "id": "CONTAINER_02",
+      "ref": "container",
+      "position": [
+        63,
+        0,
+        57
+      ],
+      "yaw": 0,
+      "court": "cargo"
+    },
+    {
+      "id": "CONTAINER_03",
+      "ref": "container",
+      "position": [
+        55,
+        0,
+        65
+      ],
+      "yaw": 0,
+      "court": "cargo"
+    },
+    {
+      "id": "ORE_01",
+      "ref": "cassette",
+      "position": [
+        52,
+        0,
+        23
+      ],
+      "yaw": 0,
+      "court": "cargo"
+    },
+    {
+      "id": "ORE_02",
+      "ref": "cassette",
+      "position": [
+        56,
+        0,
+        23
+      ],
+      "yaw": 0,
+      "court": "cargo"
+    },
+    {
+      "id": "ORE_03",
+      "ref": "cassette",
+      "position": [
+        60,
+        0,
+        23
+      ],
+      "yaw": 0,
+      "court": "cargo"
+    },
+    {
+      "id": "ORE_04",
+      "ref": "cassette",
+      "position": [
+        64,
+        0,
+        23
+      ],
+      "yaw": 0,
+      "court": "cargo"
+    },
+    {
+      "id": "ORE_05",
+      "ref": "cassette",
+      "position": [
+        52,
+        0,
+        27
+      ],
+      "yaw": 0,
+      "court": "cargo"
+    },
+    {
+      "id": "ORE_06",
+      "ref": "cassette",
+      "position": [
+        56,
+        0,
+        27
+      ],
+      "yaw": 0,
+      "court": "cargo"
+    },
+    {
+      "id": "ORE_07",
+      "ref": "cassette",
+      "position": [
+        60,
+        0,
+        27
+      ],
+      "yaw": 0,
+      "court": "cargo"
+    },
+    {
+      "id": "ORE_08",
+      "ref": "cassette",
+      "position": [
+        64,
+        0,
+        27
+      ],
+      "yaw": 0,
+      "court": "cargo"
+    }
+  ],
+  "patrol": {
+    "ref": "mork",
+    "x": -40,
+    "z_min": -98,
+    "z_max": 98,
+    "speed_m_s": 4,
+    "loop": "ping-pong; vehicle reverses translation at endpoints without turning its hull",
+    "lane_width_m": 10
+  },
+  "parked_tank": {
+    "ref": "mork",
+    "file": "../hover-tank/mork_hover_tank_d0_lod2.glb",
+    "position": [
+      22,
+      0.31,
+      -58
+    ],
+    "note": "Static distance tank in garage; does not animate."
+  },
+  "runtime": {
+    "default_lod": 1,
+    "distance_static": true,
+    "external_machines": "Parked rest poses; no launch, manufacturing, pickup or mirror tracking cycles are applied.",
+    "shared_geometry": "Repeated file references share loaded geometry and material instances. Per-dome shell materials are cloned for inspection; no GPU instancing claim.",
+    "defense": "Prior two-dome report does not certify this layout. The viewer can trace the selected mount against the loaded city meshes; this is a per-pose preview only."
+  }
+}

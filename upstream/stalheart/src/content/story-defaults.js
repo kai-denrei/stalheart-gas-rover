@@ -1,0 +1,292 @@
+// Story planet, clearing, terrace and arrival tunables. Pure data; the
+// domain modules take these as explicit configuration.
+export const STORY_RECIPE = Object.freeze({
+  seed: 7, points: 16000, k: 12, relaxIters: 80, pullRate: 0.25,
+  rooms: 384, roomRadius: 4, extraCorridors: 192, corridorWidth: 1,
+  metresPerCell: 10, wallMetres: 4,
+});
+
+export const STORY_CLEARING = Object.freeze({
+  radiusMetres: 150,   // every cell inside is open floor
+  padRadius: 46,       // the level-0 plane the pad tiles sit on
+  step: 2,             // terrace step, metres
+  blend: 20,           // metres over which the cut fades back to the sphere
+  mouthBand: 1.5,      // cells outside the clearing rim that count as a mouth
+  mouthMaxCells: 2,    // the open mouth must fit the armored gate
+  mouthReachShare: 0.5, // the open mouth must lead to at least half of the reachable world
+  terraces: false,     // islands level their own plots; the lattice stays natural
+  tileMetres: 4,       // Fortification foundation tile
+  padTiles: 16,        // 16 x 16 tiles = 64 x 64 m
+});
+
+// Sanity record for the pinned recipe; test/story-planet.mjs asserts it.
+export const STORY_SANITY = Object.freeze({ cells: 71314, heart: 8123, cellSide: 0.013274480493795838 });
+
+export const LANDING_DEFAULTS = Object.freeze({
+  orbit: 4, descent: 8, startAltitude: 900, deployAltitude: 40,
+  legsDeploy: 2.4, shock: 2, settle: 2, door: 1.8, isao: 9, isaoHold: 3.5, dustSeconds: 1.2,
+});
+
+// The SH02 as authored (assets/models/story/sh_rocket.glb, metres before STORY_SCALE.rocket): the engine bells over the touchdown
+// plane, the cargo well's floor and its door rim. The lab's landing and the game's arrival hang plumes and lift Isao from these.
+export const SH02_WELL = Object.freeze({ bell: 2.0, floor: 19.0, rim: 23.5 });
+
+// THE ARRIVAL IN THE GAME (owner, 2026-09-25, from a playtest of the live build: "bring back the landing, short and sweet but
+// showing the landing. Isao comes out, close up on his face; he's the narrator"; about eight seconds, at every story start, any key
+// or click skips it). src/domain/arrival-shot.js is its clock, src/fx/arrival.js its picture. `landing` is the lab's timeline
+// (src/domain/landing-sequence.js) cut short: no orbit, a `descent` from `startAltitude` metres with the legs out before touchdown,
+// the door opening `shock` seconds after it while the authored shock and door clips play on (`shockClip`, `doorClip`), Isao
+// climbing `door` seconds into the door for `isao` seconds, then `isaoHold` seconds flying clear. `rail`: the camera, in metres
+// around the landing island (x and z along the ground, y up, +z toward the pole; src/core/rail.js). `isao`: his way out in the same
+// metres, from `from` up the well to `rim` (over the door rim), then an arc `arc` metres higher on the way to his hover height
+// `clear` metres toward the pole; `scale` of his game size while he climbs out (the game's Isao is a six metre drone, the SH02's
+// well is not). `talk`: the cut to his face through a `fov` lens, held over all three of his lines
+// (the lines are src/isaobriefs.js `brief`). `wait`: seconds the arrival waits
+// for the rocket, its salvage, the foundry and Isao to load before it gives up and lets the opening run without it.
+export const STORY_ARRIVAL = Object.freeze({
+  landing: Object.freeze({ orbit: 0, descent: 2.6, startAltitude: 150, deployAltitude: 134, legsDeploy: 2.4, shock: 0.4, shockClip: 2, settle: 0, door: 0.3, doorClip: 1.8, isao: 1.1, isaoHold: 0.9, dustSeconds: 1.2 }),
+  rail: Object.freeze([
+    Object.freeze({ t: 0, pos: [70, 12, 70], look: [0, 105, 0], fov: 42 }),
+    Object.freeze({ t: 2.6, pos: [48, 10, 48], look: [0, 15, 0] }),
+    Object.freeze({ t: 3.4, pos: [30, 26, 26], look: [0, 28, 0] }),
+    Object.freeze({ t: 4.4, pos: [24, 44, 18], look: [0, 37, 3] }),   // over the nose, looking down: the ground behind him as he comes out
+    Object.freeze({ t: 4.85, pos: [23, 44, 22], look: [0, 33, 18], fov: 36 }),   // the lens closes on him as he flies clear and the rocket leaves the frame before the cut
+    Object.freeze({ t: 5.3, pos: [17, 36, 24], look: [0, 20, 35], fov: 30 }),
+  ]),
+  isao: Object.freeze({ scale: 0.4, from: 15, rim: 39, arc: 4, clear: 35 }),
+  talk: Object.freeze({ fov: 20, brief: 'arrival_talk' }),
+  wait: 30,
+});
+
+// Story-only cues; the lab merges these with the tank pneumatics from the
+// shared manifest. Same budget fields as audiomanifest.js.
+export const STORY_SOUNDS = Object.freeze({
+  rocket_thrust: { file: 'assets/audio/rocket_thrust.mp3', bus: 'tank', gain: 0.9, maxVoices: 1, minInterval: 0, rateJitter: 0 },
+  gate_hydraulics: { file: 'assets/audio/gate_hydraulics.mp3', bus: 'ui', gain: 2, maxVoices: 1, minInterval: 0.5, rateJitter: 0.02 },
+  gate_slam: { file: 'assets/audio/gate_slam.mp3', bus: 'ui', gain: 0.8, maxVoices: 1, minInterval: 0.5, rateJitter: 0.03 },
+  // a lost lander's distress beacon, once per beacon (src/fx/site-beacons.js onPulse; scripts/synth-beacon-ping.sh)
+  beacon_ping: { file: 'assets/audio/beacon_ping.mp3', bus: 'ui', gain: 0.7, maxVoices: 2, minInterval: 0.4, rateJitter: 0.02 },
+  // the planet's wind in a quiet stretch (owner, 2026-10-04: "small ambient sound when there's quiet once in a while"; src/fx/ambient-gust.js)
+  ambient_gust: { file: 'assets/audio/ambient_gust.mp3', bus: 'ambient', gain: 1, maxVoices: 1, minInterval: 20, rateJitter: 0.08 },
+});
+
+// Six engines under the skirt, each with its own cadence, so the cluster
+// never flickers as one lamp.
+// UNDER THE SKIRT, NOT BESIDE IT (owner, 2026-09-13: some thrusters appeared outside the rocket). The hull is 2.1 m in radius; a plume
+// is a camera-facing sheet `width` wide centred `radius` off the axis, so radius + width / 2 has to stay inside the skirt
+export const PLUME_CLUSTER = Object.freeze([
+  { angle: 0, radius: 0.8, width: 2.4, height: 24, phase: 0.0, cadence: 11, depth: 0.14 },
+  { angle: 60, radius: 0.8, width: 2.1, height: 21, phase: 1.7, cadence: 13, depth: 0.2 },
+  { angle: 120, radius: 0.8, width: 2.3, height: 23, phase: 3.1, cadence: 9, depth: 0.16 },
+  { angle: 180, radius: 0.8, width: 2.4, height: 25, phase: 4.4, cadence: 12, depth: 0.12 },
+  { angle: 240, radius: 0.8, width: 2.1, height: 20, phase: 0.9, cadence: 15, depth: 0.22 },
+  { angle: 300, radius: 0.8, width: 2.3, height: 22, phase: 2.3, cadence: 10, depth: 0.18 },
+]);
+
+// Presentation scale. The SH02 is authored at 21.4 m; the story shows it
+// larger so a game-sized Isao reads small and clears the cargo well.
+// The story hull is 10 m long (the kit's MÖRK is authored at 13.28 m, so kit containers scale to match);
+// tankUnit is the game's unit scale per lattice cell that gives that length: 10 m / (10 m cells x 1.95 span x 0.75 base).
+export const STORY_SCALE = Object.freeze({ rocket: 1.5, isaoMetres: 1.8, tankMetres: 10, tankUnit: 0.684 });
+
+// The breach seen from orbit: the whole planet stays in frame through the ground opening and the first fodder emerging
+// dive: after the pre-roll the camera drops fast from orbit to a close view over the sinkhole (in cells above it, pulled toward the base by `back`),
+// in `diveSeconds`, and holds there while the fodder emerge
+// THE FIRST WAVE (owner, 2026-09-13): fifty weak ones in a single wave, all out of the sinkhole almost at once so it reads as a swarm, and
+// none of them can hurt the tank or the gate. every 0 spawns one a frame; each rises within `stagger` seconds, scattered `spread` cells across the crater
+// `pace` multiplies the swarm's march (src/enemyspec.js amoeba speed): the tutorial's fifty rise in a moment and then WALK, and the
+// player watched that walk for 28 s before the override (QA 2026-09-16). They surge instead; the pile is the beat, not the stroll.
+// THE SWARM IS ALREADY UP THE LANE (owner, 2026-10-14, the Pearl set the default: "the creatures are much slower now, so they should be closer
+// within range of the rotor when we take control"): when the sinkhole opened QUIET, unseen during the beacons' tour (STORY_BEATS.earlyBreach), the
+// fodder rises `headStart.hops` lane cells in from it toward the gate, as a column `headStart.depth` cells deep (the k-th body hops - k % depth
+// in), so the Rotor has them in reach as the tour ends (measured headless: 11.5 cells from the Rotor at the seat before, 4.9 with six hops; the
+// Pearl records walk a fifth of a cell a second, PEARL_PACE radii, so the gate is reached ~25 s into the seat, not ~50).
+// A breach the player watches open (the tremor and the dive shot) keeps its pile at the crater (src/domain/story-beats.js spawnTick)
+export const STORY_FODDER = Object.freeze({ type: 'ghost', total: 50, alive: 50, every: 0, harmless: true, spread: 0.8, stagger: 1.2, pace: 1.7, headStart: null });   // type: the lemon (PEARL_OF ghost: yellow; owner, 2026-10-16: 'let's make the first wave yellow-lemon, they are less crazy, slightly bigger target'; was the white amoeba)   // headStart off (owner, 2026-10-16: "they should come from the sinkhole"): every one climbs the lip; was { hops: 6, depth: 3 }
+// emergeHold: the orbit camera holds over the crater after the breach FX. The fifty are all up within `stagger` (1.2 s), so holding
+// six more seconds over a finished pile was watching, not reading: three is the pile seen and the camera released.
+// preRoll: the story's own orbit beat before the dive, overriding the shared breach preset's 1.6 (immutable, and the breach lab
+// shares it). The whole planet has already been in frame since the tremor: a second and a half more of it before the camera moves
+// is the purest dead time in the opening. The 1.4 s dive itself is untouched.
+export const STORY_BREACH = Object.freeze({ preRoll: 0.7, emergeHold: 3, tail: 1.8, diveSeconds: 1.4, height: 5, back: 4 });
+// WHERE A BODY COMES UP (owner, 2026-10-15: "when they emerge out of a sinkhole, they should emerge from the periphery a bit, right now they emerge
+// straight from the center, and it looks like they hover in the air"): a body rises `rim` of the crater's radius out from its centre (the crater's lip,
+// where the ground is) plus the spawn's own scatter beyond it, never over the hole (src/fx/enemy-step.js spawnOne)
+// `scatter`: the share of the spawn's own `spread` added beyond the rim; `settle`: seconds the record then takes to glide from where it rose onto its
+// cell path (a snap left its Pearl body a leash behind, and put back; a fast glide hurried the black tier past the motion audit's pop)
+// CRAWLING OUT, NOT HOVERING (owner, 2026-10-15: "it still looks uncanny how the enemies emerge straight up at the center, hovering, instead of
+// having the feeling that they're crawling out"): the rim offset held the body at the lip while its record started at the hole's CENTRE, and the
+// glide then pulled the body back over the hole as the offset decayed. Now a body rises on the half of the rim that faces its first exit
+// (`facing`: within that many radians either side of the way out, so its first steps lead away from the hole) and keeps its offset whole until
+// its record has walked past the rim; only then does it glide onto the path over `settle`. Only a body rising at its breach's own cell takes the
+// rim: one risen up the lane (`cell`: the head start, the canyon's column) scatters on its spread as before
+// `settle` 8 s (was 4): the glide now begins once the record is past the rim and walking at its full pace, and its decay rides on top of the walk;
+// at 4 s it hurried the black tier's transfer to 0.26-0.37 radii a frame (--pearl-story's motion audit, 5 pops), at 8 s the decay is ~1.7 m/s
+// NEVER OVER THE HOLE (owner, 2026-10-16, third round: "they should absolutely never be in the dark/black center area of the sinkhole, diegetically
+// they would fall down if there, so we need to represent them as emerging and climbing on the peripheries, maybe a separate fake animation of blob
+// emerging, and then we generate the actual rammable enemies already out and rammable"; and "the first batch of enemies seem to emerge out of the
+// ground rather than already being on their way"): at its breach's cell a record now STARTS `out` crater radii from the centre (past the lip, on
+// the exit-facing half as before), hidden under the ground for `climb` seconds while a blob of its tint crests the lip at `rim` and slides out to it
+// (src/fx/emerge-blob.js, src/domain/emerge-climb.js), then pops up whole over `pop` seconds and walks; nothing of it is ever drawn over the hole.
+// A body risen up the lane (the head start, the canyon's column) keeps its spread and the old 1.2 s rise.
+export const EMERGENCE = Object.freeze({ rim: 0.95, scatter: 0.5, settle: 8, facing: Math.PI / 2, out: 1.35, climb: 1.1, pop: 0.3 });
+// THE WALK LEANS ON THE HEART (owner, 2026-10-15: "all enemies must be a bit faster. And with a much stronger bias to head towards the base"):
+// at a cell a record strays onto any exit `stray` of the time (was 0.05) and otherwise takes an exit nearer the heart, `straight` of those times
+// the nearest of them (src/domain/impact-scare.js seekExits; src/fx/enemy-step.js)
+export const WALK_BIAS = Object.freeze({ stray: 0.02, straight: 0.6 });
+// THE SECOND FRONT (owner, 2026-09-16: "protect the other side of the base"): the sealed clearing mouth nearest +Z, at most
+// `maxCells` wide, collapses with up to `flank` rock cells beside it; back breaches open `hops` steps out from it on lanes at
+// least `margin` hops shorter through the back than through the gate. The collapse shot dives after `preRoll` and holds `hold` seconds at
+// `dive`: `height` cells up and `back` cells from the mouth toward the pole, negative = out over the rock, so the mouth sits in the
+// middle of the frame with the bays and the Stalheart beyond it (the swarm's way in)
+export const STORY_BACK_DOOR = Object.freeze({ maxCells: 2, reachShare: 0.5, flank: 4, hops: Object.freeze([25, 35]), margin: 20, preRoll: 0.3, hold: 3.5, dive: Object.freeze({ height: 3, back: -6, diveSeconds: 1.4 }) });
+
+// A day on the story planet: thirty seconds, eighteen of them daylight at the pole (owner, 2026-10-18: about eighty days in a forty-minute run; DAY 42 is a party, src/content/day-42.js), the sun's orbit leaning 60 degrees off the pole so
+// noon stands 60 degrees up. The night rig is the look's own; the day set is the lab's warm sun and pale fill. No shadows.
+// `dusk` (seventh notes, 2026-10-02): the golden hour's sun, sky fill and background, at most `share` of the blend, within `band` of
+// elevation of the horizon. `discs`: the sun and the moon drawn in the sky, `distance` out from the planet's centre (the camera's far
+// plane is 50), `sunSize`/`moonSize` their sprites' width, the sun's colour at noon and `low` on the horizon (src/fx/daylight.js)
+export const STORY_DAY = Object.freeze({ seconds: 30, dayShare: 0.6, tilt: 60, skyDim: 0.15, day: Object.freeze({ hemi: [0xc8cfe0, 0x555060, 1.5], sun: [0xfff0dc, 1.6], bg: 0x0b1524 }),
+  dusk: Object.freeze({ sun: 0xff8a3c, sky: 0x8a6a9a, bg: 0x2a1a2e, share: 0.75, band: 0.32 }),
+  discs: Object.freeze({ distance: 40, sunSize: 3.2, moonSize: 1.6, sun: 0xfff4dc, low: 0xff7a30, moon: 0x9fb8d8 }) });
+
+// The Quiver's introduction after the first wave: Isao prints it on the wall across the lane, two hard-cored enemies come one
+// after the other, and the piloted Quiver fires the lab's TALON (a heavier, slower guided round) instead of the game's dart
+// hold: the hard cores stop short of the gate and mill about between these lane hops outside the forward cell, within the Quiver's
+// reach but never at the wall (while the lock is being tuned); nearCells: how close to the gate one must come for the override
+// coneDeg: the half-angle of the LOCK BOX drawn on the optic. Anything inside it is the target, it stays the target while it stays
+// inside (no flicker between bodies), a timer runs, and at full it is locked. No minimum or maximum range: on a 753 m planet the
+// horizon from a 4 m mount is about 80 m, so a 400 m reach is no limit at all, and the range test can never reset the timer.
+// THE SECOND IS A BLACK (owner, 2026-10-16: 'let's have one enemy be the purple one, and the second be a Black one, slightly bigger, moves with the 3 appendages,
+// slower, more menacing movement'): `second` is the type of the second hard core (the phantom: PEARL_OF black, the biggest tier, three stalks) at `secondPace` of its walk
+// rise: the lane hops (from the forward cell, seen from the Quiver) where its two hard cores come up, past the hold ring: on the horizon
+// as the optic opens, walking in to be held (owner, 2026-10-05: on the ring they were "much too close, making a long-range strike
+// somewhat useless"; from the sinkhole they had taken five seconds and more to show)
+export const STORY_QUIVER = Object.freeze({ key: 'quiver', delay: 0.3, hardcore: 'barbed', second: 'phantom', secondPace: 0.6, secondDelay: 3, hold: [8, 12], rise: [15, 18],   /* farther out (owner, 2026-10-16: 'the purple and black enemies should spawn further away, leaving more time for the player to aim'; was hold 5-9, rise 10-13) */ nearCells: 12, zoom: 3, studyDelay: 1.5, coneDeg: 14, missile: Object.freeze({ mesh: 'talon', profile: 'heavy', duration: 6, diveRate: 2.6, length: 1.0, dmgMul: 25, minRange: 0, maxRange: 400, lockTime: 0.6, lockGate: 1e4, lockBreak: 1e4, aimTolerance: 180 }) });   // the box is the gate; the code's mrad gates are opened out of the way   // a heavy payload (one round, one solid core), a long reach (the hard cores hold 50 to 90 m out), and a quick first-encounter lock: 0.4 s inside a 5 degree cone
+
+// THE BEAT CLOCK (owner, 2026-09-18: "everything must feel faster"). Every wait in src/domain/story-beats.js that the player only
+// watches, gathered here as content. `faceDelays` are Isao's two landing lines; `rotorDelay` the pause before he deploys the AFR-01;
+// `tremorDelay` the beat between the gate standing and the contact on the radar; `breachDelay` the beat between the contact and the
+// ground opening; `spawnDelay` the pause after the breach before the first body rises; `overrideDelay` the beat between Isao's line
+// and the seat; `overrideCells` how close to the gate the swarm must come for that line. The override used to wait for a body within
+// 2.2 cells of the door — the whole march up the lane. It fired when the pile was visibly ON the lane (13 cells); since the seventh notes
+// (owner, 2026-10-02: "Shorten the time from Beacons to 1st Rotor, and we enter the Rotor right away") it fires on the first body up:
+// the player is in the Rotor's optic watching the swarm come out of the ground, and the AFR-01's first cycle plays faster
+// (src/content/foundry.js rate)
+// THE PLAYER IS BUSY (owner, 2026-10-05: "never interrupt a player in a dangerous situation with a tank with an announcement such as
+// 'alien vibration language'. Wait for a time-down. Delay the announcement to the end of a beat or a wave or sector"): busy is a
+// hostile anywhere on the field, anything (the harmless swarm too) within `near` cells of the hull, or a body up while the player is in
+// the gunship's or SOL's seat; the timed beats and the debrief wait until it has been clear for `calm` seconds (at most `maxHold`, so
+// the story never stalls for good), and a camera shot that would cut in is skipped while the hull is in danger (src/fx/programme-host.js)
+export const STORY_CALM = Object.freeze({ near: 8, calm: 3, maxHold: 120, heartHops: 6, farHops: 60 });   // farHops: a hostile further than this from the heart (walking hops) does not keep the player engaged (the canyon's stray walkers, 2026-10-07)   // heartHops: a hostile this close to the heart (walking hops) is 'getting closer to the Stålheart' (Isao's heart_threat, src/fx/programme-host.js)
+// STRAIGHT TO THE ACTION (owner, 2026-10-05: "the player immediately dives into the action by taking over the Rotor ... we must see the
+// enemies closer and already in-sight"): on a landing page the sinkhole opens, quiet, `earlyBreach` seconds into the beacons' tour
+// instead of after the gate, and the Rotor is taken the moment the tour ends (src/domain/story-beats.js). `tankAfterNuke`: the seconds
+// between sector 0's first MK-9 blast and the hull handed to the player (src/fx/hull-issue.js early)
+// ISAO MANS THE ROTOR (owner, 2026-10-16: 'The Rotor is not working, and I am tired of troubleshooting it endlessly. let's have Isao set-up the first two towers and
+// they shoot automatically'; then 'quiver, since we one-shot them with the quiver': the Quiver stays the player's first seat): `rotorAuto` true, the Rotor fires
+// on its own from the first wave (src/domain/story-beats.js autoTower; src/fx/tower-combat.js exempts it from the tutorial's hush) and the player watches the gate
+// REVERTED THE SAME NIGHT (owner: 'the player has nothing to do for too long, we are stuck in top-down view forever as the rotor apparently fails to hit the
+// first wave entirely... we revert back to user doing the manual override'): rotorAuto false; the path stays behind the flag
+export const STORY_BEATS = Object.freeze({
+  rotorAuto: false, rotorDelay: 1.5, faceDelays: Object.freeze([0.6, 1.6]), controlDelay: 1.5,
+  tremorDelay: 0.6, breachDelay: 1.5, spawnDelay: 0.3, overrideDelay: 0.8, overrideCells: 99, earlyBreach: 0, tankAfterNuke: 1.6,
+});
+// THE NUKE'S TANK: the berth on the lane outside the gate it is handed on, `berth` [from, to] cells out from the forward cell along the
+// line to the sinkhole, so it stands nose to the blast with the smoke ahead of it
+export const STORY_NUKE_TANK = Object.freeze({ berth: Object.freeze([1.5, 3]) });
+
+// SECTOR 0: THE FOUNDATION (owner, 2026-09-24: "the first few waves before the stalheart is ready could be more intense POV sentries
+// and Gunship shooting from above to protect the construction of the stalheart"). On a growing page, once the Quiver's two hard cores
+// are down and the Stålheart is still printing, a wave rises from the sinkhole `first` seconds in and then every `every` seconds,
+// cycling through `waves` until the Stålheart stands (src/domain/story-beats.js `construction`). Each body marches at `pace` (the
+// sector loop's pace, not the tutorial surge), rising over `stagger` seconds scattered `spread` cells across the crater. Soft bodies
+// with a hard core every other wave: the Rotor, the Quiver and the gunship each have work. `harmless`: sector 0 cannot be lost — the
+// bodies pile at the gate, the gate does not wear outside a sector, and the MÖRK that rolls out into the leftovers is not hurt.
+// A wave waits while `alive` bodies stand (the frame budget, and a ceiling on what the new hull rolls out into). The handover comes
+// when the Stålheart stands and the field is down to `mopUp`: the automatic towers fire without the seats' multipliers and would
+// take minutes over what the seats and the MÖRK's rams clear in seconds, and a live body holds every wave clock after it.
+// `mopUpSeconds`: or once the hull has been out this long, whatever is left: unmanned towers do not fire before the handover, so a
+// player who drove off would otherwise stall the story for good (--pacing, 2026-09-24); the harmless leftovers roll into sector 1.
+// `studyDelay`: once sector 0 is over, the player drives the new hull this long before Isao's study takes the camera (8 -> 4, owner
+// 2026-10-02: "a strange lull of 5 seconds or so before Isao explains the vibration language"; his close-up no longer freezes the beats).
+export const STORY_CONSTRUCTION = Object.freeze({
+  first: 3, every: 11, alive: 60, mopUp: 0, mopUpSeconds: 20, studyDelay: 4, pace: 1.5, spread: 0.9, stagger: 2.5, harmless: true,
+  waves: Object.freeze([
+    Object.freeze([Object.freeze({ type: 'amoeba', count: 22 })]),
+    Object.freeze([Object.freeze({ type: 'amoeba', count: 16 }), Object.freeze({ type: 'phage', count: 8 }), Object.freeze({ type: 'barbed', count: 1 })]),
+    Object.freeze([Object.freeze({ type: 'amoeba', count: 26 })]),
+    Object.freeze([Object.freeze({ type: 'amoeba', count: 18 }), Object.freeze({ type: 'phage', count: 10 }), Object.freeze({ type: 'barbed', count: 1 })]),
+  ]),
+});
+
+// THE FIRST MÖRK ROLLS OUT OF THE STÅLHEART (owner, 2026-09-24: "Then with the Stalheart we get the first tank"). The Stålheart is a
+// gantry over a slab with its rails along the plot's Z; the hull starts `start` metres from the plot centre along `heading` (the side
+// the bays' doors face, toward the gate), under the gantry, and drives out to `end` metres, clear of the slab and short of the landing
+// pad. `lead` is the camera's run from wherever the player was to the roll-out's framing before the hull moves (src/fx/hull-issue.js).
+// `firstWave` (2026-10-14, the Pearl set the story's default): the most seconds the roll-out waits, once the Stålheart stands, for the player
+// in a sentry's optic to clear the Rotor's first wave (the beats' 'piloting'): the Pearl bodies walk the opening's lane at their slow
+// gait and reach the Rotor some 35 s later than the dot clouds did, so the roll-out came mid-wave and took the seat (src/fx/hull-issue.js)
+export const STORY_ROLLOUT = Object.freeze({ heading: Object.freeze([0, -1]), start: 4, end: 40, lead: 1.6, firstWave: 60 });
+
+// The piloted sentry in the story: a denser stream of rounds, each one
+// heavy enough that cannon fodder drops in two hits.
+export const STORY_PILOT = Object.freeze({ rateMul: 2.5, dmgMul: 60 });   // a piloted round is worth one first-wave body before the kill combo (owner, 2026-09-14: fish in a barrel must be annihilated): the base is 0.0167 a round, measured on the story swarm, see 2026-09-14-piloted-rotor-annihilates
+
+// the handover (docs/superpowers/specs/2026-09-14-handover-gunship-call-expeditions-design.md): the first automated phase and the Defend stage
+export const STORY_HANDOVER = Object.freeze({ from: 'settled', defendStage: 8 });
+
+// SKIP TUTORIAL (owner, 2026-09-16; 2026-09-16-skip-tutorial-into-the-back-door): where ?skip=defence drops a player who
+// wants the fight and not the opening. The finished base at `stage` (through the bays, so the three hulls read as lives),
+// the beats already at `phase` so the towers are automatic, `sector` 1 (owner, 2026-10-01: the back door comes late now, and SKIP
+// ALL starts the regular ramp on the finished base; ?skip=defence&sector=N opens further on, at the door from SECTOR_DOOR.earliest), `parts` the
+// two expeditions taken as though they came home — the Relay and the Mortar — and `biomass` enough for a few towers
+// before the first wave lands. `brief` is Isao's two lines on arrival (src/isaobriefs.js).
+export const STORY_SKIP = Object.freeze({ stage: 8, phase: 'expedition', sector: 1, biomass: 450, brief: 'skip_defence', parts: Object.freeze(['rocket-a', 'rocket-b']) });
+
+// THE TUTORIAL IN CHAPTERS (owner, 2026-09-25: "Skip tutorial should have 2 options. 1) Showing 1/x in tutorial, where we are, skip
+// to next phase. 2) skip entire tutorial. it will make it easier to troubleshoot the tutorial and more user-friendly"). The opening
+// is cut where its beats change hands, and the card over it says which chapter is playing and goes to the next (src/fx/tutorial-card.js).
+// `phases` are the story beats a chapter covers (src/domain/automation.js STORY_PHASES). ?skip=<id> opens a page at the chapter's
+// start (src/platform/story-world.js readStoryQuery): a growing base at stage 1 with the beats at `from`, and the world a run has
+// there, built at boot (src/fx/story-entry.js). `printed` are the steps of Isao's programme that stand (src/content/base-programme.js),
+// `towers` the sentries on their story sockets, `head` a print already under way (the share done), `foundry` the rocket sections the
+// AFR-01 has already cut (absent: all of them). The numbers are the opening's own timeline (--pacing, 2026-09-25: the Rotor stands at
+// 30 s, the gate at 44.7, the Stålheart's 75 s print starts at 52.8, so it is a third done at the first wave's clear, 77.7, and half
+// done when sector 0 starts, 91.8; the landing pad follows it). LANDING is the page itself, whose NEXT is the landing's own skip.
+// STORY_CHAPTER_END is where NEXT goes from the last chapter: sector 1, on the base the tutorial grew. SKIP ALL is STORY_SKIP.
+export const STORY_CHAPTERS = Object.freeze([
+  { id: 'landing', label: 'LANDING', phases: ['landed'], from: null },
+  { id: 'rotor', label: 'ROTOR', phases: ['foundry', 'printing', 'rotor-ready'], from: 'foundry', foundry: 0 },
+  { id: 'wave', label: 'FIRST WAVE', phases: ['tremor', 'breach', 'approach', 'override', 'piloting'], from: 'rotor-ready', printed: ['foundry', 'gate'], towers: ['rotor'], foundry: 2 },
+  { id: 'quiver', label: 'QUIVER', phases: ['cleared', 'quiver-piloting'], from: 'cleared', printed: ['foundry', 'gate'], towers: ['rotor', 'quiver'], head: { stalheart: 0.33 } },
+  { id: 'stalheart', label: 'STÅLHEART', phases: ['construction'], from: 'construction', printed: ['foundry', 'gate'], towers: ['rotor', 'quiver'], head: { stalheart: 0.5 } },
+  { id: 'expedition', label: 'EXPEDITION', phases: ['settled', 'study-talk', 'study', 'expedition'], from: 'settled', printed: ['foundry', 'gate', 'stalheart', 'landing'], towers: ['rotor', 'quiver'] },
+].map((c) => Object.freeze({ printed: [], towers: [], head: {}, ...c })));
+export const STORY_CHAPTER_END = Object.freeze({ id: 'sector-1', label: 'SECTOR 1', phases: [], from: 'expedition', printed: ['foundry', 'gate', 'stalheart', 'landing', 'solar'], towers: ['rotor', 'quiver'], head: {} });
+
+// EXPEDITIONS (docs/superpowers/specs/2026-09-14-handover-gunship-call-expeditions-design.md): the landing sites, the tower each
+// part unlocks, the guard nest, and when a later site reveals (after N parts are home). The Rotor and Quiver are the base.
+// (2026-10-03, owner: "more low level enemies protecting the extra landing sites"; then "MORE soft bodies at the landing sites, and they try
+// to attack the tank") the nests' soft bodies x5 of the first count, phages among them; `aggro`: within that many nest radii the hull is chased
+// (src/domain/guard-aggro.js). A SMALL REED AT EACH NEST (owner, 2026-10-16: 'let's put a small Reed at each cargo spot too'): a guard entry with
+// `family` and `tier` is a creature tier (CREATURE_TIERS, src/content/creature-enemies.js), spawned in its kit by src/fx/expedition-glue.js
+export const STORY_EXPEDITIONS = Object.freeze({
+  aggro: 3,
+  clearBelow: 3,   // THE NEST IS CLEARED with fewer than this many guards left (owner, 2026-10-07: the first 'nest cleared' took 20 s+ as if an invisible enemy remained; 'the cargo becomes available once there are fewer than 3 enemies at a nest')
+  base: Object.freeze(['rotor', 'quiver']),
+  deliverCells: 3,   // how close to the landing (the foundry) a carried part counts as home, in cells
+  sites: Object.freeze([
+    { id: 'rocket-a', tower: 'relay', part: 'field coil', reveal: null, guards: [{ type: 'barbed', count: 2 }, { type: 'amoeba', count: 40 }, { type: 'phage', count: 12 }, { family: 'reed', tier: 'small', count: 1 }] },
+    { id: 'rocket-b', tower: 'mortar', part: 'breech', reveal: null, guards: [{ type: 'barbed', count: 2 }, { type: 'amoeba', count: 48 }, { type: 'phage', count: 14 }, { family: 'reed', tier: 'small', count: 1 }] },
+    { id: 'wreck', tower: 'lancer', part: 'lens', reveal: null, guards: [{ type: 'barbed', count: 3 }, { type: 'amoeba', count: 60 }, { type: 'phage', count: 16 }, { family: 'reed', tier: 'small', count: 1 }] },
+    { id: 'rocket-c', tower: 'plasma', part: 'coil stack', reveal: { after: 3 }, guards: [{ type: 'barbed', count: 3 }, { type: 'amoeba', count: 64 }, { type: 'phage', count: 18 }, { family: 'reed', tier: 'small', count: 1 }] },
+    { id: 'rocket-d', tower: 'needle', part: 'optic', reveal: { after: 3 }, guards: [{ type: 'barbed', count: 3 }, { type: 'amoeba', count: 64 }, { type: 'phage', count: 18 }, { family: 'reed', tier: 'small', count: 1 }] },
+    { id: 'wreck-b', tower: 'heptapod', part: 'walker core', reveal: { after: 5 }, guards: [{ type: 'barbed', count: 4 }, { type: 'amoeba', count: 80 }, { type: 'phage', count: 20 }, { family: 'reed', tier: 'small', count: 1 }] },
+  ].map(Object.freeze)),
+});
+
+// THE WHY, LACONIC (owner, 2026-10-03: "Veni-Vidi-Vici ... Land > Resources > Build > Defend > Send Satellites to link to the Dyson
+// Sphere"): the beats over the landing, one word at a time, and Isao's one line (src/fx/mission-card.js)
+export const STORY_MISSION = Object.freeze({ beats: Object.freeze(['LAND', 'HARVEST', 'BUILD', 'DEFEND', 'LINK THE SPHERE']),
+  line: 'ISAO · We land. We take. We build. We hold. Then we wire this world to the star.', beat: 0.75, hold: 2.6 });

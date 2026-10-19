@@ -1,0 +1,5 @@
+import {readFile,readdir,stat} from 'node:fs/promises';import {createHash} from 'node:crypto';import {resolve,dirname} from 'node:path';import {execFileSync} from 'node:child_process';
+const lock=JSON.parse(await readFile('docs/assets.lock.json','utf8'));for(const file of lock.files){const data=await readFile(file.path);if(createHash('sha256').update(data).digest('hex')!==file.sha256)throw Error('Asset hash mismatch: '+file.path);}
+async function files(dir){const out=[];for(const e of await readdir(dir,{withFileTypes:true})){const p=dir+'/'+e.name;if(e.isDirectory())out.push(...await files(p));else if(/\.[cm]?js$/.test(p))out.push(p);}return out;}
+const source=[...await files('src'),...await files('scripts'),...await files('upstream/stalheart')];for(const p of source){execFileSync(process.execPath,['--check',p]);const text=(await readFile(p,'utf8')).replace(/^\s*\/\/.*$/gm,'');for(const m of text.matchAll(/(?:^|[;\n])\s*(?:import|export)\s+(?:[^'";]*?\bfrom\s*)?['"]([^'"]+)['"]/g)){if(m[1].startsWith('.'))await stat(resolve(dirname(p),m[1]));}}
+console.log(`${lock.files.length} pinned files verified; ${source.length} modules parse and resolve.`);

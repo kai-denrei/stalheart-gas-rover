@@ -1,0 +1,1423 @@
+{
+  "stalheartRevision": "9b253a412ccbf885d573adb2d6436f2fc055cb93",
+  "roverRevision": "9c3ec9d28947541a43121891e41355a1c7512a96",
+  "files": [
+    {
+      "source": "src/rng.js",
+      "path": "upstream/stalheart/src/rng.js",
+      "sha256": "3be9778a93ec8176ae313a9a4098d8ea2e207f7df31b556be919440ff75bd9ef",
+      "bytes": 505,
+      "kind": "copy"
+    },
+    {
+      "source": "src/sample.js",
+      "path": "upstream/stalheart/src/sample.js",
+      "sha256": "4804339f8f1cae4d788958b4d926182bcb09a982b88db8fd8a4ea092635983d2",
+      "bytes": 4314,
+      "kind": "copy"
+    },
+    {
+      "source": "vendor/three.module.js",
+      "path": "upstream/stalheart/vendor/three.module.js",
+      "sha256": "76dea8151bc9352aef3528b4262e249b2604f62543828328db978d060d61a495",
+      "bytes": 1272972,
+      "kind": "copy"
+    },
+    {
+      "source": "vendor/ConvexHull.js",
+      "path": "upstream/stalheart/vendor/ConvexHull.js",
+      "sha256": "be3c56516aa11537312a3307121cd8bb4ab78fdebc56832d8a45d879b3758757",
+      "bytes": 21844,
+      "kind": "copy"
+    },
+    {
+      "source": "src/hull.js",
+      "path": "upstream/stalheart/src/hull.js",
+      "sha256": "fb669224c9625698438238552b170d9ccab6ac4799045608f8ba95e49709ed58",
+      "bytes": 1402,
+      "kind": "copy"
+    },
+    {
+      "source": "src/vec3.js",
+      "path": "upstream/stalheart/src/vec3.js",
+      "sha256": "e106fd048bd44e7e4cd1531a03279355e9510f1eb8a39ce64e7f397f32087c06",
+      "bytes": 2761,
+      "kind": "copy"
+    },
+    {
+      "source": "src/grid.js",
+      "path": "upstream/stalheart/src/grid.js",
+      "sha256": "8491b15567117211ea1da5a114777a345fb8771dcf17d1a41ac999a7b44d2c80",
+      "bytes": 14382,
+      "kind": "copy"
+    },
+    {
+      "source": "src/core/planet-bake.js",
+      "path": "upstream/stalheart/src/core/planet-bake.js",
+      "sha256": "617609142a9c7b7f7f12a29fe4328eff8ec40612e5cc08db4442185a1251f019",
+      "bytes": 3003,
+      "kind": "copy"
+    },
+    {
+      "source": "src/core/sinkhole-shape.js",
+      "path": "upstream/stalheart/src/core/sinkhole-shape.js",
+      "sha256": "cfa62095777bf55d467b2146dcf1eef026f2861e4c580f938004d8db29f8553e",
+      "bytes": 1173,
+      "kind": "copy"
+    },
+    {
+      "source": "src/content/breach-defaults.js",
+      "path": "upstream/stalheart/src/content/breach-defaults.js",
+      "sha256": "e3253192b2d027f6b9fa7309666878fb95df5a76c1807db3af308df9796b8228",
+      "bytes": 691,
+      "kind": "copy"
+    },
+    {
+      "source": "src/looks.js",
+      "path": "upstream/stalheart/src/looks.js",
+      "sha256": "963bc18da4c9ded14d7a29caa1f02582bc23f58129de43f5d0a74ced9d577d1d",
+      "bytes": 6912,
+      "kind": "copy"
+    },
+    {
+      "source": "src/core/breach-surface.js",
+      "path": "upstream/stalheart/src/core/breach-surface.js",
+      "sha256": "11e8e97c09322ce5febf92614d03906b546176a4179801ef0ac83e1f8f50b76e",
+      "bytes": 1332,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/utils/shaderPatch.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/utils/shaderPatch.js",
+      "sha256": "c2f91c3a515f3c43d00b386c5906c122ac8b960a828c9d6ac66fb7604c8850ec",
+      "bytes": 2477,
+      "kind": "copy"
+    },
+    {
+      "source": "src/breach-surface.js",
+      "path": "upstream/stalheart/src/breach-surface.js",
+      "sha256": "e12a9a2ff0d10d18b1e099daffbc25abbb176d23652ae9f6aa035bbfe11fa717",
+      "bytes": 2534,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/loaders/StoneTextures.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/loaders/StoneTextures.js",
+      "sha256": "2605cc49bac15b56807a83e1396d489ba407f22755746beedc64240f96fa769e",
+      "bytes": 3427,
+      "kind": "copy"
+    },
+    {
+      "source": "src/sinkhole-terrain.js",
+      "path": "upstream/stalheart/src/sinkhole-terrain.js",
+      "sha256": "88afef9bd72bc61ec47fb4a78f18d21a46162642483efb530954bc547d79a631",
+      "bytes": 7881,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/config/settings.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/config/settings.js",
+      "sha256": "4c2a86cc2f1a612ccdfe60e3d540952ac8e0ec6e782f5186a4e3d812ede677d8",
+      "bytes": 5317,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/core/FrameUniforms.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/core/FrameUniforms.js",
+      "sha256": "323a75b3ac117dd8d6bf512145189c289fe95b6e9b8cfaa56d343a4d670589d3",
+      "bytes": 1682,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/shaders/lib/noise.glsl.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/shaders/lib/noise.glsl.js",
+      "sha256": "5c2c7c2f25f05b9a3d877efd12a39e7ab8a0f59dab54e22f09323a811989f3c2",
+      "bytes": 5040,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/shaders/lib/common.glsl.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/shaders/lib/common.glsl.js",
+      "sha256": "21dfd8ba599787bebedd856bc9dff368c493e71a7ad3b1ec23ad258d432c418b",
+      "bytes": 2226,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/core/Layers.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/core/Layers.js",
+      "sha256": "bf389198c236e273a7bc101eebe30f0a2595bdbf71027090e824eb0fee1e647d",
+      "bytes": 1528,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/particles/ParticleSystem.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/particles/ParticleSystem.js",
+      "sha256": "dbb357d5904e80b4eace97777768d4b89399fd92675f5cec044e817e27cdec40",
+      "bytes": 21505,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/particles/ParticleEngine.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/particles/ParticleEngine.js",
+      "sha256": "6dd347816fb56163c6037cdb167abc7c6348c56a46995e0df7a1982882755bba",
+      "bytes": 2340,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/utils/math.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/utils/math.js",
+      "sha256": "4e2ef77bc88f9adcfbf96eddcff1c892bc592216462b95da11fa4acb0490415d",
+      "bytes": 2181,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/effects/LightPool.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/effects/LightPool.js",
+      "sha256": "530ce33b512a3d794a4332f5ffb7416f5d001ef3c187a4e0f4a4210d842e1218",
+      "bytes": 2351,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/utils/ObjectPool.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/utils/ObjectPool.js",
+      "sha256": "ab2d5bd02f05e02a40de5fbf5eb336a39702a8ab289f5bb89729eeaadd1ba791",
+      "bytes": 1070,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/effects/GroundDecals.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/effects/GroundDecals.js",
+      "sha256": "9ea11bb83813f8fe9613d3b1acb9f90a0117bdeb470e4812e62894431aadce6c",
+      "bytes": 16211,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/effects/CameraShake.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/effects/CameraShake.js",
+      "sha256": "506508dcdbc5c89f240dbce9f12a7a3a85f458f49ae7274c2c3e99ab5915dd3d",
+      "bytes": 2158,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/utils/color.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/utils/color.js",
+      "sha256": "6e744a41827e4f0cb20dd64c23b49b01d3dacac14cda32e789babce44101a732",
+      "bytes": 1040,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/abilities/Ability.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/abilities/Ability.js",
+      "sha256": "b14d96b718372868c2179ec624222bf8790e1e4e9d845ad7164eaced36e78728",
+      "bytes": 8799,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/materials/MonolithStoneMaterial.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/materials/MonolithStoneMaterial.js",
+      "sha256": "fb8919d964fb4fe149d1dbcdc0e89f918edff301a01409326a8763d243f38434",
+      "bytes": 29914,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/assets/ProceduralGeometry.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/assets/ProceduralGeometry.js",
+      "sha256": "7df68659492079ac20753a5c9fbd3a54f8fb4a518fc5a87c6d3b24ea7f6b17dd",
+      "bytes": 15337,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/assets/MonolithGeometry.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/assets/MonolithGeometry.js",
+      "sha256": "3a866c50e25269eda32ec6acae8dfaed7295079bd5815f4eb7d61f9b1ccbc1c6",
+      "bytes": 10439,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/assets/ShatterGeometry.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/assets/ShatterGeometry.js",
+      "sha256": "2612e311aaf1f074b72ca60f05d3edfdc2c5a75bb646e606d3115081d3bd2aef",
+      "bytes": 7816,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/effects/RiftCrater.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/effects/RiftCrater.js",
+      "sha256": "34e0d9f4cf4af8bc0f17c471628e16bce46b64d05e75324d20b368d1ba4770d1",
+      "bytes": 4507,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/effects/RiftFissures.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/effects/RiftFissures.js",
+      "sha256": "d7c8689e78b750cfdca89cc357e74018279c9b0c268d5cdd52033595b2debebb",
+      "bytes": 16935,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/sinkhole/abilities/MonolithRiftAbility.js",
+      "path": "upstream/stalheart/src/fx/sinkhole/abilities/MonolithRiftAbility.js",
+      "sha256": "655b0554dc0434933753a31857256873a3b27230058753155753c36ba34539d9",
+      "bytes": 54126,
+      "kind": "copy"
+    },
+    {
+      "source": "src/sinkhole.js",
+      "path": "upstream/stalheart/src/sinkhole.js",
+      "sha256": "1c0b2dae50a95a92091cf99733c07d9a0884c4a9a9994268f6029b1bc37e47e4",
+      "bytes": 8766,
+      "kind": "adapted"
+    },
+    {
+      "source": "vendor/BufferGeometryUtils.js",
+      "path": "upstream/stalheart/vendor/BufferGeometryUtils.js",
+      "sha256": "3a6701d824adfe05dc28c09b6c1d64aeab9a183bc3b944d85f15f596e5c6c2b3",
+      "bytes": 31918,
+      "kind": "copy"
+    },
+    {
+      "source": "vendor/GLTFLoader.js",
+      "path": "upstream/stalheart/vendor/GLTFLoader.js",
+      "sha256": "1f9b02acfbf219a6ebb77f09e355500449a3ba9e6a77d87e0de72c0b9315ea4e",
+      "bytes": 108527,
+      "kind": "copy"
+    },
+    {
+      "source": "assets/story/planet.bin",
+      "path": "upstream/stalheart/assets/story/planet.bin",
+      "sha256": "d73be460c91749731954a1246c16692f9eba62ace4983bbeb69f7c6181567638",
+      "bytes": 1072292,
+      "kind": "copy"
+    },
+    {
+      "source": "docs/kernel-provenance.json",
+      "path": "upstream/stalheart/docs/kernel-provenance.json",
+      "sha256": "d9471e60650fc6b09fbfe57a4ccc855182609d13a85e5460ea2ef1aafabaebf7",
+      "bytes": 891,
+      "kind": "copy"
+    },
+    {
+      "source": "docs/sinkhole-assets.lock.json",
+      "path": "upstream/stalheart/docs/sinkhole-assets.lock.json",
+      "sha256": "ef463b23db57e1cff8ba3b00f17c97f7dcbb8e8d9b7f41e76ab9a853330a948f",
+      "bytes": 8702,
+      "kind": "copy"
+    },
+    {
+      "source": "docs/breach-audio.lock.json",
+      "path": "upstream/stalheart/docs/breach-audio.lock.json",
+      "sha256": "b697c88fb16b498a54645916f38814e8e2c315b8269660f994624b433b660821",
+      "bytes": 348,
+      "kind": "copy"
+    },
+    {
+      "source": "ATTRIBUTIONS.md",
+      "path": "upstream/stalheart/ATTRIBUTIONS.md",
+      "sha256": "af6f511017bde3e717308bf7d654ccdabe92a165e9f328c44ab1c2db66a05afb",
+      "bytes": 11254,
+      "kind": "copy"
+    },
+    {
+      "source": "assets/textures/sinkhole/color.jpg",
+      "path": "assets/textures/sinkhole/color.jpg",
+      "sha256": "1dca8a336518ce0adca4b5cbe2ab30819c8769388f1c15278082a99f022c615a",
+      "bytes": 1483352,
+      "kind": "copy"
+    },
+    {
+      "source": "assets/textures/sinkhole/normal.jpg",
+      "path": "assets/textures/sinkhole/normal.jpg",
+      "sha256": "8fd1d22eb6c7b6e4a374196c0de791f724538b8b86eb9c7a946fec1f5834cb94",
+      "bytes": 2528233,
+      "kind": "copy"
+    },
+    {
+      "source": "assets/textures/sinkhole/roughness.jpg",
+      "path": "assets/textures/sinkhole/roughness.jpg",
+      "sha256": "f37850f72994458994716d084683d80611528d1685264bde3071569e8ca53489",
+      "bytes": 669875,
+      "kind": "copy"
+    },
+    {
+      "source": "assets/textures/sinkhole/ao.jpg",
+      "path": "assets/textures/sinkhole/ao.jpg",
+      "sha256": "405ab1943485560bc01cd0c6c10065195adf7ef9c554f9b24914c3311751dde6",
+      "bytes": 568556,
+      "kind": "copy"
+    },
+    {
+      "source": "assets/audio/sinkhole_quake.mp3",
+      "path": "assets/audio/sinkhole_quake.mp3",
+      "sha256": "d3a6eb6c03a367d3c84b932d75cd1fdc1e586238a2d2bbab0f6802ae30e32f1d",
+      "bytes": 139680,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/9c3ec9d28947541a43121891e41355a1c7512a96/assets/recon-rover/lod1/r47x_recon_rover_d0_lod1.glb",
+      "path": "assets/recon-rover/rover.glb",
+      "sha256": "a6746318daa2fedb424aec781dfad6351d30afdaab1669c322398121266a03e4",
+      "bytes": 384984,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/9c3ec9d28947541a43121891e41355a1c7512a96/assets/recon-rover/manifest.json",
+      "path": "assets/recon-rover/manifest.json",
+      "sha256": "c2298aa67f422db0e32131153833256d8fa4d3ae2fcc6f2feec90f99c1db1010",
+      "bytes": 55049,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/9c3ec9d28947541a43121891e41355a1c7512a96/assets/recon-rover/README.md",
+      "path": "assets/recon-rover/README.md",
+      "sha256": "79bdec1bfa6eab6b80626953e701a544d760207b52fb2e00a358baf7f831a078",
+      "bytes": 9876,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/1abaa099e36f4bbf206746499e31c548c82239a1/ASSET-LICENSE.md",
+      "path": "assets/recon-rover/LICENSE.md",
+      "sha256": "1ef1c8dddfab925b94e0bef0b2075ec2cffd49bd5825d88aa8a73080f0932130",
+      "bytes": 486,
+      "kind": "copy"
+    },
+    {
+      "source": "Derived by scripts/bake-grid.mjs from pinned Stalheart grid and planet.bin",
+      "path": "assets/planet-grid.bin",
+      "sha256": "ad49234656b41da7b43b556c4e53e4fef2b595fc2206e83fabd6403c21a080f4",
+      "bytes": 1996824,
+      "kind": "derived"
+    },
+    {
+      "source": "Stalheart scripts/chrome-proc.mjs",
+      "path": "scripts/chrome-proc.mjs",
+      "sha256": "37d6b1b7b522222fe674f788d942721e37e4ab3ffa079aba6662f575bca8d6f3",
+      "bytes": 4170,
+      "kind": "copy"
+    },
+    {
+      "source": "src/fx/accretion.js",
+      "path": "upstream/stalheart/src/fx/accretion.js",
+      "sha256": "80a150a8c64554baa527d8507087a2098050f5d96cf254ba2cfb929157ac426f",
+      "bytes": 13523,
+      "kind": "copy",
+      "sourceRevision": "2d1d64395d047a40faf0e9d36467dc2a3bd0e7af"
+    },
+    {
+      "source": "src/fx/nebulae.js",
+      "path": "upstream/stalheart/src/fx/nebulae.js",
+      "sha256": "438df1a8823a74f53fa3dccac250399f2b74c53ad2ff082274036834d23904af",
+      "bytes": 6071,
+      "kind": "copy",
+      "sourceRevision": "2d1d64395d047a40faf0e9d36467dc2a3bd0e7af"
+    },
+    {
+      "source": "src/galaxyseed.js",
+      "path": "upstream/stalheart/src/galaxyseed.js",
+      "sha256": "fe5b0a4464f5a85ca26350bc6b3099bf1f2d568c139619dfa585fd531e69602d",
+      "bytes": 8609,
+      "kind": "copy",
+      "sourceRevision": "2d1d64395d047a40faf0e9d36467dc2a3bd0e7af"
+    },
+    {
+      "source": "src/galaxybake.js",
+      "path": "upstream/stalheart/src/galaxybake.js",
+      "sha256": "0780b2c67687d50d5013501026a9bfd7a93f697af9c7559719f4d8cda4df24df",
+      "bytes": 9836,
+      "kind": "copy",
+      "sourceRevision": "2d1d64395d047a40faf0e9d36467dc2a3bd0e7af"
+    },
+    {
+      "path": "assets/recon-rover/cold-gas-puff.png",
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/9c3ec9d28947541a43121891e41355a1c7512a96/assets/recon-rover/cold-gas-puff.png",
+      "sha256": "4368d832e66a6d9c8bc29b7a3ca985599deab3835b3345dc4ba0b6cc546f5fd2",
+      "bytes": 2038,
+      "kind": "copy"
+    },
+    {
+      "path": "assets/recon-rover/thruster-fx.js",
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/9c3ec9d28947541a43121891e41355a1c7512a96/assets/recon-rover/thruster-fx.js",
+      "sha256": "efe49b3f5e470ecbc80b3a6ea7a396bf77391d0a7ac57e1dbc865d5023afb9cf",
+      "bytes": 21823,
+      "kind": "copy"
+    },
+    {
+      "path": "assets/ctf-flags/LICENSE.md",
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/ASSET-LICENSE.md",
+      "sha256": "1ef1c8dddfab925b94e0bef0b2075ec2cffd49bd5825d88aa8a73080f0932130",
+      "bytes": 486,
+      "kind": "copy"
+    },
+    {
+      "path": "assets/ctf-flags/flag_eclipse.glb",
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/ctf-flags/flag_eclipse.glb",
+      "sha256": "62fba2b2b7a8ead84680135df5d8d7c9bfe3974db4ec205c8de7f66f48b2eec0",
+      "bytes": 211096,
+      "kind": "copy"
+    },
+    {
+      "path": "assets/ctf-flags/flag_ember.glb",
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/ctf-flags/flag_ember.glb",
+      "sha256": "eefdab13eefdde1d3bbeb23a8f1bf455aee4312724cfbfb72b980a9b9d03992b",
+      "bytes": 218420,
+      "kind": "copy"
+    },
+    {
+      "path": "assets/ctf-flags/flag_helix.glb",
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/ctf-flags/flag_helix.glb",
+      "sha256": "1d6e10a6bb6c9e91bf43b44abe9a63564955a0cdc482621bfa7bfaf2c758cc88",
+      "bytes": 230692,
+      "kind": "copy"
+    },
+    {
+      "path": "assets/ctf-flags/flag_horizon.glb",
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/ctf-flags/flag_horizon.glb",
+      "sha256": "2065e938f03e7fb7bae00ecefa82657c422ca7f2e4dadd13715ac39e07926187",
+      "bytes": 191100,
+      "kind": "copy"
+    },
+    {
+      "path": "assets/ctf-flags/flag_vanguard.glb",
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/ctf-flags/flag_vanguard.glb",
+      "sha256": "68dc238bba55029fb70ee9481583287d15295884bfdea3046309d9e31dacd4b7",
+      "bytes": 193140,
+      "kind": "copy"
+    },
+    {
+      "path": "assets/ctf-flags/flag_void.glb",
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/ctf-flags/flag_void.glb",
+      "sha256": "d73aabf63653af1f09bf7f34aab5d59e00e559259584399c12bb274e144be204",
+      "bytes": 194164,
+      "kind": "copy"
+    },
+    {
+      "path": "assets/ctf-flags/manifest.json",
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/ctf-flags/manifest.json",
+      "sha256": "85d5acb69e99badd4517f45151b80b8cd305713492a7fc40143b8323b3d27482",
+      "bytes": 6904,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/recon-rover/r47x_recon_rover_d0_lod1.glb",
+      "path": "assets/recon-rover/damage/r47x_recon_rover_d0_lod1.glb",
+      "sha256": "3ff83209fcbee4523044d8dcfa1055c8d7f60826f5630b680f24ec4049b2ace7",
+      "bytes": 383848,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/recon-rover/r47x_recon_rover_d1_lod1.glb",
+      "path": "assets/recon-rover/damage/r47x_recon_rover_d1_lod1.glb",
+      "sha256": "40a04923c71d3f746ff6b9ed50b43c634a72deb83e2f6e272e465b9a7bf95b19",
+      "bytes": 382184,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/recon-rover/r47x_recon_rover_d2_lod1.glb",
+      "path": "assets/recon-rover/damage/r47x_recon_rover_d2_lod1.glb",
+      "sha256": "0e47b0745479214b673cfd785fdf2f54f57b38fad590ff264c07bef76c0dcefd",
+      "bytes": 373444,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/recon-rover/r47x_recon_rover_d3_lod1.glb",
+      "path": "assets/recon-rover/damage/r47x_recon_rover_d3_lod1.glb",
+      "sha256": "1b5ada5955fff955528631e11bbda8442251ae46a324ec9059ff2c31ec14c855",
+      "bytes": 372012,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/recon-rover/runtime.js",
+      "path": "assets/recon-rover/damage/runtime.js",
+      "sha256": "24855a9fa20c4f53c64be9e9f98eac7478dcd5c3f7d1149c7e74c1b642858d01",
+      "bytes": 17030,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/recon-rover/thruster-fx.js",
+      "path": "assets/recon-rover/damage/thruster-fx.js",
+      "sha256": "232f3283b994210f427997501bbbc66199f7ca3f9988ef216ab32c6a0f46764c",
+      "bytes": 22226,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/recon-rover/manifest.json",
+      "path": "assets/recon-rover/damage/manifest.json",
+      "sha256": "f1dad25dd14e32318eed08121042feb6d53048c54367ce657c4101c48d19e05f",
+      "bytes": 486094,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/recon-rover/README.md",
+      "path": "assets/recon-rover/damage/README.md",
+      "sha256": "95c8d44e1d4b8ebc6cb09686f3146cfdc41e197d54cf1b1e3060e3b5cd91a739",
+      "bytes": 10916,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/biosphere_d0_lod1.glb",
+      "path": "assets/dome-city/biosphere_d0_lod1.glb",
+      "sha256": "476635f5033d6da590e1676c22a39f897a0e5956e17950b298c43f41613513a9",
+      "bytes": 362524,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/biosphere_d0_lod2.glb",
+      "path": "assets/dome-city/biosphere_d0_lod2.glb",
+      "sha256": "bbcd122c25617303de08619339bf87b22953722f8b5b5f1415a44c562761601f",
+      "bytes": 110316,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/fabrication_d0_lod1.glb",
+      "path": "assets/dome-city/fabrication_d0_lod1.glb",
+      "sha256": "c9b6684660ec330e9f5b01c0f32b18d984edde57495793216673637e67d1cc79",
+      "bytes": 289352,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/fabrication_d0_lod2.glb",
+      "path": "assets/dome-city/fabrication_d0_lod2.glb",
+      "sha256": "ec933e0ca30f0bdc6a883267dc0e63fd49a77c56ffa2e5ae05dcdb49857da650",
+      "bytes": 110316,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/habitat_d0_lod1.glb",
+      "path": "assets/dome-city/habitat_d0_lod1.glb",
+      "sha256": "7b8e231fea26d39e6df62eb1dd5c7dbf89908253330af34497caaa9fbaeb18fc",
+      "bytes": 298756,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/habitat_d0_lod2.glb",
+      "path": "assets/dome-city/habitat_d0_lod2.glb",
+      "sha256": "9d2bd16e978dbcb95236b2ebe90fbe17ef634af347a5b217259901c4fe6a4372",
+      "bytes": 116820,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/research_d0_lod1.glb",
+      "path": "assets/dome-city/research_d0_lod1.glb",
+      "sha256": "8084a012971e5c5c6b39a35a34e84a344d889f26170aa35c2c2b63b06d89f8ee",
+      "bytes": 304036,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/research_d0_lod2.glb",
+      "path": "assets/dome-city/research_d0_lod2.glb",
+      "sha256": "e0e50d2bd7610e9521efa533474080f04911c3cac94591963085b0d4bf711293",
+      "bytes": 116820,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/power_d0_lod1.glb",
+      "path": "assets/dome-city/power_d0_lod1.glb",
+      "sha256": "0b014c0fab356bdf2e49ad71a35557ff13805b93b8ecb4b805e8a2d790a6351b",
+      "bytes": 309384,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/power_d0_lod2.glb",
+      "path": "assets/dome-city/power_d0_lod2.glb",
+      "sha256": "7055ac81f30f10cd448629d4fe00787dbec326ccff0dea9c8f3ee4d465b0f520",
+      "bytes": 116816,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/logistics_d0_lod1.glb",
+      "path": "assets/dome-city/logistics_d0_lod1.glb",
+      "sha256": "172ae45d92ff111c5b7b4ac093cadeb60dcf47693c75515b1f39754d8b7e3b39",
+      "bytes": 321004,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/logistics_d0_lod2.glb",
+      "path": "assets/dome-city/logistics_d0_lod2.glb",
+      "sha256": "993a712d48d74cd5c189b428a5a424acbde08c906de0d03d0c444160330aa07b",
+      "bytes": 116820,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/bridge_long_d0_lod1.glb",
+      "path": "assets/dome-city/bridge_long_d0_lod1.glb",
+      "sha256": "6f136c45bc1b6bb2004231e72efe1e36a6a1688fb8ddda1f67775b5047395759",
+      "bytes": 53892,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-colony/bridge_long_d0_lod2.glb",
+      "path": "assets/dome-city/bridge_long_d0_lod2.glb",
+      "sha256": "e0ca7a4e0d964037d19b4b2a61dcb0d9d9f51e59ed8af7a9632829a022fe1d04",
+      "bytes": 51448,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-city/layout.json",
+      "path": "assets/dome-city/layout.json",
+      "sha256": "b05e35ca3ec6fa2ff7d714079bd80aa31801bb95fd910399fadfd06eba0c9684",
+      "bytes": 39213,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/7466a4a15ecd6b520dc405316cbeaa58a4e211a2/assets/dome-city/README.md",
+      "path": "assets/dome-city/README-upstream.md",
+      "sha256": "eef152f8eccaf32e236ede38ddcf6131fa6451b6017191b1e79a32074e0cc19c",
+      "bytes": 6777,
+      "kind": "copy"
+    },
+    {
+      "source": "assets/models/disco-ball/disco_ball_d0_lod1.glb",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
+      "path": "assets/celebration/disco_ball_d0_lod1.glb",
+      "sha256": "d24a0d50377f187bf72c11e68846ad0ebf988db51cca7e27917e40fd30d68526",
+      "bytes": 361576,
+      "kind": "copy"
+    },
+    {
+      "source": "assets/models/sentries/lancer_t1.glb",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
+      "path": "assets/celebration/lancer_t1.glb",
+      "sha256": "6d155e2d3620c05205262ad04adae9713259f6f680c5f61e4f8fdf1d2077ebc2",
+      "bytes": 42892,
+      "kind": "copy"
+    },
+    {
+      "source": "assets/audio/day_42_music.mp3",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
+      "path": "assets/audio/day_42_music.mp3",
+      "sha256": "ad89691c55cd89da539ae8712efdded5b5c4ae61f6fc4dc12ac894a4db96b417",
+      "bytes": 1409358,
+      "kind": "copy"
+    },
+    {
+      "source": "src/domain/disco-celebration.js",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
+      "path": "upstream/stalheart/src/domain/disco-celebration.js",
+      "sha256": "1360d02de4adb847a51bf422f8741fbdeac14018e746ba3967891f01cb8c31e6",
+      "bytes": 2905,
+      "kind": "copy"
+    },
+    {
+      "source": "src/content/day-42.js",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
+      "path": "upstream/stalheart/src/content/day-42.js",
+      "sha256": "7a421389cb36036817f91c033fa48693a968dbd8e6088501ec22913fbc64644f",
+      "bytes": 2664,
+      "kind": "copy"
+    },
+    {
+      "source": "assets/models/astro/terraformer_3000_d0_lod1.glb",
+      "path": "assets/celebration/terraformer_3000_d0_lod1.glb",
+      "sha256": "4886dd497382b50c39cc7455906fcc92e5ef22e0d2fef5907a0372ff2e6410ee",
+      "bytes": 329364,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/sentries/rotor_t1.glb",
+      "path": "assets/city-combat/rotor_t1.glb",
+      "sha256": "d4d0de97d7c0d0b61510e67a888999fe0d7cfb4bc15e212465fa8f1c437d66a9",
+      "bytes": 76268,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/creatures/nih-dairia/reed.json",
+      "path": "assets/city-combat/reed.json",
+      "sha256": "785fc6806856c6d774e3bf9fb011920b88729ee5d392f3afb30f3113d001b008",
+      "bytes": 1870,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/creatures/nih-dairia/reed.bin",
+      "path": "assets/city-combat/reed.bin",
+      "sha256": "3bc1339ea9b57d436cc43cde2ad9801d6f4877fa245fa5bd688e51cf91ed5207",
+      "bytes": 2153472,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/nih-dairia/LICENSE",
+      "path": "assets/city-combat/LICENSE-reed",
+      "sha256": "8b1ba204bb69a0ade2bfcf65ef294a920f6bb361b317dba43c7ef29d96332b9b",
+      "bytes": 35148,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/explosions/common.js",
+      "path": "upstream/stalheart/src/fx/explosions/common.js",
+      "sha256": "02da79ffda9c7f6eb8e55a68c453afc67a73a8baf418b5378bfee6def8afdf4c",
+      "bytes": 16373,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/explosions/rotary-pop.js",
+      "path": "upstream/stalheart/src/fx/explosions/rotary-pop.js",
+      "sha256": "32f27b3003f032dc926c175880f0a5e02d227a15e227591317e723752d3bdf18",
+      "bytes": 2055,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/explosions/bofors-burst.js",
+      "path": "upstream/stalheart/src/fx/explosions/bofors-burst.js",
+      "sha256": "caf1e8bc631537f895d35fe032a62fd2145dc86d3535b8cde838a975394ffcab",
+      "bytes": 2601,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/explosions/howitzer-blast.js",
+      "path": "upstream/stalheart/src/fx/explosions/howitzer-blast.js",
+      "sha256": "eef4c18c30a3d8122393469e464e901a6138cfdda9472fbbad1615bad0ee8b46",
+      "bytes": 2668,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/explosions/orbital-strike.js",
+      "path": "upstream/stalheart/src/fx/explosions/orbital-strike.js",
+      "sha256": "51b8cd3f55116b6619f7bbf4e212cc949bdbd108e467c064524c718c037bcb4b",
+      "bytes": 3649,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/physics/cage-model.js",
+      "path": "upstream/stalheart/below/src/fx/reed/physics/cage-model.js",
+      "sha256": "9409abaecbeca32ff41e41c05ffccf9ba472ddf6c4ada484ab0e6cb847a5eb8a",
+      "bytes": 2931,
+      "kind": "canonical-three-import",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/physics/soft-body-kernel.js",
+      "path": "upstream/stalheart/below/src/fx/reed/physics/soft-body-kernel.js",
+      "sha256": "c2094f274d2b8a4a7e4319f5d1a5d87357775ea11ddfe2832a0928c32a1d25e2",
+      "bytes": 28271,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/physics/deform-surface.js",
+      "path": "upstream/stalheart/below/src/fx/reed/physics/deform-surface.js",
+      "sha256": "c2830ebbf5220edafb629c6223b0ed61bbe51dd83e722a6c8b740f5f202c0b31",
+      "bytes": 3990,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/physics/constants.js",
+      "path": "upstream/stalheart/below/src/fx/reed/physics/constants.js",
+      "sha256": "0ad24cae058f52d830b4c65e0f106f56967e7b07ad6bf9b7de63b5dcbd5cb64c",
+      "bytes": 379,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/physics/soft-body.js",
+      "path": "upstream/stalheart/below/src/fx/reed/physics/soft-body.js",
+      "sha256": "6d4af9281decffdc18336b5f3c181106f9087169ab233fbfb973227fb469e9ef",
+      "bytes": 25340,
+      "kind": "canonical-three-import",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/monster/prey.js",
+      "path": "upstream/stalheart/below/src/fx/reed/monster/prey.js",
+      "sha256": "b0a670bf26f4a322de2349e7b377da876624c295763ae1377d3980674e9a4bde",
+      "bytes": 3062,
+      "kind": "canonical-three-import",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/monster/cradle.js",
+      "path": "upstream/stalheart/below/src/fx/reed/monster/cradle.js",
+      "sha256": "4a550199d13c66dabfa4310ff4c9934802a5a5402db18dcc011f06a2fb7d0016",
+      "bytes": 5686,
+      "kind": "canonical-three-import",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/monster/traction.js",
+      "path": "upstream/stalheart/below/src/fx/reed/monster/traction.js",
+      "sha256": "0971b57a3a6ea0a5982e60cc4852dc7a15d2e51e282393d497de8345914192a8",
+      "bytes": 2685,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/monster/limb-separation.js",
+      "path": "upstream/stalheart/below/src/fx/reed/monster/limb-separation.js",
+      "sha256": "cd98e5a57c4d483127eca2edfd89f7c5c5b56d0703ea9b28d2f874542b70b634",
+      "bytes": 3605,
+      "kind": "canonical-three-import",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/monster/motion-settings.js",
+      "path": "upstream/stalheart/below/src/fx/reed/monster/motion-settings.js",
+      "sha256": "718a41df3bd14ab91e58b3a7dac6dce502a8b54f7c69dc20b9e79c7fe3c7401a",
+      "bytes": 3486,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/monster/gait.js",
+      "path": "upstream/stalheart/below/src/fx/reed/monster/gait.js",
+      "sha256": "dff658446cb9d6479dd7c77116a0880e918167d17d4bd056a42049ffdc83a7a6",
+      "bytes": 4841,
+      "kind": "canonical-three-import",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/monster/pursuit.js",
+      "path": "upstream/stalheart/below/src/fx/reed/monster/pursuit.js",
+      "sha256": "c441f2108b0fbff6df146b7adbcdcde60c356b7ec522616f44523dee4b8b7383",
+      "bytes": 5272,
+      "kind": "canonical-three-import",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/monster/arena.js",
+      "path": "upstream/stalheart/below/src/fx/reed/monster/arena.js",
+      "sha256": "35e997c4e54cf4305c079ccbab55aaf520ce779c4604bf1ec09150527b83d6ff",
+      "bytes": 155,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/monster/feeding.js",
+      "path": "upstream/stalheart/below/src/fx/reed/monster/feeding.js",
+      "sha256": "77fe9bd55209456bc1e02d5f050546a159be85ed6903c2a5a9885ae8f4e5f62d",
+      "bytes": 8088,
+      "kind": "canonical-three-import",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/monster/behavior.js",
+      "path": "upstream/stalheart/below/src/fx/reed/monster/behavior.js",
+      "sha256": "ef7f8132dd1c601d566fd4a04a74d4dbfaf85ce44a3029e2a629b9c03566347b",
+      "bytes": 14107,
+      "kind": "canonical-three-import",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/reed.js",
+      "path": "upstream/stalheart/below/src/reed.js",
+      "sha256": "43973f49738cff0377198e7b6fcf8ae7c2ae760b603db9402ecabf3751b5c013",
+      "bytes": 1615,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/cutis-maku/convex.js",
+      "path": "upstream/stalheart/below/src/fx/cutis-maku/convex.js",
+      "sha256": "e139178427064beb783dd7cb4c501de9ad2952dd6914dfa6a66421efd0904fc4",
+      "bytes": 889,
+      "kind": "canonical-three-import",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/gorogoro/shaders.js",
+      "path": "upstream/stalheart/below/src/fx/gorogoro/shaders.js",
+      "sha256": "3ca0881bbf7c0c320051005b119c4dbf25b9f1130ab013cf29fcb7c39381c108",
+      "bytes": 12899,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/gorogoro/material.js",
+      "path": "upstream/stalheart/below/src/fx/gorogoro/material.js",
+      "sha256": "aa914b5ab54189cd0e1d4d6c0721ce59d036d833c77300033b7389f1ffbc4c9a",
+      "bytes": 2580,
+      "kind": "canonical-three-import",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/gorogoro/config.js",
+      "path": "upstream/stalheart/below/src/fx/gorogoro/config.js",
+      "sha256": "a14286bfcbe6034a996fe9feaed406b20699325e6e0f6af3bae8fea2072b39a1",
+      "bytes": 7978,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/gorogoro/tiers.js",
+      "path": "upstream/stalheart/below/src/fx/gorogoro/tiers.js",
+      "sha256": "a9d8af3ec1d532745f28dbfc411edd8ebfd740695f4559c64d1d32e1473bd676",
+      "bytes": 2774,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/gorogoro/geometry.js",
+      "path": "upstream/stalheart/below/src/fx/gorogoro/geometry.js",
+      "sha256": "4e6de8fbefe55e965af8518db1c458f45ca900dd42ab09040cd04bd230441839",
+      "bytes": 7221,
+      "kind": "canonical-three-import",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/gorogoro/locomotion.js",
+      "path": "upstream/stalheart/below/src/fx/gorogoro/locomotion.js",
+      "sha256": "0b212433a958b922796e017cde4e3def2a69045a56ede5de8de91f516ed7658c",
+      "bytes": 1394,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/gorogoro/controller.js",
+      "path": "upstream/stalheart/below/src/fx/gorogoro/controller.js",
+      "sha256": "886d91a4d9ab199672d4299c8acd44070808ce4a0c5eec90ae7efc6fc6728bd9",
+      "bytes": 13393,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/core/knobs.js",
+      "path": "upstream/stalheart/src/core/knobs.js",
+      "sha256": "c5b4e7558743559ee150d03c59132476ca12cc04d0c2abdffa7a6cf2a8bf0368",
+      "bytes": 4043,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/knobs.js",
+      "path": "upstream/stalheart/src/knobs.js",
+      "sha256": "74486132b6f1e2911b316254fed9eb80964e5abb967ffdddb43639bca174b02b",
+      "bytes": 95,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/content/sentries.js",
+      "path": "upstream/stalheart/src/content/sentries.js",
+      "sha256": "2ba0726b714582177599d0a58b324f78914d880eec4d24dd14f87aeb8ced12a8",
+      "bytes": 3576,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/sentry.js",
+      "path": "upstream/stalheart/src/sentry.js",
+      "sha256": "ebfe8a234de805a47c445575927c55c706c9ff59e804bfeae48444cd85d81015",
+      "bytes": 24376,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/beamfx.js",
+      "path": "upstream/stalheart/src/beamfx.js",
+      "sha256": "76f3b4bd28c3c41ee0c48ad28c063a461c5f37b3e35914e14a970fe273254edc",
+      "bytes": 8329,
+      "kind": "canonical-three-import",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/content/orbital-laser.js",
+      "path": "upstream/stalheart/src/content/orbital-laser.js",
+      "sha256": "0bacf57707cba3b4dc25b72188e8ed1fb44a37e8695c537b600625cdd5a9d1c5",
+      "bytes": 12821,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/content/explosions.js",
+      "path": "upstream/stalheart/src/content/explosions.js",
+      "sha256": "034e59e07f550568b4e2374d4a2c18d0262b072bfdbd38c630cf2f0bb57ca072",
+      "bytes": 7688,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/scorch-trail.js",
+      "path": "upstream/stalheart/src/fx/scorch-trail.js",
+      "sha256": "bdd6823f108a5a510a741754786f4f34585d742e2204b9020a7272270a49eb01",
+      "bytes": 4877,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/fx/orbital-laser.js",
+      "path": "upstream/stalheart/src/fx/orbital-laser.js",
+      "sha256": "d479624c65178424ab8e84cf10e251cf3aa416acf9217afb820fa71338994e07",
+      "bytes": 17947,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/core/a6-missile-flight.js",
+      "path": "upstream/stalheart/src/core/a6-missile-flight.js",
+      "sha256": "db9ca1b3ee7ae9fc1678db4ae301c41b13f11c1b52e71ef0eb6ee551112fc228",
+      "bytes": 3731,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/domain/missile-flight.js",
+      "path": "upstream/stalheart/src/domain/missile-flight.js",
+      "sha256": "86bc040805f8ae3ac4c53e3f3b73210b42fbad05e69ccedafa18763db7d31e5f",
+      "bytes": 6729,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/domain/sphere-missile-flight.js",
+      "path": "upstream/stalheart/src/domain/sphere-missile-flight.js",
+      "sha256": "e01a6697b4da6ff9aa03086baa45d94c5afc10ea3f55da44672698721ab8ebab",
+      "bytes": 1813,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/missiles.js",
+      "path": "upstream/stalheart/src/missiles.js",
+      "sha256": "ba50cebf16fb0a3c5820a0379441309588669fb42717c0b422eb75d7c3d69cb0",
+      "bytes": 3448,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/content/gunship.js",
+      "path": "upstream/stalheart/src/content/gunship.js",
+      "sha256": "9d8b7a5cdc703c88e50b2502c8184de54eeb8debdcd992a09b2df64f72d4a002",
+      "bytes": 10094,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/gorogoro/LICENSE",
+      "path": "upstream/stalheart/below/src/fx/gorogoro/LICENSE",
+      "sha256": "8b1ba204bb69a0ade2bfcf65ef294a920f6bb361b317dba43c7ef29d96332b9b",
+      "bytes": 35148,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "below/src/fx/reed/LICENSE",
+      "path": "upstream/stalheart/below/src/fx/reed/LICENSE",
+      "sha256": "8b1ba204bb69a0ade2bfcf65ef294a920f6bb361b317dba43c7ef29d96332b9b",
+      "bytes": 35148,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/sentries/quiver_t1.glb",
+      "path": "assets/city-combat/quiver_t1.glb",
+      "sha256": "53531761dfd855885c1fd730cf3ead718e0c3cb3d9811ecaef21d9264214ba21",
+      "bytes": 62532,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/missile-kit/talon.glb",
+      "path": "assets/city-combat/talon.glb",
+      "sha256": "73e1c32df49ce30f3e1c2bac1c9eb2e5c33cee76ee1b1f88b44a3850b14d21db",
+      "bytes": 149136,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/korp/korp_d0_lod1.glb",
+      "path": "assets/city-combat/gunship.glb",
+      "sha256": "e1dc17e06c53160b95970e79315bf72e75b3047d6522a1a4fd200bdd394165d6",
+      "bytes": 198764,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/sol82/sol82_platform_detailed.glb",
+      "path": "assets/city-combat/sol82.glb",
+      "sha256": "c64fe484698d6f58470cf47ac61ca70f9cc1520c681e37d035c5f1b98de559d9",
+      "bytes": 447372,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/missile-kit/talon.glb",
+      "path": "assets/models/missile-kit/talon.glb",
+      "sha256": "73e1c32df49ce30f3e1c2bac1c9eb2e5c33cee76ee1b1f88b44a3850b14d21db",
+      "bytes": 149136,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/audio/minigun_fire.mp3",
+      "path": "assets/audio/minigun_fire.mp3",
+      "sha256": "a41f5eeabd730dc70161feb6cad6336571b3204fe09d396cdf5f632ff0443d7e",
+      "bytes": 2865,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/audio/plasma_fire.mp3",
+      "path": "assets/audio/plasma_fire.mp3",
+      "sha256": "220ea7b86523b9b6635125ce8fd9405d804abd91fb66e32f6a0823e723ecf5a0",
+      "bytes": 6365,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/audio/seeker_fire.mp3",
+      "path": "assets/audio/seeker_fire.mp3",
+      "sha256": "540940df71330e2b29c5c81324dfbbfc09cd429879f7b03011e4ba6cce9be78c",
+      "bytes": 8858,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/audio/blast_fire.mp3",
+      "path": "assets/audio/blast_fire.mp3",
+      "sha256": "00b0e149e43e3bf2e5fe7560efbe18e0d69951fe55252764fa5394a270654d08",
+      "bytes": 11679,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/audio/gunship_bofors_fire.mp3",
+      "path": "assets/audio/gunship_bofors_fire.mp3",
+      "sha256": "f6c8eb5e4077b1be09c9bc6f7fd0064f2cbf9ea2fafa32778a0e5f0ec5a35370",
+      "bytes": 42240,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/missile-presentation.js",
+      "path": "upstream/stalheart/src/missile-presentation.js",
+      "sha256": "8fe2107d92c3d89854bce52e3ecb13ee46ecf62ea15f6d99e0f7e36a597c7978",
+      "bytes": 3799,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "vendor/meshopt_decoder.module.js",
+      "path": "upstream/stalheart/vendor/meshopt_decoder.module.js",
+      "sha256": "01f48524f4bac6141eaba07e94cc36e7ee56f311796fa6117c159842941b0468",
+      "bytes": 24850,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "scripts/bake-reed-motion.mjs",
+      "path": "assets/city-combat/reed-motion.bin",
+      "sha256": "6b66adea5fcb8b70de628b95b92d1b72e68b4f277232a7ffd865e07480803986",
+      "bytes": 19660800,
+      "kind": "solver-bake",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "scripts/bake-reed-motion.mjs",
+      "path": "assets/city-combat/reed-motion.json",
+      "sha256": "8f8537c2d30e6c4d78f78c496449129f037abd8299da93ed5a2c903dd7517ab7",
+      "bytes": 282,
+      "kind": "solver-bake",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/isao/isao_birudoron_lod1.glb",
+      "path": "assets/isao/isao_birudoron_lod1.glb",
+      "sha256": "2e9a389a4729f625fa9a7fd018bad8b78db86ac3254ebdcff9df230fba344088",
+      "bytes": 1570944,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/domain/crowd-cap.js",
+      "path": "upstream/stalheart/src/domain/crowd-cap.js",
+      "sha256": "103ee3ade725f19ba00d2e438032fb50c7715863fe1eaa8100907ea1292d10f4",
+      "bytes": 1841,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/domain/gunship.js",
+      "path": "upstream/stalheart/src/domain/gunship.js",
+      "sha256": "a1995f35ed9004b3be28f24304b705e5f64041b9c574bc34d4ef7a0ff011fd3d",
+      "bytes": 10857,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/domain/laser-auto.js",
+      "path": "upstream/stalheart/src/domain/laser-auto.js",
+      "sha256": "3f5bf138a6e5fd81ab678c85c3be84cd2de934732bebda760415c727cf344762",
+      "bytes": 2600,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/content/story-defaults.js",
+      "path": "upstream/stalheart/src/content/story-defaults.js",
+      "sha256": "2fe5d1ce7638115514d3942bb825cdd4e47b3ef51ed275603a993083952ff3db",
+      "bytes": 32707,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/content/missile-defaults.js",
+      "path": "upstream/stalheart/src/content/missile-defaults.js",
+      "sha256": "19de46ff6f048d8b2df81702bd610fe8f15fcb51a1c3f6d3775869e94a254d33",
+      "bytes": 525,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/domain/lockon.js",
+      "path": "upstream/stalheart/src/domain/lockon.js",
+      "sha256": "2525d4641a7e3447951e4f6b1ddfa82fed5c0524942c7aeffe718ca6e70152d7",
+      "bytes": 11654,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/domain/missile-targeting.js",
+      "path": "upstream/stalheart/src/domain/missile-targeting.js",
+      "sha256": "2a0bbf5457564bbec596efb43a882fa7cf0cd93cf73f38150bf831475d13ae99",
+      "bytes": 2497,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/content/sentry-heat.js",
+      "path": "upstream/stalheart/src/content/sentry-heat.js",
+      "sha256": "70fb1e67d26e93ba58aa1a5f050803f1ce28821959b0ee0048f6692cb5fb32ba",
+      "bytes": 923,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/core/heat.js",
+      "path": "upstream/stalheart/src/core/heat.js",
+      "sha256": "2f05aa10bff07a474753af03e3c2b81f4ceb7ec818fe55ecfccb35a3e0920ecb",
+      "bytes": 875,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/content/firing-defaults.js",
+      "path": "upstream/stalheart/src/content/firing-defaults.js",
+      "sha256": "db9cb63fc8edb44d7c5c3e75b5ab9685bce29c08003ce9408a0035d321ed5d60",
+      "bytes": 409,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/towers.js",
+      "path": "upstream/stalheart/src/towers.js",
+      "sha256": "1e55d46093646c6a403a92dbb056276e98b5bd24f8531a60498d7ab662690e5d",
+      "bytes": 5197,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/arc.js",
+      "path": "upstream/stalheart/src/arc.js",
+      "sha256": "d422837a1b63d4e180b4b12b6c2d20fde49e24966cdb1fd3159460e0de97fec8",
+      "bytes": 5941,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/beamdraw.js",
+      "path": "upstream/stalheart/src/beamdraw.js",
+      "sha256": "3331dde354be363db067992d29e7d9ca4be7410078c94332a757e332eb20d654",
+      "bytes": 13571,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "src/shotfx.js",
+      "path": "upstream/stalheart/src/shotfx.js",
+      "sha256": "5da6d3e33aae6395e4509ef9af9ca9da9b82a19eb32172040f9852aff86ee9ce",
+      "bytes": 11272,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/audio/gunship_rotary_fire.mp3",
+      "path": "assets/audio/gunship_rotary_fire.mp3",
+      "sha256": "f350a3641952c72c27433023244cb7c36d329ac3372f1d6ea61721536a876963",
+      "bytes": 62880,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/audio/tank_shells.mp3",
+      "path": "assets/audio/tank_shells.mp3",
+      "sha256": "c9583c02e1f5456950e9192fe1c9f739cec1dd9d12e267b40f71a6012eae264b",
+      "bytes": 11664,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "path": "assets/scoreboard-rivalry/beacon_rivalry_d0_lod1.glb",
+      "source": "https://jelaludo.github.io/SentryTowers_A6/assets/planet-scoreboards/beacon_rivalry_d0_lod1.glb",
+      "sha256": "f08c915ce6bf03253dfc02b2cebb8ab542bfc125fcc4d3beaa3fb3888f24b8c0",
+      "bytes": 18712,
+      "kind": "copy"
+    },
+    {
+      "path": "assets/scoreboard-rivalry/runtime.js",
+      "source": "https://jelaludo.github.io/SentryTowers_A6/assets/planet-scoreboards/runtime.js",
+      "sha256": "e02f48803041bb48b3d2fbcdab2ab1256f767723403b8bfbd3702f863ade1d40",
+      "bytes": 12681,
+      "kind": "copy"
+    },
+    {
+      "path": "assets/scoreboard-rivalry/entry.json",
+      "source": "https://jelaludo.github.io/SentryTowers_A6/assets/planet-scoreboards/manifest.json",
+      "sha256": "f4953062a303e6ffe74b4ee03e280d2ddab728033b886a0a13a4b7f65d009394",
+      "bytes": 2376,
+      "kind": "manifest entry"
+    },
+    {
+      "source": "assets/models/sentries/plasma_t1.glb",
+      "path": "assets/city-combat/plasma_t1.glb",
+      "sha256": "6661ef7111fe2a85f09170f735248f6ffdda791a087286138d4b95fd94daa60b",
+      "bytes": 296996,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/sentries/relay_t1.glb",
+      "path": "assets/city-combat/relay_t1.glb",
+      "sha256": "0aa2ed71dad5ef618d7f57812c300ee7ce3e38475e696f4cd76824a5980fd952",
+      "bytes": 120564,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/sentries/mortar_t1.glb",
+      "path": "assets/city-combat/mortar_t1.glb",
+      "sha256": "22123aabb7e708387b3479b081bb9328d8b52c99299f8ba9811744162ee84905",
+      "bytes": 47668,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/sentries/needle_t1.glb",
+      "path": "assets/city-combat/needle_t1.glb",
+      "sha256": "1cfdc1bd0b0225f93b5f74fd3936ce2853d42f54fb58f1bb23a1cd118eb46fe9",
+      "bytes": 102632,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "assets/models/sentries/heptapod_a6_t1.glb",
+      "path": "assets/city-combat/heptapod_a6_t1.glb",
+      "sha256": "98d1b84cd83502e4846563c848d08b68fd53ab60b5328492e94ba75d11a1e4ef",
+      "bytes": 295520,
+      "kind": "copy",
+      "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    }
+  ],
+  "flagsRevision": "7466a4a15ecd6b520dc405316cbeaa58a4e211a2",
+  "roverDamageRevision": "7466a4a15ecd6b520dc405316cbeaa58a4e211a2",
+  "raceCityRevision": "7466a4a15ecd6b520dc405316cbeaa58a4e211a2",
+  "raceCelebrationRevision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
+  "combatExpansionRevision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
+  "battleExpansionRevision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+}

@@ -1,0 +1,23 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>R–47X / Accumulated damage</title><link rel="icon" href="data:,"><link rel="stylesheet" href="./review.css">
+<style>
+.stage-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:16px 0}.stage-card{padding:10px;border:1px solid #36564e;border-radius:4px;font-size:11px;color:#b8cec4}.stage-card strong{display:block;font:20px monospace;margin-top:7px;color:#e2f0e6}.stage-card.active{border-color:#efc187;background:#3a382a}.milestones{display:flex;justify-content:space-between;font:10px monospace;color:#8eafa1;margin:5px 0 18px}.milestones span.done{color:#d9eabd}#history{padding:0;list-style:none;font:11px/1.6 monospace;color:#a7c4b7}#history li{padding:7px 0;border-bottom:1px solid #2b453f}#hit-progress{height:5px;background:#314b43;margin:14px 0}#hit-progress span{display:block;height:100%;background:#edc181;width:0;transition:width .2s}#readout{max-width:680px}#result{font-size:30px}
+</style><body><canvas id="scene" aria-label="Rover accumulating damage, from intact to wreck"></canvas>
+<aside><small>STÅLHEART / DAMAGE LAB</small><h1>From intact to wreck.</h1>
+<p>One rover, 12 successive hits. Damage persists as each assembly advances through D1, D2 and D3.</p>
+<div class="row"><button id="play">Pause</button><button id="restart">Restart</button></div>
+<label for="interval">Time between hits</label><select id="interval"><option value="1">1 second</option><option value="2">2 seconds</option><option value="3" selected>3 seconds</option><option value="5">5 seconds</option></select>
+<label for="step">Accumulated hits <output id="hit-value">0 / 12</output></label><input id="step" type="range" min="0" max="12" step="1" value="0">
+<div class="milestones"><span data-milestone="0">D0 · 0</span><span data-milestone="4">D1 · 4</span><span data-milestone="8">D2 · 8</span><span data-milestone="12">D3 · 12</span></div>
+<div class="row"><button id="previous">Previous hit</button><button id="next">Next hit</button></div>
+<div class="stage-grid" id="groups"></div>
+<label class="check"><input id="before" type="checkbox"> Compare with intact rover</label>
+<label class="check"><input id="orbit" type="checkbox"> Slowly rotate the view</label>
+<p class="row"><button id="front">Front</button><button id="rear">Rear</button><button id="side">Side</button></p>
+<label>Recent hits</label><ol id="history"><li>No hits yet.</li></ol>
+<p class="hint">Four hits complete each overall stage. The preview stops on the final wreck. Scrub or step backward to compare earlier damage.</p>
+<p class="hint">Asset-stage demonstration, not a gameplay damage formula. Loose debris hidden to keep the silhouette clear. Drag to orbit · Scroll to zoom.</p>
+<p><a href="./index.html">Individual impact trials</a> · <a href="../../?mode=race">Race lab</a></p>
+</aside>
+<section id="readout" aria-live="polite"><small id="phase">LOADING</small><h2 id="result">Preparing rover…</h2><div id="hit-progress"><span></span></div><p id="metrics"></p><p id="comparison"></p></section>
+<div id="loading">Loading four local damage models…</div><script type="module" src="./accumulation.js"></script></body></html>

@@ -1,0 +1,25 @@
+{
+  "name": "stalheart-rover-lab",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node scripts/build-pages.mjs",
+    "dev": "node scripts/serve.mjs",
+    "test": "node --test test/*.test.mjs",
+    "check": "node scripts/check.mjs",
+    "test:browser": "node scripts/browser-test.mjs",
+    "test:race": "node scripts/race-browser-test.mjs",
+    "test:kick": "node scripts/kick-browser-test.mjs",
+    "test:damage": "node scripts/damage-browser-test.mjs",
+    "test:city": "node scripts/city-browser-test.mjs",
+    "test:expansion": "node scripts/expansion-browser-test.mjs",
+    "test:drift": "node scripts/drift-browser-test.mjs",
+    "test:combat": "node scripts/combat-browser-test.mjs",
+    "test:finish": "node scripts/finish-update-browser-test.mjs",
+    "test:stunts": "node scripts/stunt-browser-test.mjs",
+    "test:battle": "node scripts/battle-browser-test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

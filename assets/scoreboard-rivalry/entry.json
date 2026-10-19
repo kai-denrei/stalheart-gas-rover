@@ -1,0 +1,122 @@
+{
+  "id": "beacon_rivalry_d0_lod1",
+  "family": "planet_scoreboards",
+  "variant": "beacon_rivalry",
+  "name": "Beacon / Rivalry",
+  "file": "beacon_rivalry_d0_lod1.glb",
+  "meshopt_file": "beacon_rivalry_d0_lod1.meshopt.glb",
+  "lod": 1,
+  "quality": "game",
+  "damage_level": 0,
+  "state": "intact",
+  "static": false,
+  "derived": true,
+  "derived_from": "beacon_rivalry_d0_lod0.glb",
+  "sha256": "f08c915ce6bf03253dfc02b2cebb8ab542bfc125fcc4d3beaa3fb3888f24b8c0",
+  "bytes": 18712,
+  "meshopt_sha256": "b1b6c578c39823fe37157d89e80228a62fbd6ae4c54d79dcb6cc02fc3feac42f",
+  "meshopt_bytes": 8952,
+  "triangles": 204,
+  "draw_calls": 1,
+  "materials": 1,
+  "textures": 0,
+  "measurement_basis": "rendered mesh uses; shared mesh used twice counts twice; draw calls are mesh uses \u00d7 primitives",
+  "plot_m": [
+    8,
+    5
+  ],
+  "bounds": {
+    "min": [
+      -3.75,
+      0,
+      -1.9500000476837158
+    ],
+    "max": [
+      3.75,
+      4.144999980926514,
+      1.9500000476837158
+    ],
+    "dimensions_m": [
+      7.5,
+      4.144999980926514,
+      3.9000000953674316
+    ]
+  },
+  "sockets": [
+    {
+      "id": "POWER",
+      "kind": "power",
+      "position_m": [
+        0,
+        0.35,
+        -1.65
+      ],
+      "normal": [
+        0,
+        0,
+        -1
+      ]
+    },
+    {
+      "id": "SERVICE",
+      "kind": "human_access",
+      "position_m": [
+        0,
+        0,
+        1.9
+      ],
+      "normal": [
+        0,
+        0,
+        1
+      ]
+    },
+    {
+      "id": "FX",
+      "kind": "celebration_vfx",
+      "position_m": [
+        0,
+        4.25,
+        0
+      ],
+      "normal": [
+        0,
+        1,
+        0
+      ]
+    }
+  ],
+  "clips": [],
+  "hideable_parts": [],
+  "display": {
+    "technology": "seven_segment",
+    "rows": 3,
+    "digits_per_row": 6,
+    "max_score_per_row": 999999,
+    "blank_leading": true,
+    "default_values": [
+      0,
+      0,
+      0
+    ],
+    "distance_face": "blank",
+    "owner_label_max_characters": 18,
+    "label_node": "LABEL_ORIGIN",
+    "row_ids": [
+      "KILLS",
+      "GATHERED",
+      "USED"
+    ],
+    "row_y_m": [
+      3.12,
+      2.39,
+      1.66
+    ],
+    "digit_pitch_m": 0.5,
+    "digit_cell_m": 0.064,
+    "face_z_m": 0.635,
+    "runtime_adapter": "runtime.js"
+  },
+  "review_state": "contract_candidate_pending_game_camera_reference_phone",
+  "credit": "Models by jelaludo"
+}

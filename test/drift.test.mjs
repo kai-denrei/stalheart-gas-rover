@@ -1,0 +1,8 @@
+import test from 'node:test';import assert from 'node:assert/strict';
+import {Simulation,commands} from '../src/simulation.js';import {createWorld,point,frameAt} from '../src/world.js';
+function car(){const w=createWorld();w.colliders=[];w.holes=[];return new Simulation(w);}
+function drive(s,input,n){for(let i=0;i<n;i++)s.step({...commands(),...input});}
+function lateral(s){return Math.abs(s.vel.clone().applyQuaternion(s.q.clone().invert()).x);}
+test('rear handbrake breaks rear grip, slows rear wheel roll, and grip returns after release',()=>{const normal=car(),drift=car();for(const s of [normal,drift])drive(s,{drive:1},400);const n=normal.wheelSpin[0],d=drift.wheelSpin[0];drive(normal,{drive:1,steer:.55},120);drive(drift,{drive:1,steer:.55,brake:1},120);assert.ok(lateral(drift)>lateral(normal)*3);assert.ok(drift.wheelSpin[0]-d<(normal.wheelSpin[0]-n)*.4);assert.ok(drift.drift>.9);drive(drift,{drive:1},180);assert.ok(lateral(drift)<.05);assert.ok(drift.drift<.02);assert.equal(drift.spent,0);});
+test('straight handbrake stops the rover and holding it does not induce idle spin',()=>{const s=car();drive(s,{drive:1},240);drive(s,{brake:1},300);assert.equal(s.vel.length(),0);assert.equal(s.omega.length(),0);assert.ok(s.grounded);});
+test('handbrake never injects lateral forces in flight',()=>{const a=car(),b=car();for(const s of [a,b]){s.pos.copy(point(0,0,20));s.q.copy(frameAt(s.pos).q);s.grounded=false;s.supportTime=0;}drive(a,{},60);drive(b,{brake:1},60);assert.deepEqual(a.vel.toArray(),b.vel.toArray());assert.deepEqual(a.omega.toArray(),b.omega.toArray());});

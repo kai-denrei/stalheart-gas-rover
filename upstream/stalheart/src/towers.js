@@ -1,0 +1,163 @@
+import { firingFor } from './content/firing-defaults.js';
+// Sentry combat rules. Identity, numbering and radial order have one content owner.
+import { SENTRIES, SENTRY_ORDER } from './content/sentries.js';
+const COMBAT = {
+  "rotor": {
+    "color": 15397631,
+    "cost": 45,
+    "dmg": 0.1,
+    "range": 4.6,   // 4.6 (owner, 2026-10-16: the first wave is the lemon, whose bodies hold about 42 m off the wall; at 3.6 cells the piloted Rotor read OUT OF RANGE on all of them)
+    "rate": 2.2,
+    "attack": "single"
+  },
+  "plasma": {
+    "color": 3139280,
+    "cost": 80,
+    "dmg": 0.044444444444444446,
+    "range": 2.6,
+    "rate": 6,
+    "attack": "beam"
+  },
+  "quiver": {
+    "color": 5938175,
+    "cost": 90,
+    "dmg": 0.14444444444444443,
+    "range": 3.5,
+    "rate": 1.2,
+    "attack": "seeker",
+    "lock": true
+  },
+  "relay": {
+    "color": 12904191,
+    "cost": 100,
+    "dmg": 0,
+    "range": 3.5,
+    "rate": 1,
+    "attack": "slowfield",
+    "slowFactor": 0.45,
+    "slowDur": 1.6
+  },
+  "mortar": {
+    "color": 10470655,
+    "cost": 110,
+    "dmg": 0.3,
+    "range": 3.5,
+    "rate": 0.5,
+    "attack": "mortar",
+    "splash": 2.2,
+    "arc": true
+  },
+  "lancer": {
+    "color": 16777215,
+    "cost": 130,
+    "dmg": 0.3333333333333333,
+    "range": 7,
+    "rate": 0.45,
+    "attack": "lance",
+    "pierce": true,
+    "burst": 3
+  },
+  "needle": {
+    "color": 13102079,
+    "cost": 220,
+    "dmg": 0.37777777777777777,
+    "range": 8,
+    "rate": 0.45,
+    "attack": "sniper",
+    "hitscan": true,
+    "prefers": "hard"
+  },
+  "heptapod": {
+    "color": 16757854,
+    "cost": 260,
+    "dmg": 0.17777777777777778,
+    "range": 3.4,
+    "rate": 1.8,
+    "attack": "walker",
+    "hullHp": 9
+  }
+};
+export const TOWERS = SENTRIES.map(s => Object.freeze({ ...COMBAT[s.key], ...s, sound:s.fire }));
+export const TOWER_BY_KEY = Object.fromEntries(TOWERS.map(t => [t.key,t]));
+export const TOWER_ORDER = SENTRY_ORDER;
+const WAVE_LADDER = TOWER_ORDER;
+// Retain the numeric identity for existing result files; retired roster URLs resolve here.
+export const DEFAULT_ROSTER_ID = 2;
+export const ROSTER = { id:2, label:'Sentries', towers:TOWERS, order:TOWER_ORDER };
+export const ROSTERS = { 2:ROSTER };
+export const useRoster = () => ROSTER;
+export const starterTower = () => TOWERS[0];
+export const towerSound = def => def.sound;
+
+// upgrade economics, HK-exact: tier1 = 70% of purchase, tier2 = 120%,
+// two tiers max. Returns null when maxed.
+export const MAX_TIER = 2;
+export function upgradeCost(def, currentTier) {
+  if (currentTier === 0) return Math.round(def.cost * 0.7);
+  if (currentTier === 1) return Math.round(def.cost * 1.2);
+  return null;
+}
+
+// per-tier growth (HK-exact) + tier-2 specials
+const UP_DAMAGE = 0.55;
+const UP_RANGE = 0.08;
+const UP_RATE = 0.1;
+
+// effective stats at a tier: base growth per tier, plus the tier-2
+// signature bonus per attack family (HK unit.ts:232-240).
+export function effectiveStats(def, tier) {
+  const s = {
+    dmg: def.dmg * (1 + UP_DAMAGE * tier),
+    range: def.range * (1 + UP_RANGE * tier),
+    rate: def.rate * (1 + UP_RATE * tier),
+    pellets: def.pellets ?? 0,
+    splash: def.splash ?? 0,
+    slowFactor: def.slowFactor,
+    slowDur: def.slowDur,
+  };
+  if (tier >= 2) {
+    if (def.attack === 'mortar') s.splash *= 1.4;
+    else if (def.attack === 'spread') s.pellets += 2;
+    else if (def.attack === 'beam' || def.attack === 'homing') s.range *= 1.3;
+    else if (def.attack === 'single') s.rate *= 1.2;
+  }
+  const rounds=firingFor(def.key).rounds||1;
+  s.rate*=rounds;s.dmg/=rounds;
+  return s;
+}
+
+// targeting: nearest ALIVE enemy within range (HK stepCombat). The
+// distance function is injected so the sphere's chord metric plugs in
+// without this module knowing about geometry.
+// `prefers: 'hard'` (the Needle; owner, 2026-10-02: "Needle now shoots the hardcores in priority, not whichever enemy is closest"): the
+// nearest solid-core body in range (one the tank cannot ram) before the nearest of the rest
+export function pickTarget(towerPos, range, enemies, dist, prefers = null) {
+  let best = null, bestD = range, hard = null, hardD = range;
+  for (const e of enemies) {
+    if (!e.alive) continue;
+    const d = dist(towerPos, e.pos);
+    if (d <= bestD) { bestD = d; best = e; }
+    if (prefers === 'hard' && e.spec && !e.spec.rammable && d <= hardD) { hardD = d; hard = e; }
+  }
+  return hard ?? best;
+}
+
+// cooldown helper: seconds between shots at a rate
+export const shotInterval = (rate) => 1 / rate;
+
+// --- progressive unlock ladder -------------------------------------------
+// Towers unlock by WAVE: ONE new tower each wave, cheap → capstone.
+// Cumulative: wave N grants the first N towers (capped at the roster).
+// WAVE_LADDER is the live roster's order, above. (The Antipode Relay's hack
+// gate on the Mortar retired with the relay, 2026-09-14.)
+
+export function unlockedTowerKeys(wave) {
+  const n = Math.max(1, Math.min(WAVE_LADDER.length, Math.floor(wave) || 1));
+  return WAVE_LADDER.slice(0, n);
+}
+
+// The wave a key unlocks on; null for a key that is not on the ladder.
+export function towerUnlockWave(key) {
+  const i = WAVE_LADDER.indexOf(key);
+  return i < 0 ? null : i + 1;
+}

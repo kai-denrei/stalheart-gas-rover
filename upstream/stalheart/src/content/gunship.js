@@ -1,0 +1,97 @@
+// The KORP/GS01 heavy gunship: the platform the orbital strike always
+// implied. Pure data; src/domain/gunship.js takes these as configuration.
+// Design: docs/superpowers/specs/2026-09-13-heavy-gunship-design.md.
+
+// The orbit. It cannot be influenced: the ship is low on fuel and passes
+// over the base on a fixed schedule. `pass` is the time between passes,
+// `station` how long the guns are yours.
+export const GUNSHIP_ORBIT = Object.freeze({ pass: 60, station: 120 });   // owner, 2026-09-14: two minutes overhead while we debug; a pass must last long enough to feel meaningful
+
+// the post-handover call-in meter: biomass earned from kills fills it one for one, a cleared wave adds a bonus; the
+// first call comes within a few waves, later ones cost more (owner, 2026-09-14: an earned call-in)
+export const GUNSHIP_CALL = Object.freeze({ perBiomass: 1, perWaveClear: 40, firstThreshold: 150, threshold: 300 });
+
+// A breach a minute's walk out (owner: leave time to enjoy the action; src/domain/gunship-lanes.js farCell): the ring `hops`
+// from the heart, give or take `slack`, and never within `clearCells` of a sealed breach. A sector's breach ring reaches no
+// further than the same `hops` (src/fx/sector-run.js, the field's farHops).
+export const GUNSHIP_FAR = Object.freeze({ hops: Math.round(60 * 1.15), slack: 3, clearCells: 6 });
+
+// Where the platform rides while on station, in cells; the optic's pitch
+// limits (radians, negative is down); the model's metre.
+export const GUNSHIP_PLATFORM = Object.freeze({
+  altitudeCells: 34,   // much higher (owner, 2026-09-14): 340 m up, the eye straight down
+  zoom: 2,             // the optic's magnification when the seat opens
+  pitchMin: -1.5708, pitchMax: -0.95,   // straight down to 54° down; the horizon dips 42° at 34 cells, so every aim lands
+  metresPerCell: 10,   // the KORP is authored in metres; the story world is 10 m a cell
+});
+
+// THE GROUND TRACK (owner, 2026-09-15: the gunship feels too static, it should move slowly towards the breaches).
+// src/domain/gunship-track.js flies the platform's ground point toward the live breach with the most enemies near it,
+// else back over the base. Distances in cells, speeds in cells/s (a cell is 10 m on the story planet), yaw in deg/s.
+export const GUNSHIP_TRACK = Object.freeze({
+  speedCells: 1.2,        // top ground speed, 12 m/s: about 35 s from over the base to a breach 45 cells out
+  accelCells: 0.2,        // cells/s²: six seconds from rest to top speed, and the same curve to brake onto the circle
+  loiterCells: 8,         // the orbit round the target: the breach stays in the optic's cone, never straight under the eye
+  loiterSpeedCells: 0.6,  // round the circle, anticlockwise from above (the left pylon turn): a lap in about 80 s
+  yawRateDeg: 8,          // the hull turns no faster than this
+  nearCells: 6,           // enemies within this many cells of a breach count toward it
+  switchMargin: 3,        // another breach needs this many more enemies near it to take the ship off its current one
+});
+
+// WEAPON 3 IS A REAL MISSILE (owner, 2026-09-16: "the Gunship should fire an actual missile, one of our large ones. We see it drop,
+// then it ignites after 2 seconds and heads down (for Weapon #3, mini nuke)"). The 105's instant strike is retired: the third gun is
+// now the MK-9, a modelled round on the TALON body — the missile kit's LARGE mesh (1,340 triangles against the DART's 188), authored
+// for "single special rounds / close views", already pinned and already pooled for the Quiver's own heavy shot, so no asset is added.
+// It is let go from the belly with the aircraft's own velocity, falls unpowered for `freeFall` seconds, then the motor lights —
+// exhaust, plume, sound — and `drive` seconds of powered dive put it on the painted cell. `gravity` is m/s²; `metresPerCell` above
+// turns all of it into the planet's units. src/domain/missile-flight.js takes every one of these as a parameter.
+export const GUNSHIP_NUKE = Object.freeze({
+  mesh: 'talon', profile: 'heavy', length: 4, exhaust: true,   // four metres nose to tail: a body you can read falling away from the belly, not a dart
+  freeFall: 2.4, drive: 1.8,   // the fall, then the burn: the owner's two seconds, stretched to 2.4 (2026-10-03: "drop and forward a bit more, then it ignites")
+  ejectSpeed: 6,
+  throwLeft: 9, throwAhead: 7,   // m/s the round is thrown to the eye's left and ahead (2026-10-03: in full view on the left, clear of the HUD; src/fx/gunship-drop.js)   // m/s straight down as the shackles let go: it is thrown clear of the belly, so from the seat it DROPS away down the sight instead of trailing off behind the hull
+  gravity: 9.81,             // the fall is real metres in real seconds, not an authored curve
+  arrivalLead: 1.5,          // the powered dive's arrival tangent, as a multiple of the distance left: speed climbs into impact
+  // the two moments worth hearing: the shackles letting go at the belly, and the motor catching two seconds later. Both are keys
+  // already in src/content/audio-defaults.js — no sample is added for this. seeker_fire IS the missile motor the Quiver uses.
+  releaseSound: 'tank_shells', igniteSound: 'seeker_fire',
+});
+
+// The three guns. `rate` in rounds per second, `damage` per round at the
+// centre of `blastCells`, `dangerCells` the readout ring, `travel` the
+// seconds a round takes to reach the ground from orbit: the gunner leads.
+// Downtime: the rotary overheats after `heatSeconds` of fire and cools for
+// `coolSeconds`; the Bofors reloads for `reload` s after `magazine` rounds;
+// the MK-9 is one per pass (`perPass`) and locks out for `reload` s after the
+// blast; the automated gunship's own release is booked apart, so a gunner who
+// takes over still has the pass's (src/domain/gunship.js). Ammo is otherwise
+// unlimited. The heavy has no cadence here: its
+// release is the paint-then-fire ritual in src/domain/gunship.js.
+export const GUNSHIP_GUNS = Object.freeze({
+  rotary: Object.freeze({ key: 'rotary', label: '25MM', cue: 'trrrrrrrrrr', rate: 30, damage: 0.22, blastCells: 0.45, dangerCells: 0.8, travel: 2.0, zoom: 2.6, heatSeconds: 12, coolSeconds: 3.5, sound: 'gunship_rotary_fire', loop: true, pitch: 1, impact: 'kinetic_fire', ringHex: 0xdfe8ee, clip: 'Rotary_Fire', strike: false }),
+  bofors: Object.freeze({ key: 'bofors', label: '40MM', cue: 'TOH-TOH-TOH', rate: 2.4, damage: 4, blastCells: 2.2, dangerCells: 2.6,   /* TWICE THE BLAST (owner, 2026-10-07: 'distinctly more powerful than the quiver or mortar'): the burst twice as wide (four times the ground), four damage a round, the pilot's own danger wider with it */ travel: 2.6, zoom: 1.9, magazine: 6, reload: 2.8, sound: 'gunship_bofors_fire', pitch: 1, impact: 'blast_fire', ringHex: 0xffb347, clip: 'Rotary_Fire', strike: false }),
+  // the heaviest tool the seat owns: a 55 m killing radius against the 105's 32, one release a pass, and it takes our own walls
+  // and sentries with it exactly as the orbital strike does — the ring goes red before the release, it is never made safe
+  heavy: Object.freeze({ key: 'heavy', label: 'MK-9', cue: 'clunk … ssshhhh-WHUMP', rate: 0, damage: 0, blastCells: 5.5, dangerCells: 5.5, zoom: 1.3, freeFall: GUNSHIP_NUKE.freeFall, travel: GUNSHIP_NUKE.freeFall + GUNSHIP_NUKE.drive, reload: 20, perPass: 1, sound: GUNSHIP_NUKE.releaseSound, ringHex: 0xff6a4d, clip: 'Heavy_Fire', strike: true }),
+});
+export const GUNSHIP_GUN_ORDER = Object.freeze(['rotary', 'bofors', 'heavy']);
+// THE SEAT'S CONTROLS, one text (review, 2026-10-19): the gunship seat's footer (src/sentry-pilot.js: leave · aim · views, on touch aimTouch · leaveTouch) and
+// THE MOTHER's card hint (src/content/sectors.js ARENA_HANDOVER: aim, aimTouch) quoted it twice
+export const GUNSHIP_SEAT_HINT = Object.freeze({
+  aim: 'Click to lock the mouse, move it to aim · Space or the button fires · rounds take seconds to land: lead them · 1 rotary · 2 bofors · 3 MK-9 mini nuke (paint, then release: it drops two seconds before it burns)',
+  aimTouch: 'Drag to aim · ◉ fires · the gun buttons above · rounds take seconds to land: lead them · MK-9: paint, then release',
+  leave: 'Esc frees the mouse, Esc again or 7: back to the tank', views: 'V the ship · T top view · P pause', leaveTouch: 'TANK leaves' });
+
+// THE GUNSHIP ON AUTO (owner, 2026-10-02: "in later rounds, lets have the Gunship also be on Auto mode, it learned what to do, does it by
+// itself if the player wants, we use that to push the envelope on how many hundreds of enemies we can have ... Even the odd Gunship Dummy
+// nuclear strike that just happens to be in the line of sight of the player could be satisfying. we will add sounds 'Tactical Nuke
+// Launched' / 'Say Hello to my little bomb'"). After `afterManned` passes the player flew and fired (Isao's calibration, as for SOL),
+// a full meter calls the ship by itself and a pass nobody is seated for flies itself: bursts of `burst` seconds on the densest pile
+// near its track, rotary and Bofors in turn, `rest` seconds apart; once a pass, when a pile of at least `nukePile` bodies is on the
+// player's screen and `nukeSafeCells` clear of its blast from the base and the hull (seventh notes), it drops the MK-9 there with the
+// callout and one of `nukeCalls`.
+// While it is on, the sectors may hold `aliveBudget` bodies and size their waves `swell` times larger: the envelope being pushed.
+// `reachDeg`: the guns only take bodies within this arc of the planet's centre from under the ship (owner, 2026-10-05: "gunship shooting
+// at seemingly nothing ... perhaps at enemies on the other side of the planet?": the densest pile was the far landers' guards)
+export const GUNSHIP_AUTO = Object.freeze({ reachDeg: 25, afterManned: 2, burst: 2.6, rest: 1.4, nukePile: 25, nukeView: 0.75, nukeSafeCells: 3, gunSafeCells: 1.5, nukeFacing: 0.8, callout: 'TACTICAL NUKE LAUNCHED',
+  nukeCalls: Object.freeze(['gunship_nuke_call', 'gunship_nuke_hello']), aliveBudget: 3500, swell: 2, brief: 'gunship_calibrated', autoBrief: 'gunship_auto' });

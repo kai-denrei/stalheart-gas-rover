@@ -1,0 +1,2360 @@
+{
+  "schema": "jelaludo.asset-family/v2-candidate",
+  "family": "recon_rover",
+  "category": "mobile_unit_with_optional_static_distance",
+  "label": "R-47X / 6x6 Unmanned Reconnaissance Rover with 8 Individual Gimbaled Cold-Gas Thrusters & Onboard Telemetry",
+  "status": "contract_candidate_pending_game_review",
+  "plain_glb_source_of_truth": true,
+  "coordinate_system": {
+    "units": "meters",
+    "up": "+Y",
+    "forward": "+Z",
+    "origin": "ground at plot centre"
+  },
+  "supported_damage_levels": [
+    0
+  ],
+  "missing_damage_states_reason": "D1–D3 are not authored yet; initial handoff provides intact D0 across LOD0–LOD2 while keeping damage independent of detail.",
+  "budgets": {
+    "lod1": {
+      "triangles": 8000,
+      "draw_calls": 28,
+      "bytes": 400000
+    },
+    "lod2": {
+      "triangles": 3000,
+      "draw_calls": 1,
+      "bytes": 250000
+    }
+  },
+  "lod_selection": {
+    "initial": 2,
+    "approach_distance_m": 140,
+    "hysteresis_m": 20,
+    "provisional": true,
+    "detailed": "Close inspection, suspension/thruster engineering cutaways and cinematic recordings",
+    "distance": "Static merged rest pose with one material and one draw call. Swap to LOD1 before spinning wheels, steering, articulating suspension, rotating sensor mast, or firing cold-gas thrusters."
+  },
+  "articulation": {
+    "wheels": [
+      {
+        "id": "FL",
+        "suspension_pivot": "SUSP_PIVOT_FL",
+        "suspension_arm": "SUSP_ARM_FL",
+        "steering_pivot": "WHEEL_STEER_FL",
+        "spin_pivot": "WHEEL_SPIN_FL",
+        "wheel_mesh": "WHEEL_FL",
+        "steerable": true,
+        "steer_axis": "+Y",
+        "steer_limit_deg": [
+          -34,
+          34
+        ],
+        "spin_axis": "+X",
+        "wheel_radius_m": 0.48,
+        "suspension_swing_z_deg": [
+          -16,
+          14
+        ],
+        "suspension_travel_y_m": [
+          -0.12,
+          0.14
+        ]
+      },
+      {
+        "id": "FR",
+        "suspension_pivot": "SUSP_PIVOT_FR",
+        "suspension_arm": "SUSP_ARM_FR",
+        "steering_pivot": "WHEEL_STEER_FR",
+        "spin_pivot": "WHEEL_SPIN_FR",
+        "wheel_mesh": "WHEEL_FR",
+        "steerable": true,
+        "steer_axis": "+Y",
+        "steer_limit_deg": [
+          -34,
+          34
+        ],
+        "spin_axis": "+X",
+        "wheel_radius_m": 0.48,
+        "suspension_swing_z_deg": [
+          -16,
+          14
+        ],
+        "suspension_travel_y_m": [
+          -0.12,
+          0.14
+        ]
+      },
+      {
+        "id": "ML",
+        "suspension_pivot": "SUSP_PIVOT_ML",
+        "suspension_arm": "SUSP_ARM_ML",
+        "steering_pivot": "WHEEL_STEER_ML",
+        "spin_pivot": "WHEEL_SPIN_ML",
+        "wheel_mesh": "WHEEL_ML",
+        "steerable": false,
+        "steer_axis": "+Y",
+        "steer_limit_deg": [
+          -15,
+          15
+        ],
+        "spin_axis": "+X",
+        "wheel_radius_m": 0.48,
+        "suspension_swing_z_deg": [
+          -16,
+          14
+        ],
+        "suspension_travel_y_m": [
+          -0.12,
+          0.14
+        ]
+      },
+      {
+        "id": "MR",
+        "suspension_pivot": "SUSP_PIVOT_MR",
+        "suspension_arm": "SUSP_ARM_MR",
+        "steering_pivot": "WHEEL_STEER_MR",
+        "spin_pivot": "WHEEL_SPIN_MR",
+        "wheel_mesh": "WHEEL_MR",
+        "steerable": false,
+        "steer_axis": "+Y",
+        "steer_limit_deg": [
+          -15,
+          15
+        ],
+        "spin_axis": "+X",
+        "wheel_radius_m": 0.48,
+        "suspension_swing_z_deg": [
+          -16,
+          14
+        ],
+        "suspension_travel_y_m": [
+          -0.12,
+          0.14
+        ]
+      },
+      {
+        "id": "RL",
+        "suspension_pivot": "SUSP_PIVOT_RL",
+        "suspension_arm": "SUSP_ARM_RL",
+        "steering_pivot": "WHEEL_STEER_RL",
+        "spin_pivot": "WHEEL_SPIN_RL",
+        "wheel_mesh": "WHEEL_RL",
+        "steerable": false,
+        "steer_axis": "+Y",
+        "steer_limit_deg": [
+          -15,
+          15
+        ],
+        "spin_axis": "+X",
+        "wheel_radius_m": 0.48,
+        "suspension_swing_z_deg": [
+          -16,
+          14
+        ],
+        "suspension_travel_y_m": [
+          -0.12,
+          0.14
+        ]
+      },
+      {
+        "id": "RR",
+        "suspension_pivot": "SUSP_PIVOT_RR",
+        "suspension_arm": "SUSP_ARM_RR",
+        "steering_pivot": "WHEEL_STEER_RR",
+        "spin_pivot": "WHEEL_SPIN_RR",
+        "wheel_mesh": "WHEEL_RR",
+        "steerable": false,
+        "steer_axis": "+Y",
+        "steer_limit_deg": [
+          -15,
+          15
+        ],
+        "spin_axis": "+X",
+        "wheel_radius_m": 0.48,
+        "suspension_swing_z_deg": [
+          -16,
+          14
+        ],
+        "suspension_travel_y_m": [
+          -0.12,
+          0.14
+        ]
+      }
+    ],
+    "thrusters": [
+      {
+        "id": "V_FL",
+        "group": "ventral",
+        "gimbal_pivot": "GIMBAL_V_FL",
+        "nozzle_mesh": "THRUSTER_V_FL",
+        "exit_socket": "SOCKET_THRUSTER_V_FL",
+        "exhaust_axis_local": [
+          0,
+          -1,
+          0
+        ],
+        "rest_cant_rad": [
+          0,
+          0,
+          -0.08
+        ],
+        "pitch_axis": "+X",
+        "pitch_limit_deg": [
+          -28,
+          28
+        ],
+        "roll_axis": "+Z",
+        "roll_limit_deg": [
+          -25,
+          25
+        ]
+      },
+      {
+        "id": "V_FR",
+        "group": "ventral",
+        "gimbal_pivot": "GIMBAL_V_FR",
+        "nozzle_mesh": "THRUSTER_V_FR",
+        "exit_socket": "SOCKET_THRUSTER_V_FR",
+        "exhaust_axis_local": [
+          0,
+          -1,
+          0
+        ],
+        "rest_cant_rad": [
+          0,
+          0,
+          0.08
+        ],
+        "pitch_axis": "+X",
+        "pitch_limit_deg": [
+          -28,
+          28
+        ],
+        "roll_axis": "+Z",
+        "roll_limit_deg": [
+          -25,
+          25
+        ]
+      },
+      {
+        "id": "V_RL",
+        "group": "ventral",
+        "gimbal_pivot": "GIMBAL_V_RL",
+        "nozzle_mesh": "THRUSTER_V_RL",
+        "exit_socket": "SOCKET_THRUSTER_V_RL",
+        "exhaust_axis_local": [
+          0,
+          -1,
+          0
+        ],
+        "rest_cant_rad": [
+          0,
+          0,
+          -0.08
+        ],
+        "pitch_axis": "+X",
+        "pitch_limit_deg": [
+          -28,
+          28
+        ],
+        "roll_axis": "+Z",
+        "roll_limit_deg": [
+          -25,
+          25
+        ]
+      },
+      {
+        "id": "V_RR",
+        "group": "ventral",
+        "gimbal_pivot": "GIMBAL_V_RR",
+        "nozzle_mesh": "THRUSTER_V_RR",
+        "exit_socket": "SOCKET_THRUSTER_V_RR",
+        "exhaust_axis_local": [
+          0,
+          -1,
+          0
+        ],
+        "rest_cant_rad": [
+          0,
+          0,
+          0.08
+        ],
+        "pitch_axis": "+X",
+        "pitch_limit_deg": [
+          -28,
+          28
+        ],
+        "roll_axis": "+Z",
+        "roll_limit_deg": [
+          -25,
+          25
+        ]
+      },
+      {
+        "id": "L_FL",
+        "group": "lateral",
+        "gimbal_pivot": "GIMBAL_L_FL",
+        "nozzle_mesh": "THRUSTER_L_FL",
+        "exit_socket": "SOCKET_THRUSTER_L_FL",
+        "exhaust_axis_local": [
+          0,
+          -1,
+          0
+        ],
+        "rest_cant_rad": [
+          0,
+          0,
+          -0.42
+        ],
+        "pitch_axis": "+X",
+        "pitch_limit_deg": [
+          -35,
+          35
+        ],
+        "roll_axis": "+Z",
+        "roll_limit_deg": [
+          -42,
+          18
+        ]
+      },
+      {
+        "id": "L_FR",
+        "group": "lateral",
+        "gimbal_pivot": "GIMBAL_L_FR",
+        "nozzle_mesh": "THRUSTER_L_FR",
+        "exit_socket": "SOCKET_THRUSTER_L_FR",
+        "exhaust_axis_local": [
+          0,
+          -1,
+          0
+        ],
+        "rest_cant_rad": [
+          0,
+          0,
+          0.42
+        ],
+        "pitch_axis": "+X",
+        "pitch_limit_deg": [
+          -35,
+          35
+        ],
+        "roll_axis": "+Z",
+        "roll_limit_deg": [
+          -18,
+          42
+        ]
+      },
+      {
+        "id": "L_RL",
+        "group": "lateral",
+        "gimbal_pivot": "GIMBAL_L_RL",
+        "nozzle_mesh": "THRUSTER_L_RL",
+        "exit_socket": "SOCKET_THRUSTER_L_RL",
+        "exhaust_axis_local": [
+          0,
+          -1,
+          0
+        ],
+        "rest_cant_rad": [
+          0,
+          0,
+          -0.42
+        ],
+        "pitch_axis": "+X",
+        "pitch_limit_deg": [
+          -35,
+          35
+        ],
+        "roll_axis": "+Z",
+        "roll_limit_deg": [
+          -42,
+          18
+        ]
+      },
+      {
+        "id": "L_RR",
+        "group": "lateral",
+        "gimbal_pivot": "GIMBAL_L_RR",
+        "nozzle_mesh": "THRUSTER_L_RR",
+        "exit_socket": "SOCKET_THRUSTER_L_RR",
+        "exhaust_axis_local": [
+          0,
+          -1,
+          0
+        ],
+        "rest_cant_rad": [
+          0,
+          0,
+          0.42
+        ],
+        "pitch_axis": "+X",
+        "pitch_limit_deg": [
+          -35,
+          35
+        ],
+        "roll_axis": "+Z",
+        "roll_limit_deg": [
+          -18,
+          42
+        ]
+      }
+    ],
+    "sensor_mast": {
+      "yaw_pivot": "SENSOR_MAST_YAW",
+      "yaw_axis": "+Y",
+      "yaw_limit_deg": [
+        -180,
+        180
+      ],
+      "yaw_continuous": true,
+      "pitch_pivot": "OPTICS_HEAD_PITCH",
+      "pitch_axis": "+X",
+      "pitch_limit_deg": [
+        -38,
+        28
+      ],
+      "head_mesh": "SENSOR_MAST_HEAD",
+      "optics_socket": "SOCKET_SENSOR_MAST"
+    },
+    "onboard_displays": [
+      {
+        "id": "speed_left",
+        "mesh": "DISPLAY_SPEED_LEFT",
+        "socket": "SOCKET_DISPLAY_SPEED_L",
+        "material": "DISPLAY_SPEED_ORANGE_MAT",
+        "location": "Left rear wheel cover (viewed from behind)",
+        "color_hex": "#d98a2b",
+        "uv_mapped": true
+      },
+      {
+        "id": "thrust_right",
+        "mesh": "DISPLAY_THRUST_RIGHT",
+        "socket": "SOCKET_DISPLAY_THRUST_R",
+        "material": "DISPLAY_THRUST_CYAN_MAT",
+        "location": "Right rear wheel cover (viewed from behind)",
+        "color_hex": "#38e8ff",
+        "uv_mapped": true
+      },
+      {
+        "id": "gas_reserve_rear",
+        "mesh": "DISPLAY_GAS_RESERVE_REAR",
+        "socket": "SOCKET_DISPLAY_GAS_REAR",
+        "material": "DISPLAY_GAS_RESERVE_MAT",
+        "location": "Rear central bulkhead panel",
+        "color_hex": "#46f09a",
+        "uv_mapped": true
+      },
+      {
+        "id": "fdai_telemetry_panel",
+        "mesh": "DISPLAY_FDAI_TELEMETRY_PANEL",
+        "socket": "SOCKET_DISPLAY_FDAI_REAR",
+        "material": "DISPLAY_FDAI_TELEMETRY_MAT",
+        "location": "Rear dorsal black panel (NASM Apollo FDAI-inspired codified yaw/pitch/roll rate & height/level indicator)",
+        "color_hex": "#e6eef2",
+        "uv_mapped": true
+      }
+    ]
+  },
+  "runtime": {
+    "adapter": "runtime.js",
+    "particle_helper": "thruster-fx.js",
+    "particle_texture": "cold-gas-puff.png",
+    "baked_clips": [],
+    "demonstration": {
+      "name": "Low_Gravity_Recon_Jump_Cycle",
+      "duration_s": 16,
+      "loop": true
+    },
+    "scope": "No baked vehicle movement. All 6 wheel spins, front steering pivots (±34°), per-wheel suspension linkages, 8 individual 2-axis thruster gimbals with child sockets, pale short-lived cold-gas mist particles + optional ground dust, 360° sensor yaw + pitch, and 4 UV-mapped onboard telemetry displays are runtime-controlled."
+  },
+  "assets": [
+    {
+      "id": "r47x_recon_rover_d0_lod0",
+      "family": "recon_rover",
+      "file": "lod0/r47x_recon_rover_d0_lod0.glb",
+      "lod": 0,
+      "damage_level": 0,
+      "static": false,
+      "derived": false,
+      "review_status": "contract_candidate_pending_game_review",
+      "bytes": 650216,
+      "sha256": "5647095b7d265581a7a671eb1491907673409f14a657401185f2733fbf1162e8",
+      "triangles": 9176,
+      "draw_calls": 26,
+      "materials": 5,
+      "textures": 0,
+      "meshopt_file": "derived/meshopt/lod0/r47x_recon_rover_d0_lod0.meshopt.glb",
+      "meshopt_bytes": 172484,
+      "meshopt_sha256": "075a8335dbd0522b1ac3c913d341b80ec3b526d2a64d055ebaac92935a451168",
+      "meshopt_derived": true,
+      "plot_m": [
+        6,
+        8
+      ],
+      "bounds": {
+        "min": [
+          -1.215,
+          -0.0025,
+          -2.385
+        ],
+        "max": [
+          1.215,
+          1.66,
+          2.38
+        ],
+        "dimensions_m": [
+          2.43,
+          1.6625,
+          4.765
+        ]
+      },
+      "sockets": [
+        {
+          "id": "SENSOR_MAST",
+          "node": "SOCKET_SENSOR_MAST",
+          "parent": "OPTICS_HEAD_PITCH",
+          "kind": "sensor_optics",
+          "position_m": [
+            0,
+            1.3,
+            0.44
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "THRUSTER_V_FL",
+          "node": "SOCKET_THRUSTER_V_FL",
+          "parent": "THRUSTER_V_FL",
+          "kind": "cold_gas_thruster_ventral",
+          "position_m": [
+            -0.4912,
+            0.2404,
+            0.68
+          ],
+          "normal": [
+            -0.0799,
+            -0.9968,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -28,
+            28
+          ],
+          "roll_limit_deg": [
+            -25,
+            25
+          ]
+        },
+        {
+          "id": "THRUSTER_V_FR",
+          "node": "SOCKET_THRUSTER_V_FR",
+          "parent": "THRUSTER_V_FR",
+          "kind": "cold_gas_thruster_ventral",
+          "position_m": [
+            0.4912,
+            0.2404,
+            0.68
+          ],
+          "normal": [
+            0.0799,
+            -0.9968,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -28,
+            28
+          ],
+          "roll_limit_deg": [
+            -25,
+            25
+          ]
+        },
+        {
+          "id": "THRUSTER_V_RL",
+          "node": "SOCKET_THRUSTER_V_RL",
+          "parent": "THRUSTER_V_RL",
+          "kind": "cold_gas_thruster_ventral",
+          "position_m": [
+            -0.4912,
+            0.2404,
+            -0.78
+          ],
+          "normal": [
+            -0.0799,
+            -0.9968,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -28,
+            28
+          ],
+          "roll_limit_deg": [
+            -25,
+            25
+          ]
+        },
+        {
+          "id": "THRUSTER_V_RR",
+          "node": "SOCKET_THRUSTER_V_RR",
+          "parent": "THRUSTER_V_RR",
+          "kind": "cold_gas_thruster_ventral",
+          "position_m": [
+            0.4912,
+            0.2404,
+            -0.78
+          ],
+          "normal": [
+            0.0799,
+            -0.9968,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -28,
+            28
+          ],
+          "roll_limit_deg": [
+            -25,
+            25
+          ]
+        },
+        {
+          "id": "THRUSTER_L_FL",
+          "node": "SOCKET_THRUSTER_L_FL",
+          "parent": "THRUSTER_L_FL",
+          "kind": "cold_gas_thruster_lateral",
+          "position_m": [
+            -0.8571,
+            0.3322,
+            0.64
+          ],
+          "normal": [
+            -0.4078,
+            -0.9131,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -35,
+            35
+          ],
+          "roll_limit_deg": [
+            -42,
+            18
+          ]
+        },
+        {
+          "id": "THRUSTER_L_FR",
+          "node": "SOCKET_THRUSTER_L_FR",
+          "parent": "THRUSTER_L_FR",
+          "kind": "cold_gas_thruster_lateral",
+          "position_m": [
+            0.8571,
+            0.3322,
+            0.64
+          ],
+          "normal": [
+            0.4078,
+            -0.9131,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -35,
+            35
+          ],
+          "roll_limit_deg": [
+            -18,
+            42
+          ]
+        },
+        {
+          "id": "THRUSTER_L_RL",
+          "node": "SOCKET_THRUSTER_L_RL",
+          "parent": "THRUSTER_L_RL",
+          "kind": "cold_gas_thruster_lateral",
+          "position_m": [
+            -0.8571,
+            0.3322,
+            0.18
+          ],
+          "normal": [
+            -0.4078,
+            -0.9131,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -35,
+            35
+          ],
+          "roll_limit_deg": [
+            -42,
+            18
+          ]
+        },
+        {
+          "id": "THRUSTER_L_RR",
+          "node": "SOCKET_THRUSTER_L_RR",
+          "parent": "THRUSTER_L_RR",
+          "kind": "cold_gas_thruster_lateral",
+          "position_m": [
+            0.8571,
+            0.3322,
+            0.18
+          ],
+          "normal": [
+            0.4078,
+            -0.9131,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -35,
+            35
+          ],
+          "roll_limit_deg": [
+            -18,
+            42
+          ]
+        },
+        {
+          "id": "DISPLAY_SPEED_L",
+          "node": "SOCKET_DISPLAY_SPEED_L",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "onboard_display_speed_left",
+          "position_m": [
+            -0.8,
+            0.93,
+            -1.872
+          ],
+          "normal": [
+            0,
+            0.41,
+            -0.91
+          ]
+        },
+        {
+          "id": "DISPLAY_THRUST_R",
+          "node": "SOCKET_DISPLAY_THRUST_R",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "onboard_display_thrust_right",
+          "position_m": [
+            0.8,
+            0.93,
+            -1.872
+          ],
+          "normal": [
+            0,
+            0.41,
+            -0.91
+          ]
+        },
+        {
+          "id": "DISPLAY_GAS_REAR",
+          "node": "SOCKET_DISPLAY_GAS_REAR",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "onboard_display_gas_reserve",
+          "position_m": [
+            0,
+            0.67,
+            -2.385
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ]
+        },
+        {
+          "id": "DISPLAY_FDAI_REAR",
+          "node": "SOCKET_DISPLAY_FDAI_REAR",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "onboard_display_fdai_telemetry",
+          "position_m": [
+            0,
+            0.992,
+            -0.88
+          ],
+          "normal": [
+            0,
+            0.998,
+            -0.07
+          ]
+        },
+        {
+          "id": "PAYLOAD_L",
+          "node": "SOCKET_PAYLOAD_L",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "modular_payload",
+          "position_m": [
+            -0.78,
+            0.72,
+            -0.92
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "PAYLOAD_R",
+          "node": "SOCKET_PAYLOAD_R",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "modular_payload",
+          "position_m": [
+            0.78,
+            0.72,
+            -0.92
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "TOW_FRONT",
+          "node": "SOCKET_TOW_FRONT",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "tow_hitch",
+          "position_m": [
+            0,
+            0.58,
+            2.32
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "TOW_REAR",
+          "node": "SOCKET_TOW_REAR",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "tow_hitch",
+          "position_m": [
+            0,
+            0.62,
+            -2.24
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ]
+        }
+      ],
+      "colliders": [
+        {
+          "id": "chassis_hull_envelope",
+          "center_m": [
+            0,
+            0.62,
+            0.04
+          ],
+          "size_m": [
+            2.36,
+            1.12,
+            4.66
+          ],
+          "condition": "ground_nominal"
+        },
+        {
+          "id": "airborne_jump_envelope",
+          "center_m": [
+            0,
+            1.45,
+            0.22
+          ],
+          "size_m": [
+            2.4,
+            2.65,
+            4.8
+          ],
+          "condition": "low_gravity_hop"
+        }
+      ],
+      "clips": [],
+      "engine_nodes": [
+        "R47X_ROVER_ROOT",
+        "ROVER_CHASSIS_JUMP",
+        "CHASSIS_ARMOR_BODY",
+        "SUSPENSION_BOGIE_L",
+        "SUSPENSION_ARMS_L",
+        "SUSPENSION_BOGIE_R",
+        "SUSPENSION_ARMS_R",
+        "WHEEL_DRIVE_L",
+        "WHEEL_SET_L",
+        "WHEEL_DRIVE_R",
+        "WHEEL_SET_R",
+        "SUSP_PIVOT_FL",
+        "SUSP_ARM_FL",
+        "WHEEL_STEER_FL",
+        "WHEEL_SPIN_FL",
+        "WHEEL_FL",
+        "SUSP_PIVOT_FR",
+        "SUSP_ARM_FR",
+        "WHEEL_STEER_FR",
+        "WHEEL_SPIN_FR",
+        "WHEEL_FR",
+        "SUSP_PIVOT_ML",
+        "SUSP_ARM_ML",
+        "WHEEL_STEER_ML",
+        "WHEEL_SPIN_ML",
+        "WHEEL_ML",
+        "SUSP_PIVOT_MR",
+        "SUSP_ARM_MR",
+        "WHEEL_STEER_MR",
+        "WHEEL_SPIN_MR",
+        "WHEEL_MR",
+        "SUSP_PIVOT_RL",
+        "SUSP_ARM_RL",
+        "WHEEL_STEER_RL",
+        "WHEEL_SPIN_RL",
+        "WHEEL_RL",
+        "SUSP_PIVOT_RR",
+        "SUSP_ARM_RR",
+        "WHEEL_STEER_RR",
+        "WHEEL_SPIN_RR",
+        "WHEEL_RR",
+        "SENSOR_MAST_YAW",
+        "OPTICS_HEAD_PITCH",
+        "SENSOR_MAST_HEAD",
+        "THRUSTER_GIMBAL_VENTRAL",
+        "VENTRAL_THRUSTER_CLUSTER",
+        "THRUSTER_GIMBAL_LATERAL",
+        "LATERAL_THRUSTER_CLUSTER",
+        "GIMBAL_V_FL",
+        "THRUSTER_V_FL",
+        "GIMBAL_V_FR",
+        "THRUSTER_V_FR",
+        "GIMBAL_V_RL",
+        "THRUSTER_V_RL",
+        "GIMBAL_V_RR",
+        "THRUSTER_V_RR",
+        "GIMBAL_L_FL",
+        "THRUSTER_L_FL",
+        "GIMBAL_L_FR",
+        "THRUSTER_L_FR",
+        "GIMBAL_L_RL",
+        "THRUSTER_L_RL",
+        "GIMBAL_L_RR",
+        "THRUSTER_L_RR",
+        "COLD_GAS_PLUMES",
+        "DISPLAY_SPEED_LEFT",
+        "DISPLAY_THRUST_RIGHT",
+        "DISPLAY_GAS_RESERVE_REAR",
+        "DISPLAY_FDAI_TELEMETRY_PANEL",
+        "ROVER_STATIC_BODY",
+        "SOCKET_SENSOR_MAST",
+        "SOCKET_PAYLOAD_L",
+        "SOCKET_PAYLOAD_R",
+        "SOCKET_TOW_FRONT",
+        "SOCKET_TOW_REAR",
+        "SOCKET_THRUSTER_V_FL",
+        "SOCKET_THRUSTER_V_FR",
+        "SOCKET_THRUSTER_V_RL",
+        "SOCKET_THRUSTER_V_RR",
+        "SOCKET_THRUSTER_L_FL",
+        "SOCKET_THRUSTER_L_FR",
+        "SOCKET_THRUSTER_L_RL",
+        "SOCKET_THRUSTER_L_RR",
+        "SOCKET_DISPLAY_SPEED_L",
+        "SOCKET_DISPLAY_THRUST_R",
+        "SOCKET_DISPLAY_GAS_REAR",
+        "SOCKET_DISPLAY_FDAI_REAR"
+      ],
+      "required_nodes": [
+        "R47X_ROVER_ROOT",
+        "ROVER_CHASSIS_JUMP",
+        "SUSPENSION_BOGIE_L",
+        "SUSPENSION_ARMS_L",
+        "SUSP_PIVOT_FL",
+        "SUSP_ARM_FL",
+        "WHEEL_STEER_FL",
+        "WHEEL_SPIN_FL",
+        "WHEEL_FL",
+        "SUSP_PIVOT_ML",
+        "SUSP_ARM_ML",
+        "WHEEL_STEER_ML",
+        "WHEEL_SPIN_ML",
+        "WHEEL_ML",
+        "SUSP_PIVOT_RL",
+        "SUSP_ARM_RL",
+        "WHEEL_STEER_RL",
+        "WHEEL_SPIN_RL",
+        "WHEEL_RL",
+        "SUSPENSION_BOGIE_R",
+        "SUSPENSION_ARMS_R",
+        "SUSP_PIVOT_FR",
+        "SUSP_ARM_FR",
+        "WHEEL_STEER_FR",
+        "WHEEL_SPIN_FR",
+        "WHEEL_FR",
+        "SUSP_PIVOT_MR",
+        "SUSP_ARM_MR",
+        "WHEEL_STEER_MR",
+        "WHEEL_SPIN_MR",
+        "WHEEL_MR",
+        "SUSP_PIVOT_RR",
+        "SUSP_ARM_RR",
+        "WHEEL_STEER_RR",
+        "WHEEL_SPIN_RR",
+        "WHEEL_RR",
+        "WHEEL_DRIVE_L",
+        "WHEEL_SET_L",
+        "WHEEL_DRIVE_R",
+        "WHEEL_SET_R",
+        "CHASSIS_ARMOR_BODY",
+        "SENSOR_MAST_YAW",
+        "OPTICS_HEAD_PITCH",
+        "SENSOR_MAST_HEAD",
+        "SOCKET_SENSOR_MAST",
+        "THRUSTER_GIMBAL_VENTRAL",
+        "VENTRAL_THRUSTER_CLUSTER",
+        "GIMBAL_V_FL",
+        "THRUSTER_V_FL",
+        "SOCKET_THRUSTER_V_FL",
+        "GIMBAL_V_FR",
+        "THRUSTER_V_FR",
+        "SOCKET_THRUSTER_V_FR",
+        "GIMBAL_V_RL",
+        "THRUSTER_V_RL",
+        "SOCKET_THRUSTER_V_RL",
+        "GIMBAL_V_RR",
+        "THRUSTER_V_RR",
+        "SOCKET_THRUSTER_V_RR",
+        "THRUSTER_GIMBAL_LATERAL",
+        "LATERAL_THRUSTER_CLUSTER",
+        "GIMBAL_L_FL",
+        "THRUSTER_L_FL",
+        "SOCKET_THRUSTER_L_FL",
+        "GIMBAL_L_FR",
+        "THRUSTER_L_FR",
+        "SOCKET_THRUSTER_L_FR",
+        "GIMBAL_L_RL",
+        "THRUSTER_L_RL",
+        "SOCKET_THRUSTER_L_RL",
+        "GIMBAL_L_RR",
+        "THRUSTER_L_RR",
+        "SOCKET_THRUSTER_L_RR",
+        "COLD_GAS_PLUMES",
+        "DISPLAY_SPEED_LEFT",
+        "SOCKET_DISPLAY_SPEED_L",
+        "DISPLAY_THRUST_RIGHT",
+        "SOCKET_DISPLAY_THRUST_R",
+        "DISPLAY_GAS_RESERVE_REAR",
+        "SOCKET_DISPLAY_GAS_REAR",
+        "DISPLAY_FDAI_TELEMETRY_PANEL",
+        "SOCKET_DISPLAY_FDAI_REAR",
+        "SOCKET_PAYLOAD_L",
+        "SOCKET_PAYLOAD_R",
+        "SOCKET_TOW_FRONT",
+        "SOCKET_TOW_REAR",
+        "ROVER_STATIC_BODY"
+      ],
+      "credit": "Models by jelaludo"
+    },
+    {
+      "id": "r47x_recon_rover_d0_lod1",
+      "family": "recon_rover",
+      "file": "lod1/r47x_recon_rover_d0_lod1.glb",
+      "lod": 1,
+      "damage_level": 0,
+      "static": false,
+      "derived": false,
+      "review_status": "contract_candidate_pending_game_review",
+      "bytes": 384984,
+      "sha256": "a6746318daa2fedb424aec781dfad6351d30afdaab1669c322398121266a03e4",
+      "triangles": 5120,
+      "draw_calls": 26,
+      "materials": 5,
+      "textures": 0,
+      "meshopt_file": "derived/meshopt/lod1/r47x_recon_rover_d0_lod1.meshopt.glb",
+      "meshopt_bytes": 117416,
+      "meshopt_sha256": "86428ebb2cd805c86317b1d61169df23611ffd94f0e3503d7013554c68fd7e70",
+      "meshopt_derived": true,
+      "plot_m": [
+        6,
+        8
+      ],
+      "bounds": {
+        "min": [
+          -1.215,
+          -0.0025,
+          -2.385
+        ],
+        "max": [
+          1.215,
+          1.66,
+          2.38
+        ],
+        "dimensions_m": [
+          2.43,
+          1.6625,
+          4.765
+        ]
+      },
+      "sockets": [
+        {
+          "id": "SENSOR_MAST",
+          "node": "SOCKET_SENSOR_MAST",
+          "parent": "OPTICS_HEAD_PITCH",
+          "kind": "sensor_optics",
+          "position_m": [
+            0,
+            1.3,
+            0.44
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "THRUSTER_V_FL",
+          "node": "SOCKET_THRUSTER_V_FL",
+          "parent": "THRUSTER_V_FL",
+          "kind": "cold_gas_thruster_ventral",
+          "position_m": [
+            -0.4912,
+            0.2404,
+            0.68
+          ],
+          "normal": [
+            -0.0799,
+            -0.9968,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -28,
+            28
+          ],
+          "roll_limit_deg": [
+            -25,
+            25
+          ]
+        },
+        {
+          "id": "THRUSTER_V_FR",
+          "node": "SOCKET_THRUSTER_V_FR",
+          "parent": "THRUSTER_V_FR",
+          "kind": "cold_gas_thruster_ventral",
+          "position_m": [
+            0.4912,
+            0.2404,
+            0.68
+          ],
+          "normal": [
+            0.0799,
+            -0.9968,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -28,
+            28
+          ],
+          "roll_limit_deg": [
+            -25,
+            25
+          ]
+        },
+        {
+          "id": "THRUSTER_V_RL",
+          "node": "SOCKET_THRUSTER_V_RL",
+          "parent": "THRUSTER_V_RL",
+          "kind": "cold_gas_thruster_ventral",
+          "position_m": [
+            -0.4912,
+            0.2404,
+            -0.78
+          ],
+          "normal": [
+            -0.0799,
+            -0.9968,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -28,
+            28
+          ],
+          "roll_limit_deg": [
+            -25,
+            25
+          ]
+        },
+        {
+          "id": "THRUSTER_V_RR",
+          "node": "SOCKET_THRUSTER_V_RR",
+          "parent": "THRUSTER_V_RR",
+          "kind": "cold_gas_thruster_ventral",
+          "position_m": [
+            0.4912,
+            0.2404,
+            -0.78
+          ],
+          "normal": [
+            0.0799,
+            -0.9968,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -28,
+            28
+          ],
+          "roll_limit_deg": [
+            -25,
+            25
+          ]
+        },
+        {
+          "id": "THRUSTER_L_FL",
+          "node": "SOCKET_THRUSTER_L_FL",
+          "parent": "THRUSTER_L_FL",
+          "kind": "cold_gas_thruster_lateral",
+          "position_m": [
+            -0.8571,
+            0.3322,
+            0.64
+          ],
+          "normal": [
+            -0.4078,
+            -0.9131,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -35,
+            35
+          ],
+          "roll_limit_deg": [
+            -42,
+            18
+          ]
+        },
+        {
+          "id": "THRUSTER_L_FR",
+          "node": "SOCKET_THRUSTER_L_FR",
+          "parent": "THRUSTER_L_FR",
+          "kind": "cold_gas_thruster_lateral",
+          "position_m": [
+            0.8571,
+            0.3322,
+            0.64
+          ],
+          "normal": [
+            0.4078,
+            -0.9131,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -35,
+            35
+          ],
+          "roll_limit_deg": [
+            -18,
+            42
+          ]
+        },
+        {
+          "id": "THRUSTER_L_RL",
+          "node": "SOCKET_THRUSTER_L_RL",
+          "parent": "THRUSTER_L_RL",
+          "kind": "cold_gas_thruster_lateral",
+          "position_m": [
+            -0.8571,
+            0.3322,
+            0.18
+          ],
+          "normal": [
+            -0.4078,
+            -0.9131,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -35,
+            35
+          ],
+          "roll_limit_deg": [
+            -42,
+            18
+          ]
+        },
+        {
+          "id": "THRUSTER_L_RR",
+          "node": "SOCKET_THRUSTER_L_RR",
+          "parent": "THRUSTER_L_RR",
+          "kind": "cold_gas_thruster_lateral",
+          "position_m": [
+            0.8571,
+            0.3322,
+            0.18
+          ],
+          "normal": [
+            0.4078,
+            -0.9131,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -35,
+            35
+          ],
+          "roll_limit_deg": [
+            -18,
+            42
+          ]
+        },
+        {
+          "id": "DISPLAY_SPEED_L",
+          "node": "SOCKET_DISPLAY_SPEED_L",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "onboard_display_speed_left",
+          "position_m": [
+            -0.8,
+            0.93,
+            -1.872
+          ],
+          "normal": [
+            0,
+            0.41,
+            -0.91
+          ]
+        },
+        {
+          "id": "DISPLAY_THRUST_R",
+          "node": "SOCKET_DISPLAY_THRUST_R",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "onboard_display_thrust_right",
+          "position_m": [
+            0.8,
+            0.93,
+            -1.872
+          ],
+          "normal": [
+            0,
+            0.41,
+            -0.91
+          ]
+        },
+        {
+          "id": "DISPLAY_GAS_REAR",
+          "node": "SOCKET_DISPLAY_GAS_REAR",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "onboard_display_gas_reserve",
+          "position_m": [
+            0,
+            0.67,
+            -2.385
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ]
+        },
+        {
+          "id": "DISPLAY_FDAI_REAR",
+          "node": "SOCKET_DISPLAY_FDAI_REAR",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "onboard_display_fdai_telemetry",
+          "position_m": [
+            0,
+            0.992,
+            -0.88
+          ],
+          "normal": [
+            0,
+            0.998,
+            -0.07
+          ]
+        },
+        {
+          "id": "PAYLOAD_L",
+          "node": "SOCKET_PAYLOAD_L",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "modular_payload",
+          "position_m": [
+            -0.78,
+            0.72,
+            -0.92
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "PAYLOAD_R",
+          "node": "SOCKET_PAYLOAD_R",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "modular_payload",
+          "position_m": [
+            0.78,
+            0.72,
+            -0.92
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "TOW_FRONT",
+          "node": "SOCKET_TOW_FRONT",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "tow_hitch",
+          "position_m": [
+            0,
+            0.58,
+            2.32
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "TOW_REAR",
+          "node": "SOCKET_TOW_REAR",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "tow_hitch",
+          "position_m": [
+            0,
+            0.62,
+            -2.24
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ]
+        }
+      ],
+      "colliders": [
+        {
+          "id": "chassis_hull_envelope",
+          "center_m": [
+            0,
+            0.62,
+            0.04
+          ],
+          "size_m": [
+            2.36,
+            1.12,
+            4.66
+          ],
+          "condition": "ground_nominal"
+        },
+        {
+          "id": "airborne_jump_envelope",
+          "center_m": [
+            0,
+            1.45,
+            0.22
+          ],
+          "size_m": [
+            2.4,
+            2.65,
+            4.8
+          ],
+          "condition": "low_gravity_hop"
+        }
+      ],
+      "clips": [],
+      "engine_nodes": [
+        "R47X_ROVER_ROOT",
+        "ROVER_CHASSIS_JUMP",
+        "CHASSIS_ARMOR_BODY",
+        "SUSPENSION_BOGIE_L",
+        "SUSPENSION_ARMS_L",
+        "SUSPENSION_BOGIE_R",
+        "SUSPENSION_ARMS_R",
+        "WHEEL_DRIVE_L",
+        "WHEEL_SET_L",
+        "WHEEL_DRIVE_R",
+        "WHEEL_SET_R",
+        "SUSP_PIVOT_FL",
+        "SUSP_ARM_FL",
+        "WHEEL_STEER_FL",
+        "WHEEL_SPIN_FL",
+        "WHEEL_FL",
+        "SUSP_PIVOT_FR",
+        "SUSP_ARM_FR",
+        "WHEEL_STEER_FR",
+        "WHEEL_SPIN_FR",
+        "WHEEL_FR",
+        "SUSP_PIVOT_ML",
+        "SUSP_ARM_ML",
+        "WHEEL_STEER_ML",
+        "WHEEL_SPIN_ML",
+        "WHEEL_ML",
+        "SUSP_PIVOT_MR",
+        "SUSP_ARM_MR",
+        "WHEEL_STEER_MR",
+        "WHEEL_SPIN_MR",
+        "WHEEL_MR",
+        "SUSP_PIVOT_RL",
+        "SUSP_ARM_RL",
+        "WHEEL_STEER_RL",
+        "WHEEL_SPIN_RL",
+        "WHEEL_RL",
+        "SUSP_PIVOT_RR",
+        "SUSP_ARM_RR",
+        "WHEEL_STEER_RR",
+        "WHEEL_SPIN_RR",
+        "WHEEL_RR",
+        "SENSOR_MAST_YAW",
+        "OPTICS_HEAD_PITCH",
+        "SENSOR_MAST_HEAD",
+        "THRUSTER_GIMBAL_VENTRAL",
+        "VENTRAL_THRUSTER_CLUSTER",
+        "THRUSTER_GIMBAL_LATERAL",
+        "LATERAL_THRUSTER_CLUSTER",
+        "GIMBAL_V_FL",
+        "THRUSTER_V_FL",
+        "GIMBAL_V_FR",
+        "THRUSTER_V_FR",
+        "GIMBAL_V_RL",
+        "THRUSTER_V_RL",
+        "GIMBAL_V_RR",
+        "THRUSTER_V_RR",
+        "GIMBAL_L_FL",
+        "THRUSTER_L_FL",
+        "GIMBAL_L_FR",
+        "THRUSTER_L_FR",
+        "GIMBAL_L_RL",
+        "THRUSTER_L_RL",
+        "GIMBAL_L_RR",
+        "THRUSTER_L_RR",
+        "COLD_GAS_PLUMES",
+        "DISPLAY_SPEED_LEFT",
+        "DISPLAY_THRUST_RIGHT",
+        "DISPLAY_GAS_RESERVE_REAR",
+        "DISPLAY_FDAI_TELEMETRY_PANEL",
+        "ROVER_STATIC_BODY",
+        "SOCKET_SENSOR_MAST",
+        "SOCKET_PAYLOAD_L",
+        "SOCKET_PAYLOAD_R",
+        "SOCKET_TOW_FRONT",
+        "SOCKET_TOW_REAR",
+        "SOCKET_THRUSTER_V_FL",
+        "SOCKET_THRUSTER_V_FR",
+        "SOCKET_THRUSTER_V_RL",
+        "SOCKET_THRUSTER_V_RR",
+        "SOCKET_THRUSTER_L_FL",
+        "SOCKET_THRUSTER_L_FR",
+        "SOCKET_THRUSTER_L_RL",
+        "SOCKET_THRUSTER_L_RR",
+        "SOCKET_DISPLAY_SPEED_L",
+        "SOCKET_DISPLAY_THRUST_R",
+        "SOCKET_DISPLAY_GAS_REAR",
+        "SOCKET_DISPLAY_FDAI_REAR"
+      ],
+      "required_nodes": [
+        "R47X_ROVER_ROOT",
+        "ROVER_CHASSIS_JUMP",
+        "SUSPENSION_BOGIE_L",
+        "SUSPENSION_ARMS_L",
+        "SUSP_PIVOT_FL",
+        "SUSP_ARM_FL",
+        "WHEEL_STEER_FL",
+        "WHEEL_SPIN_FL",
+        "WHEEL_FL",
+        "SUSP_PIVOT_ML",
+        "SUSP_ARM_ML",
+        "WHEEL_STEER_ML",
+        "WHEEL_SPIN_ML",
+        "WHEEL_ML",
+        "SUSP_PIVOT_RL",
+        "SUSP_ARM_RL",
+        "WHEEL_STEER_RL",
+        "WHEEL_SPIN_RL",
+        "WHEEL_RL",
+        "SUSPENSION_BOGIE_R",
+        "SUSPENSION_ARMS_R",
+        "SUSP_PIVOT_FR",
+        "SUSP_ARM_FR",
+        "WHEEL_STEER_FR",
+        "WHEEL_SPIN_FR",
+        "WHEEL_FR",
+        "SUSP_PIVOT_MR",
+        "SUSP_ARM_MR",
+        "WHEEL_STEER_MR",
+        "WHEEL_SPIN_MR",
+        "WHEEL_MR",
+        "SUSP_PIVOT_RR",
+        "SUSP_ARM_RR",
+        "WHEEL_STEER_RR",
+        "WHEEL_SPIN_RR",
+        "WHEEL_RR",
+        "WHEEL_DRIVE_L",
+        "WHEEL_SET_L",
+        "WHEEL_DRIVE_R",
+        "WHEEL_SET_R",
+        "CHASSIS_ARMOR_BODY",
+        "SENSOR_MAST_YAW",
+        "OPTICS_HEAD_PITCH",
+        "SENSOR_MAST_HEAD",
+        "SOCKET_SENSOR_MAST",
+        "THRUSTER_GIMBAL_VENTRAL",
+        "VENTRAL_THRUSTER_CLUSTER",
+        "GIMBAL_V_FL",
+        "THRUSTER_V_FL",
+        "SOCKET_THRUSTER_V_FL",
+        "GIMBAL_V_FR",
+        "THRUSTER_V_FR",
+        "SOCKET_THRUSTER_V_FR",
+        "GIMBAL_V_RL",
+        "THRUSTER_V_RL",
+        "SOCKET_THRUSTER_V_RL",
+        "GIMBAL_V_RR",
+        "THRUSTER_V_RR",
+        "SOCKET_THRUSTER_V_RR",
+        "THRUSTER_GIMBAL_LATERAL",
+        "LATERAL_THRUSTER_CLUSTER",
+        "GIMBAL_L_FL",
+        "THRUSTER_L_FL",
+        "SOCKET_THRUSTER_L_FL",
+        "GIMBAL_L_FR",
+        "THRUSTER_L_FR",
+        "SOCKET_THRUSTER_L_FR",
+        "GIMBAL_L_RL",
+        "THRUSTER_L_RL",
+        "SOCKET_THRUSTER_L_RL",
+        "GIMBAL_L_RR",
+        "THRUSTER_L_RR",
+        "SOCKET_THRUSTER_L_RR",
+        "COLD_GAS_PLUMES",
+        "DISPLAY_SPEED_LEFT",
+        "SOCKET_DISPLAY_SPEED_L",
+        "DISPLAY_THRUST_RIGHT",
+        "SOCKET_DISPLAY_THRUST_R",
+        "DISPLAY_GAS_RESERVE_REAR",
+        "SOCKET_DISPLAY_GAS_REAR",
+        "DISPLAY_FDAI_TELEMETRY_PANEL",
+        "SOCKET_DISPLAY_FDAI_REAR",
+        "SOCKET_PAYLOAD_L",
+        "SOCKET_PAYLOAD_R",
+        "SOCKET_TOW_FRONT",
+        "SOCKET_TOW_REAR",
+        "ROVER_STATIC_BODY"
+      ],
+      "credit": "Models by jelaludo"
+    },
+    {
+      "id": "r47x_recon_rover_d0_lod2",
+      "family": "recon_rover",
+      "file": "lod2/r47x_recon_rover_d0_lod2.glb",
+      "lod": 2,
+      "damage_level": 0,
+      "static": true,
+      "derived": false,
+      "review_status": "contract_candidate_pending_game_review",
+      "bytes": 203012,
+      "sha256": "17745a11903ddf76392aaaa72d058f727691df70cdf2106c954e41826b9e240a",
+      "triangles": 2712,
+      "draw_calls": 1,
+      "materials": 1,
+      "textures": 0,
+      "meshopt_file": "derived/meshopt/lod2/r47x_recon_rover_d0_lod2.meshopt.glb",
+      "meshopt_bytes": 70064,
+      "meshopt_sha256": "4ae83da85f226a6d6a87867b041e4e9e851ae47dfecd51be947e515ae2bacf78",
+      "meshopt_derived": true,
+      "plot_m": [
+        6,
+        8
+      ],
+      "bounds": {
+        "min": [
+          -1.18,
+          -0.0025,
+          -2.389
+        ],
+        "max": [
+          1.18,
+          1.465,
+          2.38
+        ],
+        "dimensions_m": [
+          2.36,
+          1.4675,
+          4.769
+        ]
+      },
+      "sockets": [
+        {
+          "id": "SENSOR_MAST",
+          "node": "SOCKET_SENSOR_MAST",
+          "parent": "OPTICS_HEAD_PITCH",
+          "kind": "sensor_optics",
+          "position_m": [
+            0,
+            1.3,
+            0.44
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "THRUSTER_V_FL",
+          "node": "SOCKET_THRUSTER_V_FL",
+          "parent": "THRUSTER_V_FL",
+          "kind": "cold_gas_thruster_ventral",
+          "position_m": [
+            -0.4912,
+            0.2404,
+            0.68
+          ],
+          "normal": [
+            -0.0799,
+            -0.9968,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -28,
+            28
+          ],
+          "roll_limit_deg": [
+            -25,
+            25
+          ]
+        },
+        {
+          "id": "THRUSTER_V_FR",
+          "node": "SOCKET_THRUSTER_V_FR",
+          "parent": "THRUSTER_V_FR",
+          "kind": "cold_gas_thruster_ventral",
+          "position_m": [
+            0.4912,
+            0.2404,
+            0.68
+          ],
+          "normal": [
+            0.0799,
+            -0.9968,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -28,
+            28
+          ],
+          "roll_limit_deg": [
+            -25,
+            25
+          ]
+        },
+        {
+          "id": "THRUSTER_V_RL",
+          "node": "SOCKET_THRUSTER_V_RL",
+          "parent": "THRUSTER_V_RL",
+          "kind": "cold_gas_thruster_ventral",
+          "position_m": [
+            -0.4912,
+            0.2404,
+            -0.78
+          ],
+          "normal": [
+            -0.0799,
+            -0.9968,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -28,
+            28
+          ],
+          "roll_limit_deg": [
+            -25,
+            25
+          ]
+        },
+        {
+          "id": "THRUSTER_V_RR",
+          "node": "SOCKET_THRUSTER_V_RR",
+          "parent": "THRUSTER_V_RR",
+          "kind": "cold_gas_thruster_ventral",
+          "position_m": [
+            0.4912,
+            0.2404,
+            -0.78
+          ],
+          "normal": [
+            0.0799,
+            -0.9968,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -28,
+            28
+          ],
+          "roll_limit_deg": [
+            -25,
+            25
+          ]
+        },
+        {
+          "id": "THRUSTER_L_FL",
+          "node": "SOCKET_THRUSTER_L_FL",
+          "parent": "THRUSTER_L_FL",
+          "kind": "cold_gas_thruster_lateral",
+          "position_m": [
+            -0.8571,
+            0.3322,
+            0.64
+          ],
+          "normal": [
+            -0.4078,
+            -0.9131,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -35,
+            35
+          ],
+          "roll_limit_deg": [
+            -42,
+            18
+          ]
+        },
+        {
+          "id": "THRUSTER_L_FR",
+          "node": "SOCKET_THRUSTER_L_FR",
+          "parent": "THRUSTER_L_FR",
+          "kind": "cold_gas_thruster_lateral",
+          "position_m": [
+            0.8571,
+            0.3322,
+            0.64
+          ],
+          "normal": [
+            0.4078,
+            -0.9131,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -35,
+            35
+          ],
+          "roll_limit_deg": [
+            -18,
+            42
+          ]
+        },
+        {
+          "id": "THRUSTER_L_RL",
+          "node": "SOCKET_THRUSTER_L_RL",
+          "parent": "THRUSTER_L_RL",
+          "kind": "cold_gas_thruster_lateral",
+          "position_m": [
+            -0.8571,
+            0.3322,
+            0.18
+          ],
+          "normal": [
+            -0.4078,
+            -0.9131,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -35,
+            35
+          ],
+          "roll_limit_deg": [
+            -42,
+            18
+          ]
+        },
+        {
+          "id": "THRUSTER_L_RR",
+          "node": "SOCKET_THRUSTER_L_RR",
+          "parent": "THRUSTER_L_RR",
+          "kind": "cold_gas_thruster_lateral",
+          "position_m": [
+            0.8571,
+            0.3322,
+            0.18
+          ],
+          "normal": [
+            0.4078,
+            -0.9131,
+            0
+          ],
+          "exhaust_axis_local": [
+            0,
+            -1,
+            0
+          ],
+          "pitch_limit_deg": [
+            -35,
+            35
+          ],
+          "roll_limit_deg": [
+            -18,
+            42
+          ]
+        },
+        {
+          "id": "DISPLAY_SPEED_L",
+          "node": "SOCKET_DISPLAY_SPEED_L",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "onboard_display_speed_left",
+          "position_m": [
+            -0.8,
+            0.93,
+            -1.872
+          ],
+          "normal": [
+            0,
+            0.41,
+            -0.91
+          ]
+        },
+        {
+          "id": "DISPLAY_THRUST_R",
+          "node": "SOCKET_DISPLAY_THRUST_R",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "onboard_display_thrust_right",
+          "position_m": [
+            0.8,
+            0.93,
+            -1.872
+          ],
+          "normal": [
+            0,
+            0.41,
+            -0.91
+          ]
+        },
+        {
+          "id": "DISPLAY_GAS_REAR",
+          "node": "SOCKET_DISPLAY_GAS_REAR",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "onboard_display_gas_reserve",
+          "position_m": [
+            0,
+            0.67,
+            -2.385
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ]
+        },
+        {
+          "id": "DISPLAY_FDAI_REAR",
+          "node": "SOCKET_DISPLAY_FDAI_REAR",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "onboard_display_fdai_telemetry",
+          "position_m": [
+            0,
+            0.992,
+            -0.88
+          ],
+          "normal": [
+            0,
+            0.998,
+            -0.07
+          ]
+        },
+        {
+          "id": "PAYLOAD_L",
+          "node": "SOCKET_PAYLOAD_L",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "modular_payload",
+          "position_m": [
+            -0.78,
+            0.72,
+            -0.92
+          ],
+          "normal": [
+            -1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "PAYLOAD_R",
+          "node": "SOCKET_PAYLOAD_R",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "modular_payload",
+          "position_m": [
+            0.78,
+            0.72,
+            -0.92
+          ],
+          "normal": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "id": "TOW_FRONT",
+          "node": "SOCKET_TOW_FRONT",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "tow_hitch",
+          "position_m": [
+            0,
+            0.58,
+            2.32
+          ],
+          "normal": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "id": "TOW_REAR",
+          "node": "SOCKET_TOW_REAR",
+          "parent": "ROVER_CHASSIS_JUMP",
+          "kind": "tow_hitch",
+          "position_m": [
+            0,
+            0.62,
+            -2.24
+          ],
+          "normal": [
+            0,
+            0,
+            -1
+          ]
+        }
+      ],
+      "colliders": [
+        {
+          "id": "chassis_hull_envelope",
+          "center_m": [
+            0,
+            0.62,
+            0.04
+          ],
+          "size_m": [
+            2.36,
+            1.12,
+            4.66
+          ],
+          "condition": "ground_nominal"
+        },
+        {
+          "id": "airborne_jump_envelope",
+          "center_m": [
+            0,
+            1.45,
+            0.22
+          ],
+          "size_m": [
+            2.4,
+            2.65,
+            4.8
+          ],
+          "condition": "low_gravity_hop"
+        }
+      ],
+      "clips": [],
+      "engine_nodes": [
+        "R47X_ROVER_ROOT",
+        "ROVER_CHASSIS_JUMP",
+        "CHASSIS_ARMOR_BODY",
+        "SUSPENSION_BOGIE_L",
+        "SUSPENSION_ARMS_L",
+        "SUSPENSION_BOGIE_R",
+        "SUSPENSION_ARMS_R",
+        "WHEEL_DRIVE_L",
+        "WHEEL_SET_L",
+        "WHEEL_DRIVE_R",
+        "WHEEL_SET_R",
+        "SUSP_PIVOT_FL",
+        "SUSP_ARM_FL",
+        "WHEEL_STEER_FL",
+        "WHEEL_SPIN_FL",
+        "WHEEL_FL",
+        "SUSP_PIVOT_FR",
+        "SUSP_ARM_FR",
+        "WHEEL_STEER_FR",
+        "WHEEL_SPIN_FR",
+        "WHEEL_FR",
+        "SUSP_PIVOT_ML",
+        "SUSP_ARM_ML",
+        "WHEEL_STEER_ML",
+        "WHEEL_SPIN_ML",
+        "WHEEL_ML",
+        "SUSP_PIVOT_MR",
+        "SUSP_ARM_MR",
+        "WHEEL_STEER_MR",
+        "WHEEL_SPIN_MR",
+        "WHEEL_MR",
+        "SUSP_PIVOT_RL",
+        "SUSP_ARM_RL",
+        "WHEEL_STEER_RL",
+        "WHEEL_SPIN_RL",
+        "WHEEL_RL",
+        "SUSP_PIVOT_RR",
+        "SUSP_ARM_RR",
+        "WHEEL_STEER_RR",
+        "WHEEL_SPIN_RR",
+        "WHEEL_RR",
+        "SENSOR_MAST_YAW",
+        "OPTICS_HEAD_PITCH",
+        "SENSOR_MAST_HEAD",
+        "THRUSTER_GIMBAL_VENTRAL",
+        "VENTRAL_THRUSTER_CLUSTER",
+        "THRUSTER_GIMBAL_LATERAL",
+        "LATERAL_THRUSTER_CLUSTER",
+        "GIMBAL_V_FL",
+        "THRUSTER_V_FL",
+        "GIMBAL_V_FR",
+        "THRUSTER_V_FR",
+        "GIMBAL_V_RL",
+        "THRUSTER_V_RL",
+        "GIMBAL_V_RR",
+        "THRUSTER_V_RR",
+        "GIMBAL_L_FL",
+        "THRUSTER_L_FL",
+        "GIMBAL_L_FR",
+        "THRUSTER_L_FR",
+        "GIMBAL_L_RL",
+        "THRUSTER_L_RL",
+        "GIMBAL_L_RR",
+        "THRUSTER_L_RR",
+        "COLD_GAS_PLUMES",
+        "DISPLAY_SPEED_LEFT",
+        "DISPLAY_THRUST_RIGHT",
+        "DISPLAY_GAS_RESERVE_REAR",
+        "DISPLAY_FDAI_TELEMETRY_PANEL",
+        "ROVER_STATIC_BODY",
+        "SOCKET_SENSOR_MAST",
+        "SOCKET_PAYLOAD_L",
+        "SOCKET_PAYLOAD_R",
+        "SOCKET_TOW_FRONT",
+        "SOCKET_TOW_REAR",
+        "SOCKET_THRUSTER_V_FL",
+        "SOCKET_THRUSTER_V_FR",
+        "SOCKET_THRUSTER_V_RL",
+        "SOCKET_THRUSTER_V_RR",
+        "SOCKET_THRUSTER_L_FL",
+        "SOCKET_THRUSTER_L_FR",
+        "SOCKET_THRUSTER_L_RL",
+        "SOCKET_THRUSTER_L_RR",
+        "SOCKET_DISPLAY_SPEED_L",
+        "SOCKET_DISPLAY_THRUST_R",
+        "SOCKET_DISPLAY_GAS_REAR",
+        "SOCKET_DISPLAY_FDAI_REAR"
+      ],
+      "required_nodes": [
+        "R47X_ROVER_ROOT",
+        "ROVER_CHASSIS_JUMP",
+        "SUSPENSION_BOGIE_L",
+        "SUSPENSION_ARMS_L",
+        "SUSP_PIVOT_FL",
+        "SUSP_ARM_FL",
+        "WHEEL_STEER_FL",
+        "WHEEL_SPIN_FL",
+        "WHEEL_FL",
+        "SUSP_PIVOT_ML",
+        "SUSP_ARM_ML",
+        "WHEEL_STEER_ML",
+        "WHEEL_SPIN_ML",
+        "WHEEL_ML",
+        "SUSP_PIVOT_RL",
+        "SUSP_ARM_RL",
+        "WHEEL_STEER_RL",
+        "WHEEL_SPIN_RL",
+        "WHEEL_RL",
+        "SUSPENSION_BOGIE_R",
+        "SUSPENSION_ARMS_R",
+        "SUSP_PIVOT_FR",
+        "SUSP_ARM_FR",
+        "WHEEL_STEER_FR",
+        "WHEEL_SPIN_FR",
+        "WHEEL_FR",
+        "SUSP_PIVOT_MR",
+        "SUSP_ARM_MR",
+        "WHEEL_STEER_MR",
+        "WHEEL_SPIN_MR",
+        "WHEEL_MR",
+        "SUSP_PIVOT_RR",
+        "SUSP_ARM_RR",
+        "WHEEL_STEER_RR",
+        "WHEEL_SPIN_RR",
+        "WHEEL_RR",
+        "WHEEL_DRIVE_L",
+        "WHEEL_SET_L",
+        "WHEEL_DRIVE_R",
+        "WHEEL_SET_R",
+        "CHASSIS_ARMOR_BODY",
+        "SENSOR_MAST_YAW",
+        "OPTICS_HEAD_PITCH",
+        "SENSOR_MAST_HEAD",
+        "SOCKET_SENSOR_MAST",
+        "THRUSTER_GIMBAL_VENTRAL",
+        "VENTRAL_THRUSTER_CLUSTER",
+        "GIMBAL_V_FL",
+        "THRUSTER_V_FL",
+        "SOCKET_THRUSTER_V_FL",
+        "GIMBAL_V_FR",
+        "THRUSTER_V_FR",
+        "SOCKET_THRUSTER_V_FR",
+        "GIMBAL_V_RL",
+        "THRUSTER_V_RL",
+        "SOCKET_THRUSTER_V_RL",
+        "GIMBAL_V_RR",
+        "THRUSTER_V_RR",
+        "SOCKET_THRUSTER_V_RR",
+        "THRUSTER_GIMBAL_LATERAL",
+        "LATERAL_THRUSTER_CLUSTER",
+        "GIMBAL_L_FL",
+        "THRUSTER_L_FL",
+        "SOCKET_THRUSTER_L_FL",
+        "GIMBAL_L_FR",
+        "THRUSTER_L_FR",
+        "SOCKET_THRUSTER_L_FR",
+        "GIMBAL_L_RL",
+        "THRUSTER_L_RL",
+        "SOCKET_THRUSTER_L_RL",
+        "GIMBAL_L_RR",
+        "THRUSTER_L_RR",
+        "SOCKET_THRUSTER_L_RR",
+        "COLD_GAS_PLUMES",
+        "DISPLAY_SPEED_LEFT",
+        "SOCKET_DISPLAY_SPEED_L",
+        "DISPLAY_THRUST_RIGHT",
+        "SOCKET_DISPLAY_THRUST_R",
+        "DISPLAY_GAS_RESERVE_REAR",
+        "SOCKET_DISPLAY_GAS_REAR",
+        "DISPLAY_FDAI_TELEMETRY_PANEL",
+        "SOCKET_DISPLAY_FDAI_REAR",
+        "SOCKET_PAYLOAD_L",
+        "SOCKET_PAYLOAD_R",
+        "SOCKET_TOW_FRONT",
+        "SOCKET_TOW_REAR",
+        "ROVER_STATIC_BODY"
+      ],
+      "credit": "Models by jelaludo"
+    }
+  ]
+}
