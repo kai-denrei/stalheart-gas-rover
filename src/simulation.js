@@ -9,7 +9,7 @@ export const STEP=1/120;
 const V=()=>new Vector3();
 export const WHEELS=[-.98,.98].flatMap(x=>[-1.44,-.42,1.44].map(z=>new Vector3(x,-.44,z)));
 const HULL=[-1,1].flatMap(x=>[-1.9,1.9].flatMap(z=>[.2,.96].map(y=>new Vector3(x,y,z))));
-export function commands(){return {drive:0,steer:0,lift:0,pitch:0,yaw:0,roll:0,kick:0,brake:0,down:0,airBrake:0,stabilize:0,acro:false};}
+export function commands(){return {drive:0,steer:0,boost:0,lift:0,pitch:0,yaw:0,roll:0,kick:0,brake:0,down:0,airBrake:0,stabilize:0,acro:false};}
 export class Simulation {
  constructor(world){this.damage=new RoverDamage();this.damageEnabled=true;this.world=world;this.tune={...DEFAULTS};this.pos=V();this.vel=V();this.q=new Quaternion();this.omega=V();this.time=0;this.checkpoint=0;this.events=[];this.motion=new RoverMotion(this);this.reset();}
  event(type,detail={}){this.events.push({type,time:this.time,...detail});if(this.events.length>40)this.events.shift();}
@@ -63,8 +63,11 @@ export class Simulation {
   // secretly lifting, and opposed jets can brake or push down in any attitude.
   let burn=allocate(force,V(),this.tune.lift/8,health);
   const correction=groundMode?V():new Vector3(-input.steer*7,0,input.drive*7).addScaledVector(up.clone().applyQuaternion(inv),-(input.down||0)*8);
+  // Opposed longitudinal jets act through the COM, on the road or in flight.
+  // They share the lift/rotation fuel budget and remain body-forward when tilted.
+  correction.z+=(input.boost||0)*8;
   if(!groundMode&&input.airBrake)correction.add(this.vel.clone().multiplyScalar(-2.8).clampLength(0,8).applyQuaternion(inv));
-  this.rcs=groundMode?reactionBurn(V(),V()):reactionBurn(correction,targetAccel.multiply(INERTIA),health);
+  this.rcs=reactionBurn(correction,groundMode?V():targetAccel.multiply(INERTIA),health);
   if(groundMode)burn=allocate(V(),V(),this.tune.lift/8);
   burn.force.add(this.rcs.force);burn.torque.add(this.rcs.torque);burn.effort+=this.rcs.effort;
   this.spent+=Math.min(this.reserve,health.leakRate*dt);
@@ -74,22 +77,24 @@ export class Simulation {
   this.spent+=wanted*fraction;
   if(this.spent>=this.tune.capacity-1e-8&&!this.exhausted){this.exhausted={time:this.time,position:this.pos.toArray()};this.event('empty');}
   this.burn=burn;
-  const resting=this.parked&&groundMode&&!input.drive&&!input.steer&&this.vel.lengthSq()===0&&this.omega.lengthSq()===0;
+  const resting=this.parked&&groundMode&&!input.drive&&!input.steer&&!input.boost&&this.vel.lengthSq()===0&&this.omega.lengthSq()===0;
   this.vel.addScaledVector(up,resting?0:-this.tune.gravity*dt).addScaledVector(burn.force.clone().applyQuaternion(this.q),dt);
   this.omega.addScaledVector(burn.torque.clone().divide(INERTIA).applyQuaternion(this.q),dt);
   if(groundMode){
    const f=bodyForward.clone().projectOnPlane(up).normalize(),r=right.clone().projectOnPlane(up).normalize(),speed=this.vel.dot(f);
    const traction=this.wheelContact.filter(Boolean).length/6;this.traction=traction;
    const desired=input.drive>0?(this.tune.driveSpeed||18)*input.drive:input.drive<0?7*input.drive:0;
-   let accel=input.drive?Math.max(-8,Math.min(6,(desired-speed)*2)):-speed*.45;
-   const handbrake=Math.max(0,Math.min(1,input.brake||0)),powerDrift=Math.max(0,input.drive)*Math.min(1,Math.abs(input.steer)*1.7)*Math.min(1,Math.max(0,(speed-5.5)/6.5))*.98,wantDrift=Math.max(powerDrift,handbrake*Math.min(1,Math.max(0,(Math.abs(speed)-2)/4)));
-   this.drift+=(wantDrift-this.drift)*Math.min(1,dt*(wantDrift>this.drift?10:2.8));
+   let accel=input.drive?Math.max(-8,Math.min(9,(desired-speed)*2)):-speed*.45;
+   // Above motor cruise speed, coast the drivetrain instead of fighting the jets.
+   if(input.boost&&this.rcs.force.z*input.boost>0&&Math.sign(speed)===Math.sign(input.boost)&&Math.abs(speed)>Math.abs(desired))accel=-speed*.12;
+   const handbrake=Math.max(0,Math.min(1,input.brake||0)),powerDrift=Math.max(0,input.drive)*Math.min(1,Math.abs(input.steer)*2.1)*Math.min(1,Math.max(0,(speed-4.5)/5.5))*.995,wantDrift=Math.max(powerDrift,handbrake*Math.min(1,Math.max(0,(Math.abs(speed)-2)/4)));
+   this.drift+=(wantDrift-this.drift)*Math.min(1,dt*(wantDrift>this.drift?14:2.8));
    if(handbrake)accel=input.drive?accel-Math.sign(speed)*2:-Math.max(-12,Math.min(12,speed/dt));
    this.vel.addScaledVector(f,accel*health.drive*traction*dt).addScaledVector(r,-this.vel.dot(r)*Math.min(1,dt*7*health.grip*traction*(1-this.drift)));
    // Axle forces: front tyres retain bite while the accelerating or braked rear axle loses lateral grip.
-   for(const [z,grip] of [[1.15,4.5],[-1.15,.16]]){const lever=f.clone().multiplyScalar(z),slip=this.vel.clone().add(new Vector3().crossVectors(this.omega,lever)).dot(r),force=Math.max(-grip,Math.min(grip,-slip*grip))*this.drift*health.grip*traction;this.impulse(r.clone().multiplyScalar(force*dt),lever);}
+   for(const [z,grip] of [[1.15,4.5],[-1.15,.08]]){const lever=f.clone().multiplyScalar(z),slip=this.vel.clone().add(new Vector3().crossVectors(this.omega,lever)).dot(r),force=Math.max(-grip,Math.min(grip,-slip*grip))*this.drift*health.grip*traction;this.impulse(r.clone().multiplyScalar(force*dt),lever);}
    if(this.damage.wreck)this.vel.addScaledVector(f,-speed*Math.min(1,dt*1.5));
-   const targetYaw=-input.steer*(.55+Math.min(Math.abs(speed)/10,1)*.65)*(speed<-.5?-1:1)*health.steer+health.pull*Math.max(-1.5,Math.min(1.5,speed/10));
+   const targetYaw=-input.steer*(.55+Math.min(Math.abs(speed)/10,1)*.65)*(1+this.drift*.18)*(speed<-.5?-1:1)*health.steer+health.pull*Math.max(-1.5,Math.min(1.5,speed/10));
    this.omega.addScaledVector(up,(targetYaw-this.omega.dot(up))*Math.min(1,dt*(9-5.5*this.drift)*health.grip*traction));
    // Speed and lateral acceleration unload the inside tyres physically. There
    // is no random grip switch: contact returns when the chassis levels again.
@@ -148,7 +153,7 @@ export class Simulation {
   for(let i=0;i<6;i++){const p=WHEELS[i],v=this.vel.clone().add(new Vector3().crossVectors(this.omega,p.clone().applyQuaternion(this.q))).applyQuaternion(this.q.clone().invert());const angle=p.z>1?this.steering:0;if(this.wheelContact[i]&&this.damage.states['WHEEL_'+['RL','ML','FL','RR','MR','FR'][i]]<3)this.wheelSpin[i]+=(v.z*Math.cos(angle)+v.x*Math.sin(angle))*dt/.48*(p.z<0?(input.brake?1-this.drift:1+this.drift*.12*Math.max(0,input.drive)):1);}
   this.contactCount=wheelContacts;this.bodyContacts=bodyContacts;this.supportTime=wheelContacts>=2?.10:Math.max(0,this.supportTime-dt);this.grounded=this.supportTime>0&&this.vel.dot(up)<1.1;
   // Static tyre friction catches the last tiny roll instead of leaving a perpetual crawl on a tilted deck.
-  this.parked=this.grounded&&wheelContacts>=4&&!input.drive&&!input.steer&&!input.lift&&this.vel.clone().projectOnPlane(up).length()<.12&&Math.abs(this.vel.dot(up))<.3&&this.omega.length()<.12;
+  this.parked=this.grounded&&wheelContacts>=4&&!input.drive&&!input.steer&&!input.boost&&!input.lift&&this.vel.clone().projectOnPlane(up).length()<.12&&Math.abs(this.vel.dot(up))<.3&&this.omega.length()<.12;
   if(this.parked){this.vel.set(0,0,0);this.omega.set(0,0,0);}
   this.tilt=Math.acos(Math.max(-1,Math.min(1,bodyUp.dot(up))))*180/Math.PI;
   if(!this.grounded){this.airtime+=dt;this.refilled=false;}else if(!wasGround&&this.airtime>.25){this.event('landing',{airtime:this.airtime,speed:maxImpact});this.impact=Math.min(1,maxImpact/8);this.airtime=0;}

@@ -23,8 +23,8 @@ test('crowd queue holds overflow without deleting living enemies and resumes as 
 test('shared adaptive crowd policy backs off on slow frames, and only grows on a populated fast field',()=>{
  const c=crowdBudget();for(let i=0;i<50;i++)crowdFrame(c,40,360);assert.ok(c.cap<360);const cap=c.cap;for(let i=0;i<500;i++)crowdFrame(c,16,0);assert.equal(c.cap,cap);for(let i=0;i<120;i++)crowdFrame(c,16,c.cap);assert.ok(c.cap>cap);
 });
-test('the disco clock releases exactly three bombs across coarse ticks and reset can replay the salvo',()=>{
- const done=new Set(),all=[];for(const t of [0,.2,1.1,2.4,8,43])for(const s of discoReleases(t,done)){all.push(s);done.add(s.i);}assert.deepEqual(all.map(s=>s.at),[0,.8,1.6]);assert.equal(discoReleases(8,done).length,0);done.clear();assert.equal(discoReleases(2,done).length,3);
+test('the disco clock releases two staggered salvos with a seven-second gap and one distant triple-size blast',()=>{
+ const done=new Set(),all=[];for(const t of [0,.2,1.1,2.4,8,43])for(const s of discoReleases(t,done)){all.push(s);done.add(s.i);}assert.deepEqual(all.map(s=>s.at),[0,.8,1.6,8.6,9.4,10.2]);assert.equal(all[3].at-all[2].at,7);assert.deepEqual(all.map(s=>s.size),[1,1,1,1,1,3]);assert.ok(all[5].target[1]>all[4].target[1]);assert.equal(discoReleases(8,done).length,0);done.clear();assert.equal(discoReleases(2,done).length,3);
 });
 test('spatial shot query retains the same blocked/open decisions as the full convex scene',()=>{
  const w=createRaceWorld(),index=new CombatSpatial(w);for(let x=-20;x<160;x+=17)for(const h of [1,12,45]){const a=point(x,0,h),b=point(x+20,180,h);assert.equal(segmentBlocked(w,a,b,index),segmentBlocked(w,a,b));}

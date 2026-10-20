@@ -25,7 +25,8 @@
     "test:interactions": "node scripts/enemy-interactions-browser-test.mjs",
     "test:flight": "node scripts/flight-control-browser-test.mjs",
     "test:divide-polish": "node scripts/divide-polish-browser-test.mjs",
-    "test:planes": "node scripts/planes-browser-test.mjs"
+    "test:planes": "node scripts/planes-browser-test.mjs",
+    "test:boost-finale": "node scripts/boost-finale-browser-test.mjs"
   },
   "engines": {
     "node": ">=22"

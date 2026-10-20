@@ -8,7 +8,8 @@ Controls switch on actual supporting wheel contact. With any wheel touching, the
 | A / D | Steer left / right | Transverse Flip: yaw left / right |
 | Q / E | Inactive | Coronal Flip: roll left / right |
 | Space | Take off | Main lift jets |
-| Shift | Rear handbrake / drift | Thrust toward the planet |
+| Shift + W / S | Forward / backward gas boost, plus drive / braking | Body-forward / backward gas boost; no W/S pitch or downward thrust |
+| Shift alone | Rear handbrake / drift | Thrust toward the planet |
 | X | Inactive | Brake translation without stopping rotation |
 | C | Inactive | Counter angular velocity and level out |
 
@@ -25,3 +26,5 @@ Two or more completed rotations in one uninterrupted flight followed by a collis
 Fixture and rover collisions retain the softer torque/friction response. Fast cornering physically lifts inside wheels; drive, steering and grip scale with wheel support, and `GRIP n/6` reports reduced contact. Ease the throttle, straighten or counter-steer to settle the chassis.
 
 Validation: `npm test`, `npm run test:planes`, and the rendered expedition race. The focused suite covers all input planes, five-second bounds, airborne exemption, authored flag height, gate stunt scoring, catastrophic impact, recovery locking and repair.
+
+Longitudinal boosts use the same finite gas reserve as lift and rotation, delivering 8 m/s² through opposed jets without added torque. Empty tanks disable the jets; the unlimited lab toggle keeps them firing. W/S still powers the wheels on the road; above motor cruise speed, boosting coasts the drivetrain instead of fighting the jets. Forward motor acceleration is now capped at 9 m/s² (previously 6). Powered drifting starts above 4.5 m/s, breaks rear grip faster, and adds 18% yaw authority at full drift; straightening restores grip.

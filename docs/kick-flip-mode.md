@@ -7,3 +7,5 @@ Boost clear of the surface, then use **Q/E for Coronal Flip**, **W/S for Sagitta
 There is no canned flip animation or automatic counter-burst. Balanced reaction jets apply real torque and use gas. Signed quaternion winding verifies each complete turn. The CRT callout names the plane; repeated turns increase the combo. The practice HUD follows the dominant rotation plane.
 
 See [flight and race rules](flight-and-traction.md) for scoring, flag-height gates, out-of-bounds allowances and high-speed multi-flip wrecks in races.
+
+Shift+W/S overrides W/S pitch with straight body-forward/backward gas boosts. Shift alone still thrusts downward. The same combinations boost on the road, where W/S also drives/brakes the wheels.

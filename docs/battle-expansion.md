@@ -22,9 +22,11 @@ SOL fires a 2.2-second pass every 3.4 seconds. Target selection uses Stalheart's
 
 Regular MK-9 drops occur every 12 seconds, using the original cargo socket, aircraft velocity, forward/side throw, 2.4-second unpowered fall and 1.8-second accelerating burn. Release and ignition retain the original sound keys.
 
-At the arrival of the final disco song, three separate bombs release at party times **0.0, 0.8 and 1.6 seconds**. They impact around **4.2, 5.0 and 5.8 seconds**, at three nearby positions beyond the finish gantry. The initial ISAO handoff faces this direction. Exploring freely can of course put the spectacle behind the camera; the salvo never takes control away from the player.
+At the arrival of the final disco song, the first three bombs are scheduled at party times **0.0, 0.8 and 1.6 seconds**. Each uses the original 4.2-second drop. Seven seconds after the third release, a second three-bomb volley starts, staggered by 0.8 seconds. These land farther beyond the gantry; the final mushroom cloud, blast radius and persistent scorch are **3× the linear size** of a normal celebration strike.
 
-All three mushroom clouds and their cooling/ember aftermath coexist. Nuclear capacity is four (including an ordinary strike already underway), with the original effect slowed to about 16 seconds and scorch lasting 65 seconds. Regular drops pause during the first 18 seconds of the party so they do not evict its aftermath. The shared race clock handles pause; restart clears missiles, beams, effects and salvo history.
+Blocked trajectories wait for a clear shot and try alternate positions in the hinterland. Any delay preserves the stagger and the seven-second interval. The gunship gradually moves its orbit toward the finish and climbs from 105 to 230 metres during the finale so distant shots clear the curved horizon, including when the human rover finishes far from the podium. The giant blast requires a 165-metre friendly clearance radius. The initial ISAO handoff faces the show; exploring never loses camera control.
+
+The original mushroom-cloud effect runs at about 16 seconds, with scorch lasting 65 seconds. Nuclear capacity stays capped at four concurrent effects; when a newer cloud needs that slot, the oldest cloud retires while its ground scorch remains. The giant effect scales the existing geometry and particles rather than tripling their number. Regular drops pause during the first 18 seconds of the party. Pause freezes the shared race clock; restart clears missiles, beams, effects and salvo history.
 
 ## Hundreds of actual enemies
 
@@ -54,3 +56,5 @@ Measured in local desktop Chrome; these are samples, not a guarantee for another
 Reports: `artifacts/battle-browser-report.json`, `artifacts/battle-unit-tests.txt`, `artifacts/battle-check.txt`, `artifacts/battle-race-validation.txt`. Reproduce with `npm run test:battle`, `npm test`, `npm run check` and `npm run test:race`. The source import script is `scripts/import-battle-assets.mjs`.
 
 Visuals: `artifacts/battle-disco-three-nukes.png`, `artifacts/battle-disco-retina-aftermath.png`, `artifacts/battle-640-track.png`, `artifacts/battle-640-retina.png`.
+
+October 20 follow-up: `npm run test:boost-finale` verifies real Shift+W keyboard translation and gas use, both staggered volleys, the triple-size blast, pause and reset. Set `LAB_URL=http://localhost:8166/?mode=expedition` to run it in Base 2.
