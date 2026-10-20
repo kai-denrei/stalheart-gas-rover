@@ -11,6 +11,7 @@ import {RoverRig} from './rover-rig.js';
 import {createRoverInstruments} from './rover-instruments.js';
 import {createStalheartSky} from './sky.js';
 import {PerformanceMonitor} from './performance.js';
+import {RoverCameraHeading} from './rover-camera-heading.js';
 const green=0xaff3ce,amber=0xffbf7b;
 LOOKS.roverLab={...LOOKS.tronColors,floors:{...LOOKS.tronColors.floors,room:[.12,.18,.17]},walls:{top:[.14,.18,.17],side:[.09,.13,.13]},edges:{color:0xa9d4b4,opacity:.5,additive:false}};
 export class Presentation {
@@ -21,7 +22,7 @@ export class Presentation {
   const sun=new T.DirectionalLight(0xffe3bc,3.5);sun.position.set(-100,200,-80);this.scene.add(sun);this.sun=sun;
   this.mode='chase';this.distance=13;this.orbit=0;this.pitch=.40;this.look=new T.Vector3();this.cameraInitialized=false;this.effects=[];this.shadow=new T.Mesh(new T.CircleGeometry(2.6,32),new T.MeshBasicMaterial({color:0x02090c,transparent:true,opacity:.26,depthWrite:false}));this.shadow.rotation.x=-Math.PI/2;this.scene.add(this.shadow);
   this.exhaustionMarker=new T.Mesh(new T.OctahedronGeometry(.5),new T.MeshBasicMaterial({color:0xffb575,wireframe:true}));this.exhaustionMarker.visible=false;this.scene.add(this.exhaustionMarker);
-  this.drawFixtures();
+  this.cameraHeading=new RoverCameraHeading();this.drawFixtures();
  }
  async load(){this.sky=createStalheartSky(this.renderer,this.scene,this.world);await Promise.all([this.loadGround(),this.loadRover()]);await this.loadSinkholes();this.renderer.compile(this.scene,this.camera);}
  async loadGround(){
@@ -48,7 +49,7 @@ export class Presentation {
    const disk=new T.Mesh(new T.CylinderGeometry(6,6,.08,64),new T.MeshStandardMaterial({color:0x344b4a,roughness:.75,metalness:.4}));disk.position.y=.03;group.add(disk);
    const ring=new T.Mesh(new T.RingGeometry(5.7,5.82,64),new T.MeshBasicMaterial({color:green,side:T.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.position.y=.085;group.add(ring);
    const crossMat=new T.MeshBasicMaterial({color:0x9cd7c0});for(const a of [0,Math.PI/2]){const m=new T.Mesh(new T.PlaneGeometry(2.4,.1),crossMat);m.rotation.set(-Math.PI/2,0,a);m.position.y=.09;group.add(m);}
-   for(const x of [-6,6]){const post=new T.Mesh(new T.CylinderGeometry(.08,.12,1.2,6),new T.MeshStandardMaterial({color:0x80918b}));post.position.set(x,.6,0);group.add(post);const cap=new T.Mesh(new T.SphereGeometry(.12,8,8),new T.MeshBasicMaterial({color:green}));cap.position.set(x,1.25,0);group.add(cap);}
+   if(!this.world.race)for(const x of [-6,6]){const post=new T.Mesh(new T.CylinderGeometry(.08,.12,1.2,6),new T.MeshStandardMaterial({color:0x80918b}));post.position.set(x,.6,0);group.add(post);const cap=new T.Mesh(new T.SphereGeometry(.12,8,8),new T.MeshBasicMaterial({color:green}));cap.position.set(x,1.25,0);group.add(cap);}
   }
   for(const r of this.world.rocks){const m=new T.Mesh(new T.BoxGeometry(r.w,r.h,r.d),new T.MeshStandardMaterial({color:0x425053,roughness:1}));m.position.copy(r.origin).addScaledVector(r.frame.up,r.h/2);m.quaternion.copy(r.frame.q);this.scene.add(m);const edges=new T.LineSegments(new T.EdgesGeometry(m.geometry),new T.LineBasicMaterial({color:0x70918a,transparent:true,opacity:.3}));m.add(edges);}
   // Approach strip gives the first jump a readable runway without constraining the vehicle.
@@ -95,7 +96,7 @@ export class Presentation {
   }for(const u of this.floorUniforms)u.value=this.world.holes.map(h=>h.radius);
  }
  render(dt,alpha=1){
-  this.resize();if(this.world.race)this.syncRaceHazards();this.raceView?.update(alpha);const s=this.sim.motion.sample(alpha),up=upAt(s.pos),fwd=new T.Vector3(0,0,1).applyQuaternion(s.q).projectOnPlane(up).normalize();if(fwd.lengthSq()<.1)fwd.copy(frameAt(s.pos).north);const right=new T.Vector3().crossVectors(up,fwd).normalize();
+  this.resize();if(this.world.race)this.syncRaceHazards();this.raceView?.update(alpha);const s=this.sim.motion.sample(alpha),up=upAt(s.pos),fwd=this.cameraHeading.update(s,dt,!this.cameraInitialized).clone();
   this.driftTrails?.update(s);
   this.instruments?.update(s,s.vel.clone().projectOnPlane(up).length());
   if(this.rover){this.rover.visible=!this.sim.recovering;this.rover.position.copy(s.pos);this.rover.quaternion.copy(s.q);this.rig.update(s,s.vel.clone().projectOnPlane(up).length());}

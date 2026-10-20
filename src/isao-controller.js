@@ -10,7 +10,7 @@ export class IsaoController {
   this.view=view;this.keys=new Set();this.active=false;this.unlocked=false;this.spawned=false;
   this.position=new T.Vector3();this.previous=new T.Vector3();this.velocity=new T.Vector3();
   this.rotation=new T.Quaternion();this.previousRotation=new T.Quaternion();
-  this.yaw=0;this.cameraYaw=0;this.pitch=.32;this.distance=5;this.radius=.75;this.contacts=0;
+  this.yaw=0;this.cameraYaw=0;this.pitch=.32;this.distance=5;this.radius=.75;this.contacts=0;this.forwardHeld=0;
   this.root=new T.Group();this.root.name='ISAO / player-controlled builder drone';this.root.visible=false;view.scene.add(this.root);
  }
  async load(){
@@ -26,10 +26,10 @@ export class IsaoController {
  enter(){
   if(!this.unlocked)return false;
   if(!this.spawned){const source=this.view.sim.pos,f=frameAt(source);this.position.copy(source).addScaledVector(f.up,4).addScaledVector(f.east,4);this.rotation.copy(f.q).multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),this.yaw));this.velocity.set(0,0,0);this.resolveContacts();this.capture();this.spawned=true;}
-  this.active=true;this.root.visible=true;this.cameraInitialized=false;return true;
+  this.active=true;this.forwardHeld=0;this.root.visible=true;this.cameraInitialized=false;return true;
  }
  capture(){this.previous.copy(this.position);this.previousRotation.copy(this.rotation);}
- reset(){this.active=false;this.unlocked=false;this.spawned=false;this.root.visible=false;this.keys.clear();this.velocity.set(0,0,0);this.yaw=0;this.cameraYaw=0;this.pitch=.32;this.distance=5;this.setFace('Happy');}
+ reset(){this.active=false;this.unlocked=false;this.spawned=false;this.root.visible=false;this.keys.clear();this.velocity.set(0,0,0);this.yaw=0;this.cameraYaw=0;this.pitch=.32;this.distance=5;this.forwardHeld=0;this.setFace('Happy');}
  look(dx,dy){this.cameraYaw-=dx*.005;this.pitch=T.MathUtils.clamp(this.pitch+dy*.004,-.55,1.25);}
  resolveContacts(){
   this.contacts=0;
@@ -47,9 +47,11 @@ export class IsaoController {
   // +Z is forward: positive yaw turns left in the trailing camera.
   this.yaw+=(Number(k.has('KeyA'))-Number(k.has('KeyD')))*1.6*dt;
   const forward=frame.north.clone().applyAxisAngle(frame.up,this.yaw);
-  const desired=forward.multiplyScalar(12*(Number(k.has('KeyW'))-Number(k.has('KeyS'))));
+  this.forwardHeld=k.has('KeyW')&&!k.has('KeyS')?Math.min(4,this.forwardHeld+dt):0;
+  const forwardSpeed=12+24*T.MathUtils.smoothstep(this.forwardHeld,0,4);
+  const desired=forward.multiplyScalar(k.has('KeyW')&&!k.has('KeyS')?forwardSpeed:k.has('KeyS')&&!k.has('KeyW')?-12:0);
   desired.addScaledVector(frame.up,8*Number(k.has('Space'))*(k.has('ShiftLeft')||k.has('ShiftRight')?-1:1));
-  this.velocity.lerp(desired,1-Math.exp(-dt*7));this.position.addScaledVector(this.velocity,dt);this.resolveContacts();
+  this.velocity.lerp(desired,1-Math.exp(-dt*7));this.position.addScaledVector(this.velocity,dt);this.resolveContacts();if(this.contacts)this.forwardHeld=0;
   const target=frameAt(this.position).q.multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),this.yaw));
   this.rotation.slerp(target,1-Math.exp(-dt*8));
   this.setFace(this.contacts?'Surprised':this.velocity.length()>1?'Determined':'Happy');if(this.rotor)this.rotor.timeScale=1+this.velocity.length()/16;this.mixer?.update(dt);

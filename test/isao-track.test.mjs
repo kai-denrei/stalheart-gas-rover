@@ -28,3 +28,11 @@ test('ISAO turns without strafing, flies forward/back along his heading, and sep
 });
 
 test('ISAO Shift alone holds altitude and Shift Space descends instead of cancelling lift',()=>{const f=actor();f.unlock();f.enter();f.position.copy(point(0,0,20));f.capture();f.keys.add('ShiftRight');advance(f,1);assert.ok(Math.abs(coords(f.position).h-20)<.01);f.keys.add('Space');advance(f,1);assert.ok(coords(f.position).h<14);});
+test('ISAO sustained W ramps smoothly to triple cruise speed and release, reverse and blocked input reset the ramp',()=>{
+ const f=actor();f.unlock();f.enter();f.position.copy(point(0,0,40));f.capture();f.keys.add('KeyW');
+ const speeds=[];for(let i=0;i<5;i++){advance(f,1);speeds.push(f.velocity.length());}
+ assert.ok(speeds[0]>12&&speeds[0]<16);assert.ok(speeds[1]>speeds[0]+5);assert.ok(speeds[3]>35);assert.ok(speeds.every(v=>v<36.01));
+ f.keys.clear();advance(f,.5);assert.equal(f.forwardHeld,0);assert.ok(f.velocity.length()<1.2);
+ f.keys.add('KeyS');advance(f,1);assert.ok(f.velocity.length()<12.01);assert.equal(f.forwardHeld,0);
+ f.keys.clear();f.keys.add('KeyW');advance(f,2);f.step(1/120,false);assert.equal(f.forwardHeld,0);f.reset();assert.equal(f.forwardHeld,0);
+});

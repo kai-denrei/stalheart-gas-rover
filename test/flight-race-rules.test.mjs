@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';
-import {readFile} from 'node:fs/promises';import {GLTFLoader} from '../upstream/stalheart/vendor/GLTFLoader.js';import {Box3} from '../upstream/stalheart/vendor/three.module.js';
+import {readFile} from 'node:fs/promises';import {GLTFLoader} from '../upstream/stalheart/vendor/GLTFLoader.js';import {Box3,Vector3,Quaternion} from '../upstream/stalheart/vendor/three.module.js';
 import {Race} from '../src/race.js';import {createRaceWorld} from '../src/race-world.js';import {Simulation,commands,STEP} from '../src/simulation.js';import {point,frameAt,upAt} from '../src/world.js';import {wheelsOffCourse} from '../src/race-bounds.js';import {roverInput} from '../src/rover-input.js';
 const setup=()=>{const w=createRaceWorld();w.colliders=[];w.holes=[];const race=new Race(w,new Simulation(w)),r=race.racers[0];race.phase='racing';race.racers.slice(1).forEach(r=>r.penalty=999);return {w,race,r,s:r.sim};};
 const run=(s,c,t)=>{for(let i=0;i<Math.round(t/STEP);i++)s.step({...commands(),...c});};
@@ -17,3 +17,10 @@ test('mixed-plane gate passage earns the larger bonus and cannot also farm singl
 test('damage-disabled practice remains exempt from catastrophic stunt crashes',()=>{const {s}=setup();s.damageEnabled=false;s.flightTurns=4;s.receiveImpact({speed:30,zone:'FRONT_BUMPER'});assert.equal(s.catastrophic,null);assert.equal(s.damage.wreck,false);});
 
 test('race airborne exemption also removes the proving-ground altitude reset',()=>{const {race,r,s}=setup();airborne(s,400,-300,300);for(let i=0;i<240;i++)race.step(commands());assert.equal(r.penalty,0);assert.equal(r.penalties,0);assert.equal(r.outside,0);assert.ok(s.pos.distanceTo(point(400,-300))>290);});
+
+test('high-spin crash landings dissipate momentum and settle as passive wrecks in every landing attitude',()=>{
+ for(const pitch of [0,Math.PI/2,Math.PI]){const {s}=setup();airborne(s,0,-100,5);const f=frameAt(s.pos);s.q.copy(f.q).multiply(new Quaternion().setFromAxisAngle(new Vector3(1,0,0),pitch));s.vel.copy(f.north).multiplyScalar(25).addScaledVector(f.up,-35);s.omega.set(18,4,6);s.age=1;s.flightTurns=3;
+  let seen=false,maxSpeed=0,maxSpin=0,maxRise=0;for(let i=0;i<600;i++){s.step(commands());if(s.damage.wreck){seen=true;maxSpeed=Math.max(maxSpeed,s.vel.length());maxSpin=Math.max(maxSpin,s.omega.length());maxRise=Math.max(maxRise,s.vel.dot(upAt(s.pos)));}}
+  assert.ok(seen);assert.ok(s.catastrophic);assert.ok(maxSpeed<6);assert.ok(maxSpin<3);assert.ok(maxRise<.6);assert.ok(s.vel.length()<.2);assert.ok(s.contactCount+s.bodyContacts>0);assert.ok(s.damage.wreck,'wreck hold is retained');
+ }
+});

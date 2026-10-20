@@ -40,3 +40,5 @@ The road uses the same polyline/capsule union as the race boundary and the exist
 - Local desktop Chrome samples remain approximately 60 FPS at 1440×913 (DPR 1) and 2520×1597 (DPR 1.75). The ISAO battle samples average about 1.01 ms simulation, 2.48–2.61 ms render submission and 2.10–4.37 ms GPU; P95 frame interval 16.7 ms. These are local measurements, not a phone benchmark.
 
 Reports: `artifacts/combat-browser-report.json`, `artifacts/combat-performance.json`, `artifacts/race-validation-output.txt`, `artifacts/unit-test-output.txt`. Visuals: `artifacts/isao-handoff.png`, `artifacts/isao-flight.png`, `artifacts/track-v2-grid.png`, `artifacts/track-v2-corners.png`.
+
+Holding W ramps ISAO forward speed smoothly from 12 to 36 m/s over four seconds. Releasing W, reversing, disabling control or touching an obstacle resets the ramp. Reverse stays at 12 m/s; vertical movement stays at 8 m/s.

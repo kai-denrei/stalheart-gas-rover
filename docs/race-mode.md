@@ -94,3 +94,5 @@ The five-light start sequence and beeps use the physical board only, without a d
 Damaging rover–alien contacts produce red envelopes around both bodies plus a short expanding contact ring. The effect is capped at 16 simultaneous impacts, uses two instanced batches, and follows the existing contact cooldown. Actual impulse recoil remains mass-dependent; killed small bodies carry their knockback briefly before settling.
 
 The current control sets, named three-plane flips, gate bonuses and total-wreck recovery are specified in [flight and race rules](flight-and-traction.md).
+
+Race refill areas retain their flat disk/ring markers but omit the old proving-ground bollards and glowing caps, which protruded through the asphalt. The box-shaped rocks remain intentional physical obstacles.

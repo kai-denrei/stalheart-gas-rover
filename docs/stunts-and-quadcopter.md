@@ -44,3 +44,5 @@ All three podiums are 64-sided cylinders with matching convex collision hulls an
 - `npm run test:stunts`: real E input, physical double/counter burst, synchronized HUD/world board, human cylinder landing/claim, actual ISAO keyboard yaw/forward/down/up, dense battle and restart. Report: `../artifacts/stunt-browser-report.json`.
 
 Measured final dense-battle result: 603 live enemies, approximately 60 FPS, 6.12 ms GPU at 2520×1597 (1.75×). All 92 unit tests passed; 183 pinned assets and 171 modules verified. Browser checks reported no console errors. Measurements are from this machine/headless Chrome; the live FPS/GPU panel remains available for interactive comparisons.
+
+Holding W ramps ISAO forward speed smoothly from 12 to 36 m/s over four seconds. Releasing W, reversing, disabling control or touching an obstacle resets the ramp. Reverse stays at 12 m/s; vertical movement stays at 8 m/s.

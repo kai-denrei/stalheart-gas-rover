@@ -20,12 +20,17 @@ export class Simulation {
   this.vel.set(0,0,0);this.omega.set(0,0,0);this.spent=0;this.exhausted=null;this.grounded=true;this.supportTime=.1;this.contactCount=6;this.bodyContacts=0;this.inverted=0;this.tilt=0;this.age=0;this.padTime=0;this.refilled=true;this.burn=allocate(V(),V(),this.tune.lift/8);this.airtime=0;this.peak=0;this.impact=0;this.steering=0;this.drift=0;this.wheelContact=Array(6).fill(true);this.traction=1;this.trickAxes=[false,false,false];this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];this.rcs=reactionBurn(V(),V());this.parked=false;this.wheelSpin=Array(6).fill(0);this.lastCollision=null;this.collisionCooldown=0;this.kickFlight=false;this.kickAngle=0;this.kickTurns=0;this.kickInput=0;this.kickTotal??=0;this.figureTotal??=0;this.enemyPrevious=null;this.lastReason=reason;this.event('reset',{reason});this.motion.capture();}
  receiveImpact(hit){
   if(!this.damageEnabled)return null;
+  const wasWreck=this.damage.wreck;
   const local=hit.local||(hit.point?new Vector3().fromArray(hit.point).sub(this.pos).applyQuaternion(this.q.clone().invert()).toArray():[0,0,0]);
   let result;
   if(!this.damage.wreck&&this.flightTurns>=2&&hit.speed>=16){
    this.catastrophic={time:this.time,speed:hit.speed,turns:this.flightTurns,position:this.pos.toArray()};this.wreckDelay=8;
    result=this.damage.destroy({...hit,local,source:hit.collider||hit.source||'environment',time:this.time});this.event('total-wreck',this.catastrophic);
   }else result=this.damage.impact({...hit,local,source:hit.collider||hit.source||'environment',time:this.time});
+  if(!wasWreck&&this.damage.wreck){
+   // Crushing the chassis absorbs momentum; it cannot spring back into flight.
+   const up=upAt(this.pos);this.vel.multiplyScalar(.2);this.vel.addScaledVector(up,-Math.max(0,this.vel.dot(up)));this.omega.multiplyScalar(.1);this.drift=0;
+  }
   if(result&&(result.changed.length||result.coreChanged))this.event('damage',{...result,wreck:this.damage.wreck});
   return result;
  }
@@ -37,7 +42,7 @@ export class Simulation {
  }return -vn;}
  step(input,dt=STEP){
   this.motion.capture();
-  const health=this.damage.effects;if(this.damage.wreck)input=commands();
+  const health=this.damage.effects;if(this.damage.wreck){input=commands();const supported=this.contactCount+this.bodyContacts>0;this.vel.multiplyScalar(Math.exp(-dt*(supported?3:.8)));this.omega.multiplyScalar(Math.exp(-dt*(supported?1.5:2)));}
   const kick=Math.sign(input.kick||0);this.kickInput=kick;
   if(kick&&this.contactCount===0&&this.bodyContacts===0&&!this.kickFlight){this.kickFlight=true;this.kickAngle=0;this.kickTurns=0;this.event('kick-start');}
   const firingKick=this.kickFlight?kick:0,previousQ=this.q.clone();
@@ -81,7 +86,7 @@ export class Simulation {
   const resting=this.parked&&groundMode&&!input.drive&&!input.steer&&!input.boost&&!input.down&&this.vel.lengthSq()===0&&this.omega.lengthSq()===0;
   this.vel.addScaledVector(up,resting?0:-this.tune.gravity*dt).addScaledVector(burn.force.clone().applyQuaternion(this.q),dt);
   this.omega.addScaledVector(burn.torque.clone().divide(INERTIA).applyQuaternion(this.q),dt);
-  if(groundMode){
+  if(groundMode&&!this.damage.wreck){
    const f=bodyForward.clone().projectOnPlane(up).normalize(),r=right.clone().projectOnPlane(up).normalize(),speed=this.vel.dot(f);
    const traction=this.wheelContact.filter(Boolean).length/6;this.traction=traction;
    const desired=input.drive>0?(this.tune.driveSpeed||18)*input.drive:input.drive<0?7*input.drive:0;
@@ -94,7 +99,6 @@ export class Simulation {
    this.vel.addScaledVector(f,accel*health.drive*traction*dt).addScaledVector(r,-this.vel.dot(r)*Math.min(1,dt*7*health.grip*traction*(1-this.drift)));
    // Axle forces: front tyres retain bite while the accelerating or braked rear axle loses lateral grip.
    for(const [z,grip] of [[1.15,4.5],[-1.15,.08]]){const lever=f.clone().multiplyScalar(z),slip=this.vel.clone().add(new Vector3().crossVectors(this.omega,lever)).dot(r),force=Math.max(-grip,Math.min(grip,-slip*grip))*this.drift*health.grip*traction;this.impulse(r.clone().multiplyScalar(force*dt),lever);}
-   if(this.damage.wreck)this.vel.addScaledVector(f,-speed*Math.min(1,dt*1.5));
    const targetYaw=-input.steer*(.55+Math.min(Math.abs(speed)/10,1)*.65)*(1+this.drift*.18)*(speed<-.5?-1:1)*health.steer+health.pull*Math.max(-1.5,Math.min(1.5,speed/10));
    this.omega.addScaledVector(up,(targetYaw-this.omega.dot(up))*Math.min(1,dt*(9-5.5*this.drift)*health.grip*traction));
    // Speed and lateral acceleration unload the inside tyres physically. There
