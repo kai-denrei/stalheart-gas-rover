@@ -11,3 +11,5 @@
 @media(max-height:850px){.race-mode #raceMap{top:225px}.race-mode #raceMap svg{height:110px}#stuntAchievements{max-height:32px}}
 
 #racePenalty{position:absolute;top:22%;left:50%;transform:translateX(-50%);z-index:6;pointer-events:none;text-align:center;font-family:monospace;color:#ffb49c;text-shadow:0 2px 18px #000,0 0 30px #ff381b66}#racePenalty[hidden]{display:none}#racePenalty span{display:block;font-size:clamp(20px,3vw,38px);font-weight:800;letter-spacing:.2em}#racePenalty strong{display:block;font-size:clamp(100px,15vw,190px);line-height:1.05;color:#fff1dc}#racePenalty small{display:block;font-size:12px;letter-spacing:.1em;background:#230d0cbb;padding:7px 12px;border-radius:4px}
+
+#racePenalty.warning{color:#ffcf79;text-shadow:0 2px 18px #000,0 0 30px #ffae3266}#racePenalty.warning strong{color:#ffe3a8}

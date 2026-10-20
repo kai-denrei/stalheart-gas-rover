@@ -6,7 +6,7 @@ test('race scores real single and double rotations, retains points on recovery, 
  const {race,r,s}=setup();s.pos.copy(point(0,-30,35));s.q.copy(frameAt(s.pos).q);s.grounded=false;s.contactCount=0;s.bodyContacts=0;s.supportTime=0;s.motion.capture();
  for(let t=0;t<.9;t+=STEP)race.step({...commands(),kick:1});
  for(let t=0;t<4&&r.stunts.flips<2;t+=STEP)race.step(commands());
- assert.equal(r.stunts.flips,2);assert.equal(r.stunts.score,300);assert.equal(r.stunts.achievements['Double Kick-Flip'],1);
+ assert.equal(r.stunts.flips,2);assert.equal(r.stunts.score,300);assert.equal(r.stunts.achievements['Double Coronal Flip'],1);
  race.recover(r);assert.equal(r.stunts.score,300);assert.equal(r.stunts.flight,null);race.start();assert.equal(r.stunts.score,0);assert.deepEqual(r.stunts.achievements,{});
 });
 test('context requires a crossing and a completed turn; hovering and repeated samples do not farm points',()=>{

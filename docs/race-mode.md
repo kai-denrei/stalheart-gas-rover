@@ -17,9 +17,9 @@ The course has straights, right-angle corners, two tight hairpins, seven solid r
 - **P:** pause; **V:** camera; mouse drag/scroll changes the view.
 - **Restart race:** reset all five rovers and start a shared five-second countdown.
 
-Gates must be crossed **in order between the flags**, on the ground or airborne. Swept validation catches fast crossings; there is no altitude ceiling. Return through a missed gate; the next gate remains cyan until then. Crossing the last gate validates the course but does not finish the race.
+Gates must be crossed **in order between the flags**, on the ground or airborne. Swept validation catches fast crossings; the ceiling is the top of the flags. Return through a missed gate; the next gate remains cyan until then. Crossing the last gate validates the course but does not finish the race.
 
-Leaving the 18 m wide road corridor for more than 0.7 seconds triggers a three-second recovery at the last validated gate. Falling into a throat, a severe crash or overturning uses the same recovery. Checkpoint progress is preserved; gas is replenished. AI recovery from exhausted gas or being stuck also incurs this penalty. The same recovery is available to the player with R. The platform approach broadens to the deck footprint.
+The 18 m road corridor has an additional 4 m allowance on each side. When every touching wheel is outside it, a five-second OUT OF BOUNDS warning gives time to return. Returning a wheel inside or lifting off clears the warning. Expiry triggers a three-second recovery at the last validated gate. Falling into a throat or overturning uses the same recovery; a high-speed multi-flip wreck first has an eight-second salvage hold. Checkpoint progress is preserved; gas is replenished. AI recovery from exhausted gas or being stuck also incurs this penalty. The same recovery is available to the player with R. The platform approach broadens to the deck footprint.
 
 ## Raised finish
 
@@ -69,7 +69,7 @@ Run `npm run test:city` for browser checks of visible warning/opening, shared ph
 
 ## Rear-wheel drift and player claims
 
-Shift brakes the rear wheels and reduces rear lateral grip while the front axle retains bite. Countersteer during the slide and release Shift to recover traction; bounded rear tyre marks show the path. This applies in driving and racing. Kick-Flip mode retains Q/E as its airborne trick control.
+Shift brakes the rear wheels and reduces rear lateral grip while the front axle retains bite. Countersteer during the slide and release Shift to recover traction; bounded rear tyre marks show the path. This applies in driving and racing. The flip lab uses Q/E for coronal, W/S for sagittal and A/D for transverse rotation while airborne.
 
 The claim regression exposed a slightly off-center physical landing whose wheels appeared inside the old ring while the full bumper footprint was outside it. Wider 4.8 m rings fit the new 10 m square podiums; the entire rover still has to fit. Static wheel support now holds a resting rover without tiny contact-bias velocities repeatedly interrupting the 1.25-second hold. Input, external impulses and lost wheel support wake it again. Close to the finish, the HUD identifies the next missing gate, wrong podium, incomplete landing, movement or footprint problem. Every gate is still mandatory. Player-ID-zero ownership is tested through real falling/landing/stopping physics on all three tiers and in the browser.
 
@@ -89,6 +89,8 @@ Next stage requested by the owner: heavier enemies and distant Gunship/SOL suppo
 
 The Great Divide black-hole formation keeps its compass bearing and is raised above Base 2’s local horizon to frame the finish gantry. Decorative direction chevrons and leftover proving-ground runway strips are removed from races; kerbs, flags and service pads remain.
 
-The five-light start sequence and beeps use the physical board only, without a duplicate countdown HUD. Recovery displays a large `PENALTY 3`, `2`, `1` with its reason. The duration remains three seconds.
+The five-light start sequence and beeps use the physical board only, without a duplicate countdown HUD. Recovery displays a large `PENALTY 3`, `2`, `1` with its reason. The recovery penalty remains three seconds. The preceding out-of-bounds warning lasts five seconds and only runs when all touching wheels are more than 4 m beyond the road edge; airborne travel is exempt.
 
 Damaging rover–alien contacts produce red envelopes around both bodies plus a short expanding contact ring. The effect is capped at 16 simultaneous impacts, uses two instanced batches, and follows the existing contact cooldown. Actual impulse recoil remains mass-dependent; killed small bodies carry their knockback briefly before settling.
+
+The current control sets, named three-plane flips, gate bonuses and total-wreck recovery are specified in [flight and race rules](flight-and-traction.md).

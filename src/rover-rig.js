@@ -1,3 +1,4 @@
+import {createRoverWreckEffects} from './rover-wreck-effects.js';
 import {createReactionEffects} from './reaction-effects.js';
 import * as T from '../upstream/stalheart/vendor/three.module.js';
 import {solidSupport} from './collisions.js';
@@ -10,7 +11,7 @@ const clamp=(x,a,b)=>Math.max(a,Math.min(b,x)),rad=Math.PI/180;
 
 export class RoverRig {
  constructor(model,scene,world,texture,damageBank){
-  this.damageBank=damageBank;this.damageRevision=-1;
+  this.wreckFX=createRoverWreckEffects(model,scene,world);this.damageBank=damageBank;this.damageRevision=-1;
   this.model=model;this.world=world;this.lastTime=0;this.lastAge=Infinity;this.fxClock=0;this.displayClock=1;
   this.wheels=['FL','FR','ML','MR','RL','RR'].map((id,i)=>({id,index:[2,5,1,4,0,3][i],side:id.endsWith('L')?-1:1,z:id.startsWith('F')?1.44:id.startsWith('M')?-.42:-1.44,susp:model.getObjectByName('SUSP_PIVOT_'+id),steer:model.getObjectByName('WHEEL_STEER_'+id),spin:model.getObjectByName('WHEEL_SPIN_'+id)}));
   this.gimbals=NOZZLE_IDS.map(id=>model.getObjectByName('GIMBAL_'+id));this.intensities=Object.fromEntries(NOZZLE_IDS.map(id=>[id,0]));
@@ -30,7 +31,7 @@ export class RoverRig {
    // Authored cracks target the original screen positions; our relocated displays stay readable.
    this.model.getObjectByName('DISPLAY_CRACK_OVERLAY').visible=false;this.displayClock=1;
   }
-  const reset=sim.age<this.lastAge,dt=reset?0:clamp(sim.time-this.lastTime,0,.08);this.lastTime=sim.time;this.lastAge=sim.age;
+  const reset=sim.age<this.lastAge,dt=reset?0:clamp(sim.time-this.lastTime,0,.08);this.lastTime=sim.time;this.lastAge=sim.age;this.wreckFX.update(sim,dt);
   if(reset){this.fx.clear();this.fxClock=0;this.displayClock=1;}
   for(const w of this.wheels){
    const p=new T.Vector3(w.side*.98,-.44,w.z).applyQuaternion(sim.q).add(sim.pos),ground=terrainSample(this.world,p,false);

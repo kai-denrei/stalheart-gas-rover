@@ -1,27 +1,27 @@
-# Flight, contacts and traction
+# Flight, bounds and stunt crashes
 
-The rover now separates translation from attitude control. All added reaction jets share the existing finite gas reserve and scale with thruster health; the lab's unlimited toggle still tracks nominal expenditure. The original eight gimbals provide lift. Small visible lab reaction ports provide balanced torque and opposed translation, so a backward burst can brake without adding unwanted lift.
+Controls switch on actual supporting wheel contact. With any wheel touching, the rover uses the ground set; with none touching, it uses the airborne set. ISAO keeps its separate quadcopter controls.
 
-| Key | Ground | Air |
+| Keys | Wheels touching | Airborne |
 | --- | --- | --- |
-| W / S | Drive / brake / reverse | Forward / backward bursts |
-| A / D | Steer | Sideways bursts |
+| W / S | Drive / brake / reverse | Sagittal Flip: pitch forward / backward |
+| A / D | Steer left / right | Transverse Flip: yaw left / right |
+| Q / E | Inactive | Coronal Flip: roll left / right |
 | Space | Take off | Main lift jets |
-| Shift | Rear handbrake | Thrust toward the surface, regardless of attitude |
-| Q / E | — | Left / right Kick-Flip roll |
-| Up / Down | — | Nose up / down; hold for pitch flips |
-| Left / Right | — | Yaw for flat spins; combine with pitch/roll |
-| X | — | Brake translation without stopping rotation |
-| C | — | Counter angular velocity and level the rover |
+| Shift | Rear handbrake / drift | Thrust toward the planet |
+| X | Inactive | Brake translation without stopping rotation |
+| C | Inactive | Counter angular velocity and level out |
 
-WASD jets follow the rover's body axes. Shift always points toward the planet and X opposes actual velocity. Gravity still acts during braking; use Space to cushion a landing. A rotation axis becomes manual when its control is used: release to coast, opposite input to counter. C restores stabilization, including from an inverted attitude. Landing clears the current trick. Ground steering and post-race ISAO controls retain their existing mappings.
+Arrow keys remain pitch/yaw aliases. All three rotation pairs have matching initial angular acceleration. Release to coast; press the opposite key to counter. C discards partial winding and restores stabilization. WASD no longer provides directional translation in the air: rotate the rover, then use lift to redirect it. X remains a direct flight brake. Every reaction jet consumes the same finite gas reserve and scales with thruster damage.
 
-Racing awards completed physical rotations, not key presses: Kick-Flip starts at 100 points, front/back flips and flat spins at 150, face-up yaw spins at 250. Successive turns increase the award, capped at five times the first-turn value. Existing Kick-Flip crossing bonuses remain. The shared scoreboard and CRT callout display the new figures.
+The painted road remains 18 m wide. Out-of-bounds checking adds 4 m beyond each edge and checks only wheel contact positions. A countdown starts only when every touching wheel is outside that generous boundary. `OUT OF BOUNDS 5 → 4 → 3 → 2 → 1` gives five seconds to return; returning any touching wheel inside or becoming airborne clears it. Expiry triggers the normal three-second checkpoint penalty. Airborne travel alone never triggers out-of-bounds recovery.
 
-Fixture collision separation now uses positional correction instead of injecting a large velocity bias into every overlapping wheel/chassis sphere. Contact torque transfer and friction are reduced for fixtures and rover-to-rover hits, and rover restitution drops from 8% to 2%. Serious impacts still stop and damage the rover; this is not collision immunity.
+Mandatory gates accept the rover centre between the flags, from road level to the actual top of that flag model (4.60–4.93 m). Swept validation catches fast crossings. Flying above the flag tops does not count. Gates remain ordered.
 
-Fast cornering creates bounded chassis roll, lifting actual inside-wheel contacts. Drive, lateral grip and steering authority scale with the number of supporting wheels; unsupported wheels no longer count toward wheel roll. The HUD shows `GRIP n/6` while contact is reduced. Counter-steer, ease the throttle or straighten out to settle the chassis and regain traction. There is no random loss-of-grip timer.
+Completed physical turns score Coronal Flip (100), Sagittal Flip (150), and Transverse Flip (150). Additional turns increase the award up to 5×. An airborne gate crossing during a visible rotation (at least a quarter turn and 1 rad/s of spin) adds a named Gate Flip bonus: coronal/transverse 400, sagittal 500, or mixed planes 750. Each gate awards once; a straight hover or tiny flick earns no stunt bonus. Existing Sinkhole, Tremor, Alien and Rover crossing bonuses apply to all three planes.
 
-The reaction ports and plumes use two instanced draw calls per rover. Physics remains fixed at 120 Hz, with the existing interpolated presentation.
+Two or more completed rotations in one uninterrupted flight followed by a collision closing speed of at least 16 m/s trigger total destruction. This uses the full D3 geometry for every assembly, the authored detached fragments and a local explosion. The destroyed rover remains for eight seconds before the normal three-second checkpoint recovery. Manual recovery cannot skip the wreck hold; race restart still starts a fresh run. Gentle landings and non-stunt impacts keep the ordinary accumulated damage rules. Damage-disabled practice remains exempt.
 
-Validation: `npm test`, `npm run test:kick`, `npm run test:flight`, and the rendered expedition race. Focused tests cover key routing, force/moment sums, forward/reverse braking, downward thrust, finite gas, independent rotational coasting and counter-thrust, stabilization, actual wheel lift/recovery, and bounded small-rock reactions.
+Fixture and rover collisions retain the softer torque/friction response. Fast cornering physically lifts inside wheels; drive, steering and grip scale with wheel support, and `GRIP n/6` reports reduced contact. Ease the throttle, straighten or counter-steer to settle the chassis.
+
+Validation: `npm test`, `npm run test:planes`, and the rendered expedition race. The focused suite covers all input planes, five-second bounds, airborne exemption, authored flag height, gate stunt scoring, catastrophic impact, recovery locking and repair.

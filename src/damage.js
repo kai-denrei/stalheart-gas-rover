@@ -28,6 +28,10 @@ export class RoverDamage {
   this.effects.leakRate=this.wreck?0:Object.values(this.leaks).reduce((s,n)=>s+n,0)*.8;
   this.revision++;
  }
+ destroy({speed,source='environment',time=0,zone,local}){
+  if(this.wreck)return null;const primary=impactZone(zone,local),before={...this.states};this.corePoints=6;for(const id of ZONES)this.points[id]=6;this.hits++;this.refresh();
+  this.lastHit={zone:primary,speed,source,time,level:3,changed:ZONES.filter(id=>before[id]!==3),coreChanged:true,hits:this.hits};return this.lastHit;
+ }
  impact({speed,zone,local=[0,0,0],source='environment',time=0,landing=false}){
   // Contact solvers revisit a manifold many times. Count its strongest event once,
   // then suppress sustained scraping/settling for 0.65 s per object and assembly.

@@ -7,13 +7,13 @@ import {reactionBurn} from './reaction-thrusters.js';
 import {RoverDamage} from './damage.js';
 export const STEP=1/120;
 const V=()=>new Vector3();
-const WHEELS=[-.98,.98].flatMap(x=>[-1.44,-.42,1.44].map(z=>new Vector3(x,-.44,z)));
+export const WHEELS=[-.98,.98].flatMap(x=>[-1.44,-.42,1.44].map(z=>new Vector3(x,-.44,z)));
 const HULL=[-1,1].flatMap(x=>[-1.9,1.9].flatMap(z=>[.2,.96].map(y=>new Vector3(x,y,z))));
 export function commands(){return {drive:0,steer:0,lift:0,pitch:0,yaw:0,roll:0,kick:0,brake:0,down:0,airBrake:0,stabilize:0,acro:false};}
 export class Simulation {
  constructor(world){this.damage=new RoverDamage();this.damageEnabled=true;this.world=world;this.tune={...DEFAULTS};this.pos=V();this.vel=V();this.q=new Quaternion();this.omega=V();this.time=0;this.checkpoint=0;this.events=[];this.motion=new RoverMotion(this);this.reset();}
  event(type,detail={}){this.events.push({type,time:this.time,...detail});if(this.events.length>40)this.events.shift();}
- reset(reason='READY'){if(this.onReset&&reason!=='READY')return this.onReset(reason);this.damage.reset();this.wreckTime=0;const pad=this.world.pads[this.checkpoint];this.pos.copy(pad.origin).addScaledVector(pad.frame.up,.46);this.q.copy(pad.frame.q);
+ reset(reason='READY'){if(reason!=='READY'&&this.catastrophic&&this.wreckTime<this.wreckDelay)return;if(this.onReset&&reason!=='READY')return this.onReset(reason);this.damage.reset();this.wreckTime=0;this.wreckDelay=3;this.catastrophic=null;this.flightTurns=0;const pad=this.world.pads[this.checkpoint];this.pos.copy(pad.origin).addScaledVector(pad.frame.up,.46);this.q.copy(pad.frame.q);
   // A new opening can scatter solid debris over a pad. Pick a clear point inside
   // the checkpoint ring instead of resetting the rover inside a boulder.
   for(const radius of [0,2,3.5]){let found=false;for(let i=0;i<(radius?12:1);i++){const angle=i*Math.PI/6,p=pad.origin.clone().addScaledVector(pad.frame.up,.46).addScaledVector(pad.frame.east,Math.cos(angle)*radius).addScaledVector(pad.frame.north,Math.sin(angle)*radius),near=nearColliders(this.world,p,3.5);if(!ROVER_SOLIDS.some(shape=>{const c=shape.center.clone().applyQuaternion(pad.frame.q).add(p);return near.some(solid=>sphereContact(solid,c,shape.radius));})){this.pos.copy(p);found=true;break;}}if(found)break;}
@@ -21,7 +21,11 @@ export class Simulation {
  receiveImpact(hit){
   if(!this.damageEnabled)return null;
   const local=hit.local||(hit.point?new Vector3().fromArray(hit.point).sub(this.pos).applyQuaternion(this.q.clone().invert()).toArray():[0,0,0]);
-  const result=this.damage.impact({...hit,local,source:hit.collider||hit.source||'environment',time:this.time});
+  let result;
+  if(!this.damage.wreck&&this.flightTurns>=2&&hit.speed>=16){
+   this.catastrophic={time:this.time,speed:hit.speed,turns:this.flightTurns,position:this.pos.toArray()};this.wreckDelay=8;
+   result=this.damage.destroy({...hit,local,source:hit.collider||hit.source||'environment',time:this.time});this.event('total-wreck',this.catastrophic);
+  }else result=this.damage.impact({...hit,local,source:hit.collider||hit.source||'environment',time:this.time});
   if(result&&(result.changed.length||result.coreChanged))this.event('damage',{...result,wreck:this.damage.wreck});
   return result;
  }
@@ -35,17 +39,17 @@ export class Simulation {
   this.motion.capture();
   const health=this.damage.effects;if(this.damage.wreck)input=commands();
   const kick=Math.sign(input.kick||0);this.kickInput=kick;
-  if(kick&&!this.grounded&&this.contactCount===0&&this.bodyContacts===0&&!this.kickFlight){this.kickFlight=true;this.kickAngle=0;this.kickTurns=0;this.event('kick-start');}
+  if(kick&&this.contactCount===0&&this.bodyContacts===0&&!this.kickFlight){this.kickFlight=true;this.kickAngle=0;this.kickTurns=0;this.event('kick-start');}
   const firingKick=this.kickFlight?kick:0,previousQ=this.q.clone();
   this.steering+=(-input.steer*.52*health.steer-this.steering)*Math.min(1,dt*10*Math.max(.2,health.steer));
   this.time+=dt;this.age+=dt;this.impact*=Math.exp(-dt*9);
   const up=upAt(this.pos),bodyUp=new Vector3(0,1,0).applyQuaternion(this.q),bodyForward=new Vector3(0,0,1).applyQuaternion(this.q),right=new Vector3(1,0,0).applyQuaternion(this.q);
-  const inv=this.q.clone().invert(),wasGround=this.grounded,groundMode=this.grounded&&input.lift===0;
+  const inv=this.q.clone().invert(),wasGround=this.grounded,groundMode=this.contactCount>0&&input.lift===0;
   const force=new Vector3(0,input.lift*this.tune.lift,0),angular=this.omega.clone().applyQuaternion(inv);
-  const clearAir=!this.grounded&&this.contactCount===0&&this.bodyContacts===0;
-  if(clearAir){if(firingKick)this.trickAxes[2]=true;if(input.acro&&input.pitch)this.trickAxes[0]=true;if(input.acro&&input.yaw){this.trickAxes[1]=true;this.figureLabels[1]??=Math.abs(bodyForward.dot(up))>.65?'Face-up Spin':'Flat Spin';}}
+  const clearAir=this.contactCount===0&&this.bodyContacts===0;
+  if(clearAir){if(firingKick)this.trickAxes[2]=true;if(input.acro&&input.pitch)this.trickAxes[0]=true;if(input.acro&&input.yaw){this.trickAxes[1]=true;this.figureLabels[1]='Transverse Flip';}}
   if(input.stabilize){this.trickAxes.fill(false);this.kickFlight=false;this.kickAngle=0;this.kickTurns=0;this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];}
-  const targetAccel=input.stabilize?V():new Vector3(input.pitch*4.5,input.yaw*4,firingKick?firingKick*5.4:input.roll*2.1);
+  const targetAccel=input.stabilize?V():new Vector3(input.pitch*5.4,input.yaw*5.4,firingKick?firingKick*5.4:input.roll*2.1);
   if(!groundMode&&(this.tune.assistance!=='manual'||input.stabilize)){
    const damping=angular.clone().multiplyScalar(input.stabilize?-5:-3.4);
    for(let i=0;i<3;i++)if(this.trickAxes[i])damping.setComponent(i,0);
@@ -123,10 +127,10 @@ export class Simulation {
   }
   if(this.age>.3){for(const hit of terrainHits.values())this.receiveImpact(hit);if(collision)this.receiveImpact(collision);}
   wheelContacts=supported.size;this.wheelContact=Array.from({length:6},(_,i)=>supported.has(i));this.traction=wheelContacts/6;
-  if(wheelContacts||bodyContacts){this.trickAxes.fill(false);this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];}
+  if(wheelContacts||bodyContacts){this.flightTurns=0;this.trickAxes.fill(false);this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];}
   else {const delta=previousQ.clone().invert().multiply(this.q);if(delta.w<0){delta.x*=-1;delta.y*=-1;delta.z*=-1;delta.w*=-1;}
    const length=Math.hypot(delta.x,delta.y,delta.z),scale=length>1e-9?2*Math.atan2(length,delta.w)/length:2;
-   for(let axis=0;axis<2;axis++)if(this.trickAxes[axis]){this.figureAngles[axis]+=(axis===0?delta.x:delta.y)*scale;const turns=Math.floor(Math.abs(this.figureAngles[axis])/(2*Math.PI));if(turns>this.figureTurns[axis]){this.figureTotal+=turns-this.figureTurns[axis];this.figureTurns[axis]=turns;const label=axis===0?(this.figureAngles[0]>0?'Front Flip':'Back Flip'):this.figureLabels[1]||'Flat Spin';this.event('figure',{axis,label,turns,total:this.kickTotal+this.figureTotal});}}
+   for(let axis=0;axis<2;axis++)if(this.trickAxes[axis]){this.figureAngles[axis]+=(axis===0?delta.x:delta.y)*scale;const turns=Math.floor(Math.abs(this.figureAngles[axis])/(2*Math.PI));if(turns>this.figureTurns[axis]){this.flightTurns+=turns-this.figureTurns[axis];this.figureTotal+=turns-this.figureTurns[axis];this.figureTurns[axis]=turns;const label=axis===0?'Sagittal Flip':'Transverse Flip';this.event('figure',{axis,label,turns,total:this.kickTotal+this.figureTotal});}}
   }
   if(this.kickFlight){
    if(wheelContacts||bodyContacts){this.kickFlight=false;this.kickInput=0;}
@@ -134,7 +138,7 @@ export class Simulation {
     // Quaternion increments preserve winding through 360° without Euler wrapping.
     const delta=previousQ.clone().invert().multiply(this.q);if(delta.w<0){delta.x*=-1;delta.y*=-1;delta.z*=-1;delta.w*=-1;}
     this.kickAngle+=2*Math.atan2(delta.z,delta.w);const turns=Math.floor(Math.abs(this.kickAngle)/(Math.PI*2));
-    if(turns>this.kickTurns){const gained=turns-this.kickTurns;this.kickTurns=turns;this.kickTotal+=gained;this.event('kick-flip',{turns,total:this.kickTotal,direction:Math.sign(this.kickAngle)});}
+    if(turns>this.kickTurns){const gained=turns-this.kickTurns;this.kickTurns=turns;this.kickTotal+=gained;this.flightTurns+=gained;this.event('kick-flip',{label:'Coronal Flip',turns,total:this.kickTotal,direction:Math.sign(this.kickAngle)});}
    }
   }
   this.collisionCooldown=Math.max(0,this.collisionCooldown-dt);
@@ -149,7 +153,7 @@ export class Simulation {
   this.tilt=Math.acos(Math.max(-1,Math.min(1,bodyUp.dot(up))))*180/Math.PI;
   if(!this.grounded){this.airtime+=dt;this.refilled=false;}else if(!wasGround&&this.airtime>.25){this.event('landing',{airtime:this.airtime,speed:maxImpact});this.impact=Math.min(1,maxImpact/8);this.airtime=0;}
   this.wreckTime=this.damage.wreck?this.wreckTime+dt:0;
-  if(this.wreckTime>=3){this.reset('WRECKED · RECOVERY / REPAIRED');return;}
+  if(this.wreckTime>=this.wreckDelay){this.reset(this.catastrophic?'TOTAL DESTRUCTION · RECOVERY / REPAIRED':'WRECKED · RECOVERY / REPAIRED');return;}
   if(!this.damageEnabled&&maxImpact>20&&this.age>1){this.reset('HARD IMPACT · TRY AGAIN');return;}
   const terrain=terrainSample(this.world,this.pos,false);this.altitude=terrain.altitude-.46;
   if(terrain.altitude<-32||this.pos.distanceTo(CENTER)>RADIUS+220){this.reset(terrain.altitude<0?'LOST IN THE THROAT':'OUT OF TEST RANGE');return;}
@@ -158,5 +162,5 @@ export class Simulation {
   else {this.padTime=0;this.refilled=false;}
   if((this.contactCount+this.bodyContacts)>1&&this.tilt>100&&this.vel.length()<.5){this.inverted=(this.inverted||0)+dt;if(this.inverted>4){this.inverted=0;this.reset('OVERTURNED');}}else this.inverted=0;
  }
- snapshot(){return {drift:this.drift,traction:this.traction,wheelContact:[...this.wheelContact],figures:{angles:[...this.figureAngles],turns:[...this.figureTurns]},damage:{enabled:this.damageEnabled,...this.damage.snapshot()},kick:{active:this.kickFlight,angle:this.kickAngle,turns:this.kickTurns,total:this.kickTotal},time:this.time,position:this.pos.toArray(),velocity:this.vel.toArray(),quaternion:this.q.toArray(),angularVelocity:this.omega.toArray(),grounded:this.grounded,contacts:this.contactCount,gas:this.reserve,spent:this.spent,exhausted:this.exhausted,altitude:this.altitude,tilt:this.tilt,checkpoint:this.checkpoint,collision:this.lastCollision,burn:this.burn.effort,events:this.events.slice(-8)};}
+ snapshot(){return {flightTurns:this.flightTurns,catastrophic:this.catastrophic,wreckDelay:this.wreckDelay,wreckTime:this.wreckTime,drift:this.drift,traction:this.traction,wheelContact:[...this.wheelContact],figures:{angles:[...this.figureAngles],turns:[...this.figureTurns]},damage:{enabled:this.damageEnabled,...this.damage.snapshot()},kick:{active:this.kickFlight,angle:this.kickAngle,turns:this.kickTurns,total:this.kickTotal},time:this.time,position:this.pos.toArray(),velocity:this.vel.toArray(),quaternion:this.q.toArray(),angularVelocity:this.omega.toArray(),grounded:this.grounded,contacts:this.contactCount,gas:this.reserve,spent:this.spent,exhausted:this.exhausted,altitude:this.altitude,tilt:this.tilt,checkpoint:this.checkpoint,collision:this.lastCollision,burn:this.burn.effort,events:this.events.slice(-8)};}
 }

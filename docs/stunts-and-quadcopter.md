@@ -6,17 +6,21 @@ Open http://localhost:8166/?mode=race and refresh an existing tab.
 
 After a podium claim or race completion, ISAO takes over as before. A/D rotates left/right; W/S flies forward/backward along his heading. Shift descends, Space ascends. Releasing the controls brakes to a hover. Drag orbits the camera without steering the drone; F swaps views. Heading is retained while reversing. Ground/world collision, pause, interpolation and the 130 m ceiling remain active.
 
-Racing rovers use **Q/E while airborne** to kick a lateral roll. Release to coast, then fire the opposite roll key to counter the spin. Balanced lab reaction jets supply torque, consume gas and scale with thruster health. Arrow keys add pitch/yaw figures; X brakes translation, Shift thrusts down, and C restores stabilization. On the ground, Shift still brakes and Shift+steering drifts. No roll auto-level or automatic stop runs during a trick. The separate Kick-Flip practice mode remains available.
+Racing rovers use Q/E for Coronal Flip (roll), W/S for Sagittal Flip (pitch) and A/D for Transverse Flip (yaw) while no wheels touch the surface. Release to coast and counter with the opposite key. X brakes flight, Shift thrusts down, and C levels. Ground W/S drives, A/D steers and Shift drifts. [Current controls, scoring and crash rules](flight-and-traction.md).
 
 ## Points and callouts
 
 | Achievement | Points |
 | --- | ---: |
-| Kick-Flip, full airborne 360° | 100 |
-| Double Kick-Flip, 720° in the same flight | +200 (300 total) |
+| Coronal Flip, full airborne 360° | 100 |
+| Sagittal / Transverse Flip, full airborne 360° | 150 |
+| Coronal / Transverse Gate Flip! | +400 |
+| Sagittal Gate Flip! | +500 |
+| Mixed Gate Flip! | +750 |
+| Double Coronal Flip, 720° in the same flight | +200 (300 total) |
 | Further rotations | +300, +400, then +500 per turn |
 | Sinkhole Flip, crossing an open/opening hole | +500 |
-| Tremor-Kick-Flip!, crossing the seam and completing the flip before it opens | +1,000 |
+| Tremor Flip!, crossing the seam and completing the flip before it opens | +1,000 |
 | Alien Flip, clearing a living Reed or Gorogoro | +300 |
 | Rover Flip, clearing another active racer | +400 |
 

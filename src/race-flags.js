@@ -18,7 +18,7 @@ export async function createRaceFlags(view,gates){
  const loader=new GLTFLoader(),assets=await Promise.all(FACTIONS.map(f=>loader.loadAsync(`./assets/ctf-flags/flag_${f}.glb`))),flags=[];
  for(let i=0;i<assets.length;i++){
   const asset=assets[i],faction=FACTIONS[i],plain=PLAIN.has(faction),statics=new Map(),remove=[],solids=[];
-  asset.scene.updateMatrixWorld(true);
+  asset.scene.updateMatrixWorld(true);const flagHeight=new T.Box3().setFromObject(asset.scene).max.y*1.45;
   asset.scene.traverse(o=>{
    if(!o.isMesh)return;
    // The glyph is separate sewn geometry, not a texture. Remove both sides of
@@ -38,7 +38,7 @@ export async function createRaceFlags(view,gates){
   for(const o of remove)o.removeFromParent();
   const placements=[];
   gates.forEach((gate,index)=>{
-   if(index%FACTIONS.length!==i)return;
+   if(index%FACTIONS.length!==i)return;view.world.race.gates[index].height=flagHeight;
    for(const side of [-1,1]){
     const root=cloneRig(asset.scene);root.name=`Gate ${index+1} / ${faction} / ${side<0?'left':'right'}`;root.position.set(side*9.1,0,0);root.rotation.y=side<0?0:Math.PI;root.scale.setScalar(1.45);gate.group.add(root);root.updateWorldMatrix(true,true);placements.push(root.matrixWorld.clone());
     for(const solid of solids){const collider=convexCollider(solid.points.map(p=>p.clone().applyMatrix4(root.matrixWorld)),`flag-${index}-${side}-${solid.name}`,'race-flags');if(collider)view.world.colliders.push(collider);}

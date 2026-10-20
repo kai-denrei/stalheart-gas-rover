@@ -14,7 +14,7 @@ export const RCS_PORTS=[
 export function reactionBurn(force,torque,health){const power=health?health.thrust.reduce((a,n)=>a+n,0)/8:1,forces=RCS_PORTS.map(()=>V()),total=V(),moment=V();let effort=0;
  for(let i=0;i<RCS_PORTS.length;i++){const p=RCS_PORTS[i];let amount;
   if(p.axis===undefined)amount=clamp(force.dot(p.d),0,8)*power;
-  else {const arm=p.axis===0?1.7:.98;amount=clamp(torque.getComponent(p.axis)*p.sign/(2*arm),0,p.axis===2?2.4:p.axis===1?5.2:3.2)*power;}
+  else {const arm=p.axis===0?1.7:.98;amount=clamp(torque.getComponent(p.axis)*p.sign/(2*arm),0,p.axis===2?2.4:p.axis===1?6.7:3.2)*power;}
   forces[i].copy(p.d).multiplyScalar(amount);total.add(forces[i]);moment.add(V().crossVectors(p.p,forces[i]));effort+=amount;
  }
  return {forces,force:total,torque:moment,effort};

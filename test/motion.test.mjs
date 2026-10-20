@@ -2,7 +2,7 @@ import test from 'node:test';import assert from 'node:assert/strict';
 import {Vector3} from '../upstream/stalheart/vendor/three.module.js';
 import {Simulation,STEP,commands} from '../src/simulation.js';
 import {createWorld,point,frameAt} from '../src/world.js';
-function cruise(){const s=new Simulation(createWorld());s.pos.copy(point(0,-180,20));s.q.copy(frameAt(s.pos).q);s.vel.set(0,0,18);s.grounded=false;s.supportTime=0;s.tune.gravity=0;s.tune.assistance='manual';s.omega.set(0,.3,0);s.motion.capture();return s;}
+function cruise(){const s=new Simulation(createWorld());s.pos.copy(point(0,-180,20));s.q.copy(frameAt(s.pos).q);s.vel.set(0,0,18);s.grounded=false;s.supportTime=0;s.contactCount=0;s.wheelContact.fill(false);s.tune.gravity=0;s.tune.assistance='manual';s.omega.set(0,.3,0);s.motion.capture();return s;}
 for(const hz of [50,60,75,144,240])test(`smooth constant-speed presentation at ${hz} FPS with 120 Hz physics`,()=>{
  const s=cruise();let accumulator=0,previous=null,previousQ=null;
  for(let frame=0;frame<hz*2;frame++){

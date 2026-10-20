@@ -13,7 +13,7 @@ Node 22+; no package installation, external runtime services, or sibling checkou
 
 For the five-rover race, open **[The Last Leap](https://kai-denrei.github.io/stalheart-gas-rover/?mode=race)** or use the mode selector. Touch fourteen gates, clear the sinkholes, then boost onto a raised platform and stop inside one of three sequentially claimed podium circles. The gates use animated flags from [jelaludo’s CTF kit](https://jelaludo.github.io/SentryTowers_A6/ctf-flags/), with the 火 and 力 variants rendered in plain colors. [Race rules and controls](docs/race-mode.md).
 
-For **[Kick-Flip practice](https://kai-denrei.github.io/stalheart-gas-rover/?mode=kickflip)**, boost into the air, use **Q/E** for a fast roll burst, release to coast, then counter with the opposite roll key. A full airborne 360° earns a brief CRT-style callout. [Trick controls and scoring](docs/kick-flip-mode.md). [Flight, braking and traction](docs/flight-and-traction.md).
+For **[Three-plane flip practice](https://kai-denrei.github.io/stalheart-gas-rover/?mode=kickflip)**, boost into the air, use **Q/E** for Coronal Flip, **W/S** for Sagittal Flip, or **A/D** for Transverse Flip, release to coast, then counter with the opposite roll key. A full airborne 360° earns a brief CRT-style callout. [Trick controls and scoring](docs/kick-flip-mode.md). [Flight, braking and traction](docs/flight-and-traction.md).
 
 Click **Enter proving ground**. Start with a short run-up on W, tap/hold Space before the rim, then use S to reduce forward speed in flight. Releasing Space lets gravity bring you down. Keep gas for the landing. Timing is experimental; repeated short attempts are the point of the lab.
 
@@ -62,7 +62,7 @@ Browser checks use installed Google Chrome, with an isolated profile and cleanup
 
 Models by **jelaludo** — [SentryTowers_A6](https://jelaludo.github.io/SentryTowers_A6/). Planet/grid and sinkhole integration from Stalheart. See the implementation notes for inherited sources and credits.
 
-Driving and racing now include accumulated rover damage: D1 cosmetic wear, D2 reduced steering/grip/thrust, and D3 component failure. R recovers and repairs (three-second penalty in races); refill pads supply gas without repairs. The footer reports hull and control condition. Kick-Flip practice keeps damage off. Standalone art comparisons remain at [impact trials](https://kai-denrei.github.io/stalheart-gas-rover/artifacts/rover-damage-review/index.html) and [accumulation preview](https://kai-denrei.github.io/stalheart-gas-rover/artifacts/rover-damage-review/accumulation.html).
+Driving and racing now include accumulated rover damage: D1 cosmetic wear, D2 reduced steering/grip/thrust, and D3 component failure. R recovers and repairs (three-second penalty in races); refill pads supply gas without repairs. The footer reports hull and control condition. Three-plane flip practice keeps damage off. Standalone art comparisons remain at [impact trials](https://kai-denrei.github.io/stalheart-gas-rover/artifacts/rover-damage-review/index.html) and [accumulation preview](https://kai-denrei.github.io/stalheart-gas-rover/artifacts/rover-damage-review/accumulation.html).
 
 The race now runs through a dome city with distance-based detail. Jumps 2 and 4 tremble and open when the first racer approaches. Once the third podium spot is claimed, Stalheart’s day-42 disco ball and music celebrate the finish, with two LANCER sentries aiming lasers at the ball. [Race details](docs/race-mode.md).
 
