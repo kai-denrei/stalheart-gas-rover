@@ -7,6 +7,7 @@ import {point,frameAt,upAt} from './world.js';
 import {createStuntBoard} from './stunt-board.js';
 import {createRaceTrack} from './race-track.js';
 import {createRaceFlags} from './race-flags.js';
+import {createGateLights} from './gate-lights.js';
 import {createCityDefense} from './city-defense-render.js';
 import {createRaceCity} from './race-city.js';
 import {createRaceCelebration} from './race-celebration.js';
@@ -19,9 +20,10 @@ export class RacePresentation {
   for(const h of w.holes){if(!h.dormant)continue;const points=[];for(let i=0;i<12;i++){const a=i*Math.PI/6;for(let k=0;k<4;k++){const r=h.r*(.25+k*.3),r2=r+h.r*.25,b=a+(k%2?.08:-.08);points.push(Math.cos(a)*r,0,Math.sin(a)*r,Math.cos(b)*r2,0,Math.sin(b)*r2);}}const geo=new T.BufferGeometry();geo.setAttribute('position',new T.Float32BufferAttribute(points,3));const cracks=new T.LineSegments(geo,new T.LineBasicMaterial({color:0xffbb65,transparent:true,opacity:1}));const group=new T.Group();group.position.copy(h.origin).addScaledVector(h.frame.up,.13);group.quaternion.copy(h.frame.q);group.add(cracks);scene.add(group);group.visible=false;this.warnings.push({h,group,cracks});}
   for(const [i,g] of view.padGroups.entries())g.visible=!!w.pads[i].service;
   this.track=createRaceTrack(view);this.wilderness=createWilderness(view);
-  for(const gate of w.race.gates){const group=new T.Group();group.position.copy(gate.origin);group.quaternion.copy(gate.frame.q).multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),Math.atan2(gate.dx,gate.dz)));scene.add(group);const mat=new T.MeshBasicMaterial({color:0x4b7270});const strip=new T.Mesh(new T.BoxGeometry(15,.035,.22),mat);strip.position.y=.16;group.add(strip);
-   this.gates.push({group,mat});
+  for(const gate of w.race.gates){const group=new T.Group();group.position.copy(gate.origin);group.quaternion.copy(gate.frame.q).multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),Math.atan2(gate.dx,gate.dz)));scene.add(group);
+   this.gates.push({group});
   }
+  this.gateLights=createGateLights(this.gates,race);
   const deck=w.race.deck,dg=new T.Group();dg.position.copy(deck.origin);dg.quaternion.copy(deck.frame.q);scene.add(dg);
   const platform=mesh(new T.BoxGeometry(deck.w,deck.h,deck.d),0x29454d);platform.position.y=deck.h/2;dg.add(platform);platform.add(new T.LineSegments(new T.EdgesGeometry(platform.geometry),new T.LineBasicMaterial({color:0x82c9c0})));
   for(const spot of w.race.spots){const plinth=mesh(new T.CylinderGeometry(w.race.rules.podiumRadius,w.race.rules.podiumRadius,spot.height,64),spot.number===1?0x9e7946:spot.number===2?0x6f8592:0x886957);plinth.position.copy(spot.local).add(new T.Vector3(0,-spot.height/2,0));dg.add(plinth);const ring=new T.Mesh(new T.RingGeometry(w.race.rules.spotRadius-.18,w.race.rules.spotRadius,64),new T.MeshBasicMaterial({color:0xf7c77d,side:T.DoubleSide}));ring.rotation.x=-Math.PI/2;ring.position.copy(spot.local);ring.position.y+=.025;dg.add(ring);
@@ -36,8 +38,7 @@ export class RacePresentation {
  }
  async loadEnvironment(){[this.city,this.celebration,this.traffic,this.arrival]=await Promise.all([createRaceCity(this.view),createRaceCelebration(this.view,this.race),createBaseTraffic(this.view,this.race),createBaseTraffic(this.view,this.race,{celebration:true})]);this.defense=await createCityDefense(this.view,this.race,this.city);this.race.stuntEnemies=()=>this.defense.defense.enemies;[this.scoreboard,this.startLights]=await Promise.all([createStuntBoard(this.view,this.race),createRaceStart(this.view,this.race)]);}
  async loadFlags(){this.flags=await createRaceFlags(this.view,this.gates);}
- update(alpha){this.traffic?.update();this.arrival?.update();this.startLights?.update();this.scoreboard?.update();this.defense?.update();this.celebration?.update();for(const {h,group,cracks} of this.warnings){group.visible=h.phase==='trembling';cracks.position.y=.02+Math.abs(Math.sin(h.age*42))*.12;cracks.rotation.y=Math.sin(h.age*31)*.012;cracks.material.opacity=.45+.55*Math.abs(Math.sin(h.age*14));}this.flags?.update(alpha);for(const {r,group,rig,instruments} of this.rivals){group.visible=!r.pendingRespawn;const s=r.sim.motion.sample(r.penalty||r.place?1:alpha),speed=s.vel.clone().projectOnPlane(upAt(s.pos)).length();group.position.copy(s.pos);group.quaternion.copy(s.q);rig.update(s,speed);instruments.update(s,speed);}
-  const next=this.race.racers[0].gate;this.gates.forEach((g,i)=>{g.mat.color.set(i<next?0x45996d:i===next?0x39e6ff:0x375f60);});
+ update(alpha){this.gateLights.update(alpha);this.traffic?.update();this.arrival?.update();this.startLights?.update();this.scoreboard?.update();this.defense?.update();this.celebration?.update();for(const {h,group,cracks} of this.warnings){group.visible=h.phase==='trembling';cracks.position.y=.02+Math.abs(Math.sin(h.age*42))*.12;cracks.rotation.y=Math.sin(h.age*31)*.012;cracks.material.opacity=.45+.55*Math.abs(Math.sin(h.age*14));}this.flags?.update(alpha);for(const {r,group,rig,instruments} of this.rivals){group.visible=!r.pendingRespawn;const s=r.sim.motion.sample(r.penalty||r.place?1:alpha),speed=s.vel.clone().projectOnPlane(upAt(s.pos)).length();group.position.copy(s.pos);group.quaternion.copy(s.q);rig.update(s,speed);instruments.update(s,speed);}
   this.race.world.race.spots.forEach((s,i)=>{const v=this.spots[i],id=s.owner??s.reserved,open=this.race.world.race.spots.find(x=>x.owner===null)===s;v.ring.material.color.set(id!==null?this.race.racers[id].color:open?0xffd080:0x637985);v.tag.visible=true;v.bubble.visible=id!==null;if(id!==null){v.bubble.material.color.set(this.race.racers[id].color);v.wire.material.color.copy(v.bubble.material.color);v.bubble.material.opacity=s.owner!==null?.13:.06+.14*s.hold/this.race.world.race.rules.claimTime;}});
  }
  setMist(enabled){for(const v of this.rivals)v.rig.fx.setEnabled(enabled);}

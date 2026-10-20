@@ -135,3 +135,12 @@ See [stunts-and-quadcopter.md](stunts-and-quadcopter.md) for turn-and-fly drone 
 ## Finish battery, start and contact update
 
 See [finish-battery-and-start.md](finish-battery-and-start.md) for staggered cylindrical podiums, the 16-emplacement ground battery, five-second audiovisual start sequence, oriented rover contact solver and validation.
+
+
+## Gate confirmation lights — 2026-10-20
+
+Mandatory gates now use an inset segmented LED strip with a narrow metallic bezel, fasteners and soft light spill. A valid player crossing flashes white, then green over 1.35 seconds, with a light sweep moving outward along the strip. Both animated flag cloths flash in sync and return to their original faction colors. Other gates and AI crossings do not trigger the player's confirmation. Ready gates stay cyan and cleared gates settle to green.
+
+The strip replaces the old mesh with one shader plane per gate; hardware instancing remains intact, and cloth materials are isolated per gate pair. No added draw calls, dynamic lights, bloom pass or colliders. Timing uses the race clock, respects pause, clears on restart and continues fading through the celebration.
+
+Browser acceptance on both courses verifies a physical airborne gate crossing, white/green phases, matching flags, unrelated-gate isolation, pause, restoration and restart resource reuse (`npm run test:gates`). All 199 unit tests and pinned-asset/module checks pass.

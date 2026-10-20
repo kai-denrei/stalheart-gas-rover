@@ -15,7 +15,7 @@ export function cloneRig(source){
 }
 
 export async function createRaceFlags(view,gates){
- const loader=new GLTFLoader(),assets=await Promise.all(FACTIONS.map(f=>loader.loadAsync(`./assets/ctf-flags/flag_${f}.glb`))),flags=[];
+ const loader=new GLTFLoader(),assets=await Promise.all(FACTIONS.map(f=>loader.loadAsync(`./assets/ctf-flags/flag_${f}.glb`))),flags=[],paint=new Map();
  for(let i=0;i<assets.length;i++){
   const asset=assets[i],faction=FACTIONS[i],plain=PLAIN.has(faction),statics=new Map(),remove=[],solids=[];
   asset.scene.updateMatrixWorld(true);const flagHeight=new T.Box3().setFromObject(asset.scene).max.y*1.45;
@@ -39,13 +39,15 @@ export async function createRaceFlags(view,gates){
   const placements=[];
   gates.forEach((gate,index)=>{
    if(index%FACTIONS.length!==i)return;const def=view.world.race.gates[index],heightScale=def.authoredHeight?def.height/flagHeight:1;if(!def.authoredHeight)def.height=flagHeight;
+   const gateMaterials=new Map();paint.set(index,gateMaterials);
+   const signalMaterial=source=>{if(!gateMaterials.has(source)){const material=source.clone();gateMaterials.set(source,{material,color:source.color.clone(),emissive:source.emissive?.clone(),intensity:source.emissiveIntensity});}return gateMaterials.get(source).material;};
    for(const side of [-1,1]){
     const root=cloneRig(asset.scene);root.name=`Gate ${index+1} / ${faction} / ${side<0?'left':'right'}`;root.position.set(side*9.1,0,0);root.rotation.y=side<0?0:Math.PI;root.scale.set(1.45,1.45*heightScale,1.45);gate.group.add(root);root.updateWorldMatrix(true,true);placements.push(root.matrixWorld.clone());
     for(const solid of solids){const collider=convexCollider(solid.points.map(p=>p.clone().applyMatrix4(root.matrixWorld)),`flag-${index}-${side}-${solid.name}`,'race-flags');if(collider){collider.softImpact=true;view.world.colliders.push(collider);}}
     const mixer=new T.AnimationMixer(root),clip=asset.animations.find(c=>c.name==='Flutter');if(!clip)throw Error(`Missing flag Flutter clip: ${faction}`);mixer.clipAction(clip).play();const offset=index*.19+(side>0?.37:0);mixer.setTime(offset);
     // A bind-pose bound can reject these animated, reparented cloth meshes.
     // Keep the small cloth surfaces visible; the batched hardware still culls.
-    root.traverse(o=>{if(o.isSkinnedMesh)o.frustumCulled=false;});
+    root.traverse(o=>{if(o.isSkinnedMesh){o.frustumCulled=false;o.material=Array.isArray(o.material)?o.material.map(signalMaterial):signalMaterial(o.material);}});
     flags.push({root,mixer,faction,plain,gate:index,side,offset});
    }
   });
@@ -53,6 +55,10 @@ export async function createRaceFlags(view,gates){
   // material, instead of adding fourteen separate draw calls for every flag.
   for(const [material,parts] of statics){const geometry=mergeGeometries(parts),instances=new T.InstancedMesh(geometry,material,placements.length);instances.name=`Race flag hardware / ${faction} / ${material.name}`;placements.forEach((m,n)=>instances.setMatrixAt(n,m));instances.instanceMatrix.needsUpdate=true;instances.computeBoundingSphere();view.scene.add(instances);for(const part of parts)part.dispose();}
  }
- let lastTime=null;
- return {flags,update(alpha){const race=view.raceView.race,time=Math.max(0,race.time-(race.phase==='racing'?STEP*(1-alpha):0));if(time===lastTime)return;lastTime=time;for(const f of flags)f.mixer.setTime(time+f.offset);}};
+ let lastTime=null;const white=new T.Color(0xffffff),green=new T.Color(0x35ff83),flashColor=new T.Color();
+ return {flags,paint,update(alpha){const race=view.raceView.race,time=Math.max(0,race.time-(race.phase==='racing'?STEP*(1-alpha):0));if(time!==lastTime){lastTime=time;for(const f of flags)f.mixer.setTime(time+f.offset);}
+  for(const [index,materials] of paint){const pulse=gates[index].flash||{strength:0,white:0};flashColor.copy(green).lerp(white,pulse.white);
+   for(const {material,color,emissive,intensity} of materials.values()){material.color.copy(color).lerp(flashColor,pulse.strength);if(emissive){material.emissive.copy(emissive).lerp(flashColor,pulse.strength);material.emissiveIntensity=intensity+2*pulse.strength;}}
+  }
+ }};
 }

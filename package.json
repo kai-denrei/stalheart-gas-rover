@@ -32,7 +32,8 @@
     "test:stage": "node scripts/stage-maker-browser-test.mjs && node scripts/stage-template-browser-test.mjs",
     "test:overturned": "node scripts/overturned-browser-test.mjs",
     "test:fleet": "node scripts/fleet-browser-test.mjs",
-    "profile:fleet": "node scripts/profile-fleet.mjs"
+    "profile:fleet": "node scripts/profile-fleet.mjs",
+    "test:gates": "node scripts/gate-feedback-browser-test.mjs"
   },
   "engines": {
     "node": ">=22"
