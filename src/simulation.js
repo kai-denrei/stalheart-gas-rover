@@ -156,7 +156,7 @@ export class Simulation {
   if(this.wreckTime>=this.wreckDelay){this.reset(this.catastrophic?'TOTAL DESTRUCTION · RECOVERY / REPAIRED':'WRECKED · RECOVERY / REPAIRED');return;}
   if(!this.damageEnabled&&maxImpact>20&&this.age>1){this.reset('HARD IMPACT · TRY AGAIN');return;}
   const terrain=terrainSample(this.world,this.pos,false);this.altitude=terrain.altitude-.46;
-  if(terrain.altitude<-32||this.pos.distanceTo(CENTER)>RADIUS+220){this.reset(terrain.altitude<0?'LOST IN THE THROAT':'OUT OF TEST RANGE');return;}
+  if(terrain.altitude<-32||!this.world.race&&this.pos.distanceTo(CENTER)>RADIUS+220){this.reset(terrain.altitude<0?'LOST IN THE THROAT':'OUT OF TEST RANGE');return;}
   const pad=this.world.pads.findIndex(p=>{const c=localOnSphere(this.pos,p.frame);return Math.hypot(c.x,c.z)<5;});
   if(pad>=0&&this.grounded&&this.vel.length()<1&&this.tilt<18&&!input.lift){this.padTime+=dt;if(this.padTime>1.2&&!this.refilled){this.checkpoint=pad;this.spent=0;this.exhausted=null;this.refilled=true;this.event('refill',{pad:this.world.pads[pad].name});}}
   else {this.padTime=0;this.refilled=false;}
