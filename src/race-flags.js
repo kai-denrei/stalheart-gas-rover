@@ -7,7 +7,7 @@ const FACTIONS=['ember','vanguard','eclipse','helix','horizon','void'];
 const PLAIN=new Set(['ember','vanguard']);
 
 // Each cloth needs its own bones; geometry, materials and clips can be shared.
-function cloneRig(source){
+export function cloneRig(source){
  const root=source.clone(true),originals=new Map(),copies=new Map();
  function pair(a,b){originals.set(b,a);copies.set(a,b);for(let i=0;i<a.children.length;i++)pair(a.children[i],b.children[i]);}pair(source,root);
  root.traverse(o=>{if(!o.isSkinnedMesh)return;const original=originals.get(o);o.skeleton=original.skeleton.clone();o.skeleton.bones=original.skeleton.bones.map(b=>copies.get(b));o.bind(o.skeleton,original.bindMatrix);});
@@ -38,9 +38,9 @@ export async function createRaceFlags(view,gates){
   for(const o of remove)o.removeFromParent();
   const placements=[];
   gates.forEach((gate,index)=>{
-   if(index%FACTIONS.length!==i)return;view.world.race.gates[index].height=flagHeight;
+   if(index%FACTIONS.length!==i)return;const def=view.world.race.gates[index],heightScale=def.authoredHeight?def.height/flagHeight:1;if(!def.authoredHeight)def.height=flagHeight;
    for(const side of [-1,1]){
-    const root=cloneRig(asset.scene);root.name=`Gate ${index+1} / ${faction} / ${side<0?'left':'right'}`;root.position.set(side*9.1,0,0);root.rotation.y=side<0?0:Math.PI;root.scale.setScalar(1.45);gate.group.add(root);root.updateWorldMatrix(true,true);placements.push(root.matrixWorld.clone());
+    const root=cloneRig(asset.scene);root.name=`Gate ${index+1} / ${faction} / ${side<0?'left':'right'}`;root.position.set(side*9.1,0,0);root.rotation.y=side<0?0:Math.PI;root.scale.set(1.45,1.45*heightScale,1.45);gate.group.add(root);root.updateWorldMatrix(true,true);placements.push(root.matrixWorld.clone());
     for(const solid of solids){const collider=convexCollider(solid.points.map(p=>p.clone().applyMatrix4(root.matrixWorld)),`flag-${index}-${side}-${solid.name}`,'race-flags');if(collider){collider.softImpact=true;view.world.colliders.push(collider);}}
     const mixer=new T.AnimationMixer(root),clip=asset.animations.find(c=>c.name==='Flutter');if(!clip)throw Error(`Missing flag Flutter clip: ${faction}`);mixer.clipAction(clip).play();const offset=index*.19+(side>0?.37:0);mixer.setTime(offset);
     // A bind-pose bound can reject these animated, reparented cloth meshes.

@@ -1,40 +1,47 @@
-# Stage Maker proposal
+# Stage Maker
 
-A developer-only editor inside this standalone lab, using the same planet, objects, physics and race validation as play mode. Start by editing copies of The Last Leap and The Great Divide; keep the original presets available. This is a design proposal; the editor is not implemented yet.
+The first usable editor is implemented at **[stage-maker.html](../stage-maker.html)**. Open it directly or through **Tab → Open Stage Maker** in the lab. It creates editable copies; the built-in races and main Stalheart project remain separate.
 
-## First usable version
+## Workflow
 
-Enter **Edit Stage** from Lab settings. Pause simulation and use an inspection camera. Click an object to select it, then drag translation/rotation handles. An inspector exposes position, heading, dimensions, appearance and gameplay properties. A palette places rocks, barriers, flags/gates, sinkholes, refill pads, city prefabs, sentry sockets, spawn points and finish/podium assemblies.
+1. Start with **The Last Leap**, **The Great Divide**, or **Empty stage → New**. An empty stage includes five starts, two gates and the finish so it can be driven immediately.
+2. Select an object in the scene or the searchable list. **F** focuses it. Shift-click selects a group.
+3. Drag on the planet surface, use the colored move handles, or edit exact values in the inspector. **G** selects move; **R** selects rotation. **Alt-drag** changes height for supported objects. Snap uses 1 m / 15° increments.
+4. Use **Clone / Cmd/Ctrl+D**, Delete, **Cmd/Ctrl+Z** and **Cmd/Ctrl+Shift+Z**. The palette places rocks, barriers, gates, sinkholes/tremors, service pads, domes, sentries, starts and finish assemblies.
+5. Order the gates in the inspector. The road follows start 0, ordered gates, then the finish. “Face along race route” aligns a gate with its approach. Gate height controls both the flags and the actual clearance volume.
+6. Resolve red validation items, then press **Play test**. This runs an immutable snapshot in the normal five-rover race, with the edited physics and gameplay objects. **Return to Stage Maker** restores the draft and camera, not the damaged simulation state.
 
-- **Move:** surface snapping follows the planet normal. Height is an explicit offset; a modifier disables snapping for bridges and elevated obstacles. Coordinates use the existing spherical world helpers, not a flat Y=0 plane.
-- **Modify:** edit a selected object's properties; renderer and collision geometry update together. Show collision outlines and gate clearance volumes on demand.
-- **Clone:** duplicate with a small offset, preserving settings but assigning fresh object IDs. Multi-select, delete and undo/redo apply to complete logical objects, not arbitrary GLB submeshes.
-- **Create:** choose an existing stage as a template or an empty planet patch. Draw a route, place ordered mandatory gates, position five non-overlapping start slots and a finish assembly. Preview racing before saving.
-- **Test:** one button starts a temporary play session at the selected spawn. Return to editing restores the authored scene, not the state of destroyed objects or opened holes.
-- **Save:** named local drafts and autosave in IndexedDB; export/import versioned JSON. Export explicitly promotes a draft to a repository course file. Editing must never silently overwrite the bundled courses or the main Stalheart project.
+Right-drag orbits, middle-drag or Space-drag pans, and the wheel zooms. Top view, Fit stage, and Bounds help inspect the layout. The viewport reports FPS, draw calls, object count and pending asset loads.
 
-## Data and runtime changes required first
+## Saving and sharing
 
-Today, course routes live in `src/race-courses.js`, while obstacles, podiums and holes are constructed in `src/race-world.js`; cities and combat placements have separate builders. Extract these authored values into a serializable `StageDefinition` before building gizmos.
+Drafts autosave to this browser's IndexedDB after each edit. **Save draft** flushes immediately. A different browser, browser profile, or origin has a separate draft library. **Export JSON** downloads a portable version-1 stage definition. **Import JSON** validates it and makes a new draft with a new identity. Export does not modify repository course files or publish a draft.
 
-Each stage contains a schema version, stable ID/name, planet settings, route points, ordered gates, spawn slots, objects, finish assembly and encounter settings. Each object has a stable ID, prefab ID, spherical surface coordinates, altitude offset, local rotation and prefab-specific properties. Asset URLs and raw executable code are not part of imported stages.
+The five starts have unique slots 0–4; slot 0 is the human player. Validation blocks missing/overlapping starts, missing finish, gates inside solids, duplicate route orders, degenerate route segments, invalid prefab properties and unsupported transforms. Large gaps and heavier battle/scenery budgets are warnings requiring a drive-through, not guarantees of AI solvability.
 
-A shared prefab registry creates the visible model, collision proxies, gameplay triggers and editor handles from that one definition. Changes to transforms rebuild only the selected object's proxies; moving articulated models keep their collision transforms synchronized. Existing `point`, `frameAt`, convex colliders, gate height validation and free respawn searches can be reused.
+## What is editable now
 
-Import both current races into this format with a compatibility test before exposing editing. Keep physics bodies, resource budgets, AI tuning and runtime effects outside the saved authoring state. Editing a flag must move its poles, clearance volume and AI waypoint together. Editing a sinkhole must update terrain sampling, visible geometry, debris collision and avoidance consistently.
+- Rocks and barriers: surface position, altitude, heading, dimensions and color. Play mode uses the same transforms for visuals and convex collisions.
+- Gates: position, altitude, heading, height and race order. Their flag poles remain solid.
+- Holes: position, radius and dormant/open state. Rendering, terrain collision, hazard triggers and enemy avoidance consume the same authored holes.
+- Domes: position, heading, altitude, role, base palette and clear/opaque glazing. Optional row/column links create bridges between compatible neighboring domes **in play mode**.
+- Sentries: weapon, position, altitude and heading. Battle activity can be disabled while retaining the models.
+- Start poses, service pads, finish position/dimensions and gas capacity.
 
-## Validation and performance
+The runtime uses `stage-definition.js`, `stage-world.js` and the existing race builders. The editor uses the actual GLBs and sinkhole renderer, shared source asset caches, incremental object updates, and commit-on-release dragging. It holds up to 60 undo snapshots.
 
-Before play/export, report overlapping starts, gates inside solids, unreachable or blocked podiums, unsupported structure heights, malformed values and missing prefabs. Warn about very long jump gaps and dense enemy/FX budgets; those are creative choices, not automatic blockers. Show route order and race direction, particularly in the reverse Base 1 section.
+## Deliberate first-version limits
 
-Batch edits while dragging; commit physics rebuilds on release or at a throttled preview rate. Keep rendering instancing and shared materials. Preserve spatial-index invalidation on add, remove **and move**, not just changes in object count. Include a visible FPS/draw-call/object-count panel in editing mode.
+The finish faces north and needs at least 64 × 68 m of platform space. Put the final gate south of it for AI podium approaches. The gantry and three podiums move as one assembly. Dome sentries are independent objects; shift-select them with the dome to move them together. Bridges are generated during play, not individually editable or drawn in the editor preview. Bounds are visual object bounds, not a view of every convex physics hull.
 
-## Delivery sequence
+Procedural wilderness is optional scenery rather than a list of editable objects. Orbital battle, scoreboards, recurring rocket traffic and celebration choreography still belong to the race systems. Custom elevated gates and extreme layouts are allowed but may exceed the current AI pilot's capabilities. Test driving is essential; validation cannot prove that a course is completable.
 
-1. Extract and round-trip existing course data with no changes in race behavior.
-2. Add selection, surface-aware move/rotate, inspector, clone/delete, undo/redo and drafts.
-3. Add prefab placement, empty stages, gate/route editing and play/return workflow.
-4. Add validation, export/import and comparison against the original stage.
-5. Later: reusable city assemblies, encounter timeline, multi-lap races and authorable celebration events.
+Later extensions can add reusable city assemblies, explicit bridge pieces, encounter timelines, multi-lap races and authorable celebration events.
 
-The most useful first milestone is moving a rock and a gate in Great Divide, cloning a sinkhole, test-driving the result, then returning to exactly the same editable stage.
+## Celebration SH02
+
+The third podium claim starts a separate arrival beside the finish. The SH02 appears 320 m above its landing pad and 360 m behind it, ignites its boosters after 1.4 seconds, and descends over 14 seconds. It reuses Stalheart's animated landing legs, shock absorption, opening door, clustered plumes, dust and scorch. It stays docked for the celebration and resets with the race. Regular base traffic continues on its own schedule and audio source.
+
+## Verification
+
+`node --test test/stage-maker.test.mjs` checks both preset conversions, edited runtime geometry/gates, malformed stages, history isolation and the arrival timeline. `npm run test:stage` uses real browser pointer input to place and drag an object, edits/clones/undoes, reloads an autosaved draft, play-tests and returns, validates empty stages, and exercises podium-triggered arrival effects.

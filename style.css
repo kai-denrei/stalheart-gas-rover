@@ -18,3 +18,5 @@
    including dynamically inserted race/stunt HUDs. Explicit H/Tab still opens
    controls/settings; everything returns when the song ends or race restarts. */
 body.disco-mode > :not(#world):not(script):not(#help):not(#labPanel) { visibility:hidden !important; pointer-events:none !important; }
+
+.editor-return {display:inline-block;padding:10px 14px;border:1px solid #648c85;border-radius:4px;color:#aff3ce;background:#132b30;text-decoration:none;font:12px monospace;}

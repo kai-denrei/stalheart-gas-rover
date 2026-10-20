@@ -34,7 +34,7 @@ export class Presentation {
   const floorMat=new T.MeshStandardMaterial({color:0x233c40,roughness:.95,metalness:.15});this.patchFloor(floorMat);this.ground=new T.Mesh(g,floorMat);this.ground.receiveShadow=true;this.scene.add(this.ground);
   const lineGeo=new T.BufferGeometry();lineGeo.setAttribute('position',new T.BufferAttribute(positions,3));lineGeo.setIndex(lines);const mat=new T.LineBasicMaterial({color:0x7ac5ac,transparent:true,opacity:.18,depthWrite:false});this.patchFloor(mat);const grid=new T.LineSegments(lineGeo,mat);grid.scale.setScalar(1.00004);grid.position.y=RADIUS*.00004;this.scene.add(grid);
  }
- patchFloor(material){const holes=this.world.holes;const frames=holes.map(h=>new T.Matrix4().compose(h.origin,h.frame.q,new T.Vector3(1,1,1)).invert());this.floorUniforms??=[];const radii={value:holes.map(h=>h.radius)};this.floorUniforms.push(radii);
+ patchFloor(material){this.floorUniforms??=[];const holes=this.world.holes;if(!holes.length)return;const frames=holes.map(h=>new T.Matrix4().compose(h.origin,h.frame.q,new T.Vector3(1,1,1)).invert());const radii={value:holes.map(h=>h.radius)};this.floorUniforms.push(radii);
   material.onBeforeCompile=shader=>{
    shader.uniforms.uHoleCenters={value:holes.map(h=>h.origin)};shader.uniforms.uHoleFrames={value:frames};shader.uniforms.uHoleRadii=radii;
    shader.vertexShader=shader.vertexShader.replace('#include <common>','#include <common>\nvarying vec3 vLabWorld;').replace('#include <project_vertex>','#include <project_vertex>\nvLabWorld=(modelMatrix*vec4(transformed,1.0)).xyz;');
@@ -51,7 +51,7 @@ export class Presentation {
    const crossMat=new T.MeshBasicMaterial({color:0x9cd7c0});for(const a of [0,Math.PI/2]){const m=new T.Mesh(new T.PlaneGeometry(2.4,.1),crossMat);m.rotation.set(-Math.PI/2,0,a);m.position.y=.09;group.add(m);}
    if(!this.world.race)for(const x of [-6,6]){const post=new T.Mesh(new T.CylinderGeometry(.08,.12,1.2,6),new T.MeshStandardMaterial({color:0x80918b}));post.position.set(x,.6,0);group.add(post);const cap=new T.Mesh(new T.SphereGeometry(.12,8,8),new T.MeshBasicMaterial({color:green}));cap.position.set(x,1.25,0);group.add(cap);}
   }
-  for(const r of this.world.rocks){const m=new T.Mesh(new T.BoxGeometry(r.w,r.h,r.d),new T.MeshStandardMaterial({color:0x425053,roughness:1}));m.position.copy(r.origin).addScaledVector(r.frame.up,r.h/2);m.quaternion.copy(r.frame.q);this.scene.add(m);const edges=new T.LineSegments(new T.EdgesGeometry(m.geometry),new T.LineBasicMaterial({color:0x70918a,transparent:true,opacity:.3}));m.add(edges);}
+  for(const r of this.world.rocks){const m=new T.Mesh(new T.BoxGeometry(r.w,r.h,r.d),new T.MeshStandardMaterial({color:r.color||0x425053,roughness:1}));m.position.copy(r.origin).addScaledVector(r.frame.up,r.h/2);m.quaternion.copy(r.frame.q);this.scene.add(m);const edges=new T.LineSegments(new T.EdgesGeometry(m.geometry),new T.LineBasicMaterial({color:0x70918a,transparent:true,opacity:.3}));m.add(edges);}
   // Approach strip gives the first jump a readable runway without constraining the vehicle.
   if(!this.world.race)for(let z=8;z<24;z+=3){for(const x of [-4.5,4.5]){const g=new T.Mesh(new T.BoxGeometry(.12,.035,.9),new T.MeshBasicMaterial({color:0xd3e2b6}));g.position.copy(point(x,z,.05));g.quaternion.copy(frameAt(g.position).q);this.scene.add(g);}}
  }
@@ -84,7 +84,7 @@ export class Presentation {
   if(this.width!==w||this.height!==h||this.lastDpr!==dpr){this.width=w;this.height=h;this.lastDpr=dpr;this.renderer.setSize(w,h,false);this.performance.resizeCalls++;this.camera.aspect=w/h;this.camera.updateProjectionMatrix();}
  }
  stepEffects(dt){
-  this.raceView?.traffic?.step(dt);this.raceView?.defense?.step(dt);this.isao?.step(dt,this.isao.inputEnabled!==false);
+  this.raceView?.traffic?.step(dt);this.raceView?.arrival?.step(dt);this.raceView?.defense?.step(dt);this.isao?.step(dt,this.isao.inputEnabled!==false);
   if(this.world.race)this.syncRaceHazards();
   for(let i=0;i<this.effects.length;i++){const fx=this.effects[i],h=this.world.holes[i];
    if(this.world.race&&h.dormant){

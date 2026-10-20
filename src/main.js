@@ -1,3 +1,5 @@
+import {loadPlay} from './stage-store.js';
+import {createStageWorld} from './stage-world.js';
 import {DAY_42} from '../upstream/stalheart/src/content/day-42.js';
 import {roverInput} from './rover-input.js';
 import {IsaoController} from './isao-controller.js';
@@ -10,14 +12,16 @@ import {RacePresentation} from './race-render.js';
 import {KickHUD} from './kick-hud.js';
 import {RaceHUD} from './race-hud.js';
 import {LabAudio} from './audio.js';
-const mode=new URLSearchParams(location.search).get('mode'),racing=mode==='race'||mode==='expedition',kickMode=mode==='kickflip';
-const $=id=>document.getElementById(id),world=racing?createRaceWorld(mode):createWorld(),sim=new Simulation(world),race=racing?new Race(world,sim):null,audio=new LabAudio();
+const params=new URLSearchParams(location.search);let authored=null;if(params.has('stagePlay')){try{authored=(await loadPlay(params.get('stagePlay')))?.stage;if(!authored)throw Error('Play snapshot not found. Open Stage Maker and press Play test again.');}catch(error){document.getElementById('loadText').textContent=error.message;throw error;}}
+const mode=authored?.base||params.get('mode'),racing=!!authored||mode==='race'||mode==='expedition',kickMode=mode==='kickflip';
+const $=id=>document.getElementById(id),world=authored?createStageWorld(authored):racing?createRaceWorld(mode):createWorld(),sim=new Simulation(world),race=racing?new Race(world,sim):null,audio=new LabAudio();
 sim.damageEnabled=!kickMode;
+$('stageMaker').href=authored?'./stage-maker.html?draft='+encodeURIComponent(authored.id):'./stage-maker.html?template='+(racing?mode:'race');if(authored){const back=document.createElement('a');back.id='returnToEditor';back.textContent='← Return to Stage Maker';back.href=$('stageMaker').href;back.className='editor-return';document.querySelector('.top-actions').prepend(back);}
 $('gameMode').value=racing?mode:kickMode?'kickflip':'lab';$('gameMode').onchange=e=>{location.href=e.target.value==='lab'?location.pathname:'?mode='+e.target.value;};
 const view=new Presentation($('world'),world,sim),keys=new Set();let ready=false,started=false,paused=false,accumulator=0,last=performance.now(),lastEvent=0,toastUntil=0,lastHud=0;
 view.isao=new IsaoController(view);view.isao.keys=keys;
 if(racing){const option=new Option('ISAO · post-race','isao');option.disabled=true;$('camera').add(option);document.querySelector('.key-grid').insertAdjacentHTML('beforeend','<kbd>F</kbd><p>After your podium claim or race end: pilot ISAO. A/D turn · W/S forward/back (hold W to accelerate to 3×) · Shift+Space down · Space up · drag to orbit · wheel zoom. F switches ISAO / rover.</p>');}
-let raceHud,kickHud;view.onTremor=()=>audio.quake();view.onAmbientLoop=(key,p,level)=>audio.ambientLoop(key,p.distanceTo(view.camera.position),level);view.onSentryShot=(type,distance)=>audio.sentry(type,distance);view.onWeaponSound=(key,p,gain)=>audio.combat(key,p.distanceTo(view.camera.position),gain);view.onCombatImpact=(type,p)=>{if(type!=='rotary')audio.combat('blast_fire',p.distanceTo(view.camera.position),type==='nuclear'?.85:.2);};
+let raceHud,kickHud;view.onTremor=()=>audio.quake();view.onAmbientLoop=(key,p,level,source)=>audio.ambientLoop(key,p.distanceTo(view.camera.position),level,source);view.onSentryShot=(type,distance)=>audio.sentry(type,distance);view.onWeaponSound=(key,p,gain)=>audio.combat(key,p.distanceTo(view.camera.position),gain);view.onCombatImpact=(type,p)=>{if(type!=='rotary')audio.combat('blast_fire',p.distanceTo(view.camera.position),type==='nuclear'?.85:.2);};
 function restartRace(){neutral();view.isao.reset();view.mode='chase';$('camera').value='chase';$('camera').querySelector('[value=isao]').disabled=true;race.start();started=true;paused=false;audio.update(0,0,true,false);audio.syncStart(race,false);last=performance.now();view.cameraInitialized=false;}
 function notify(text,seconds=3){$('toast').textContent=text;$('toast').classList.add('show');toastUntil=performance.now()+seconds*1000;}
 function neutral(){keys.clear();accumulator=0;sim.motion.capture();audio.silence();}

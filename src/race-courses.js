@@ -8,5 +8,5 @@ export const COURSES={
   sectors:[{start:0,name:'BASE 1 · REVERSE'},{start:14,name:'THE WILDS'},{start:23,name:'BASE 2 · AMBER'}],
   canyon:{x:215,z:-140,r:42},base2:{x:475,z:-140},service:[[115,-140],[420,-240]]}
 };
-export function gridPose(world,racer){const [a,b]=world.race.route,heading=Math.atan2(b[0]-a[0],b[1]-a[1]),back=racer.id>=3?7:0;return {x:a[0]+Math.cos(heading)*racer.lane-Math.sin(heading)*back,z:a[1]-Math.sin(heading)*racer.lane-Math.cos(heading)*back,heading};}
+export function gridPose(world,racer){if(world.stage&&racer.lane!==12){const o=world.stage.objects.find(o=>o.type==='spawn'&&o.slot===racer.id);if(o)return {x:o.x,z:o.z,heading:o.yaw*Math.PI/180};}const [a,b]=world.race.route,heading=Math.atan2(b[0]-a[0],b[1]-a[1]),back=racer.id>=3?7:0;return {x:a[0]+Math.cos(heading)*racer.lane-Math.sin(heading)*back,z:a[1]-Math.sin(heading)*racer.lane-Math.cos(heading)*back,heading};}
 export function courseSector(world,gate){return [...(world.race.course.sectors||[{start:0,name:world.race.course.name}])].reverse().find(s=>gate>=s.start)?.name;}

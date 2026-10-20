@@ -4,7 +4,7 @@ import {segmentDistance} from './race-world.js';
 import {boxCollider} from './collisions.js';
 // Bounded instanced scenery. Clear the actual course, launch and landing areas.
 export function createWilderness(view){
- if(view.world.race.course.id!=='expedition')return null;
+ if(view.world.race.course.id!=='expedition'||view.world.stage&&!view.world.stage.settings.wilderness)return null;
  const root=new T.Group();root.name='WILDS / basalt badlands';view.scene.add(root);
  const geometry=new T.DodecahedronGeometry(1,0),material=new T.MeshStandardMaterial({color:0x765449,roughness:1,flatShading:true}),placements=[];
  for(let i=0;i<260;i++){const x=35+(i*67.13%330),z=-245+(i*43.71%170),r=1.5+(i%7)*.65;
