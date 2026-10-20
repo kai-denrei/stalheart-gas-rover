@@ -16,7 +16,6 @@ export function createRaceWorld(id='race'){
  const gates=route.slice(1).map(([x,z],i)=>{const from=route[i],dx=x-from[0],dz=z-from[1],len=Math.hypot(dx,dz);return {x,z,index:i,height:[3.3,3.175,3.4][i%3]*1.45,origin:point(x,z),frame:frameAt(point(x,z)),dx:dx/len,dz:dz/len};});
  const colliders=fixtureColliders(rocks,[]);colliders.push(boxCollider(deck,'finish-platform'));
  for(const s of spots)colliders.push(cylinderCollider({radius:RACE_RULES.podiumRadius,h:s.height,origin:s.origin.clone().addScaledVector(deck.frame.up,-s.height),frame:deck.frame},'podium-'+s.number));
- for(const x of [-19,19]){colliders.push(boxCollider({w:2,d:51,h:.6,origin:new Vector3(x,deck.h,2).applyQuaternion(deck.frame.q).add(deck.origin),frame:deck.frame},'gantry-rail-'+x));colliders.push(boxCollider({w:2,d:3,h:30,origin:new Vector3(x,deck.h,2).applyQuaternion(deck.frame.q).add(deck.origin),frame:deck.frame},'gantry-column-'+x));}
  return {holes,pads,rocks,colliders,holeScale:1,race:{course,route,gates,deck,spots,rules:RACE_RULES}};
 }
 export function segmentDistance(x,z,a,b){const dx=b[0]-a[0],dz=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(z-a[1])*dz)/(dx*dx+dz*dz)));return Math.hypot(x-a[0]-t*dx,z-a[1]-t*dz);}

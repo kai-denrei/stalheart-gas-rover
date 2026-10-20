@@ -41,7 +41,7 @@ export async function createRaceFlags(view,gates){
    if(index%FACTIONS.length!==i)return;view.world.race.gates[index].height=flagHeight;
    for(const side of [-1,1]){
     const root=cloneRig(asset.scene);root.name=`Gate ${index+1} / ${faction} / ${side<0?'left':'right'}`;root.position.set(side*9.1,0,0);root.rotation.y=side<0?0:Math.PI;root.scale.setScalar(1.45);gate.group.add(root);root.updateWorldMatrix(true,true);placements.push(root.matrixWorld.clone());
-    for(const solid of solids){const collider=convexCollider(solid.points.map(p=>p.clone().applyMatrix4(root.matrixWorld)),`flag-${index}-${side}-${solid.name}`,'race-flags');if(collider)view.world.colliders.push(collider);}
+    for(const solid of solids){const collider=convexCollider(solid.points.map(p=>p.clone().applyMatrix4(root.matrixWorld)),`flag-${index}-${side}-${solid.name}`,'race-flags');if(collider){collider.softImpact=true;view.world.colliders.push(collider);}}
     const mixer=new T.AnimationMixer(root),clip=asset.animations.find(c=>c.name==='Flutter');if(!clip)throw Error(`Missing flag Flutter clip: ${faction}`);mixer.clipAction(clip).play();const offset=index*.19+(side>0?.37:0);mixer.setTime(offset);
     // A bind-pose bound can reject these animated, reparented cloth meshes.
     // Keep the small cloth surfaces visible; the batched hardware still culls.

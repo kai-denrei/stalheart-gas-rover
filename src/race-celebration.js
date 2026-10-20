@@ -1,3 +1,4 @@
+import {createGantryCollisions} from './gantry-collisions.js';
 import * as T from '../upstream/stalheart/vendor/three.module.js';
 import {GLTFLoader} from '../upstream/stalheart/vendor/GLTFLoader.js';
 import {celebrationPose,PARTY_COLORS} from '../upstream/stalheart/src/domain/disco-celebration.js';
@@ -13,8 +14,9 @@ export async function createRaceCelebration(view,race){
  const housing=new T.Group();housing.name='STALHEART_FINISH_GANTRY';housing.position.copy(deck.origin);housing.quaternion.copy(deck.frame.q);view.scene.add(housing);const gantry=gantryAsset.scene;gantry.position.set(0,deck.h,2);housing.add(gantry);
  const joints=[['GANTRY_TRAVEL_Y','position','z','gantryZ'],['CARRIAGE_TRAVEL_X','position','x','carriageX'],['TOOL_LIFT_Z','position','y','liftY'],['J1_BASE_YAW','rotation','y','j1Yaw'],['J2_SHOULDER','rotation','z','j2Shoulder'],['J3_ELBOW','rotation','z','j3Elbow'],['J4_FOREARM_ROLL','rotation','y','j4Roll'],['J5_WRIST_PITCH','rotation','z','j5Wrist'],['J6_TOOL_ROLL','rotation','y','j6Roll']].map(([name,tr,axis,key])=>({node:gantry.getObjectByName(name),tr,axis,key}));
  const hook=gantry.getObjectByName('EXTRUSION_TIP');if(!hook||joints.some(j=>!j.node))throw Error('Stalheart gantry articulation missing');
- function poseGantry(t){const p={...celebrationPose(t),j4Roll:0,j6Roll:0};for(const j of joints)j.node[j.tr][j.axis]=p[j.key];housing.updateWorldMatrix(true,true);}
- poseGantry(0);
+ let collisionRig;
+ function poseGantry(t){const p={...celebrationPose(t),j4Roll:0,j6Roll:0};for(const j of joints)j.node[j.tr][j.axis]=p[j.key];housing.updateWorldMatrix(true,true);collisionRig?.update();}
+ poseGantry(0);collisionRig=createGantryCollisions(gantry,race.world);
  const surface=(x,z)=>race.world.race.spots.find(s=>Math.hypot(x-s.local.x,z-s.local.z)<race.world.race.rules.podiumRadius)?.local.y??deck.h;
  // Sentries share the original geometry/materials and retain all authored aiming pivots.
  const sentries=[-1,1].map((side,i)=>{const model=lancer.scene.clone(true);model.position.set(side*27,deck.h,-8);model.scale.setScalar(2);root.add(model);const yaw=model.getObjectByName('YAW'),pitch=model.getObjectByName('PITCH'),muzzle=model.getObjectByName('MUZZLE_00');if(!yaw||!pitch||!muzzle)throw Error('Missing LANCER aiming nodes');
@@ -44,5 +46,5 @@ export async function createRaceCelebration(view,race){
   const t=race.celebrationTime,a=.52+Math.sin(Math.min(t,DAY_42.seconds)*.10)*.12+view.orbit,position=new T.Vector3(Math.sin(a)*87,deck.h+36,-Math.cos(a)*87).applyQuaternion(deck.frame.q).add(deck.origin),look=new T.Vector3(0,deck.h+15,0).applyQuaternion(deck.frame.q).add(deck.origin),k=smooth(t/2);
   camera.position.lerpVectors(startPosition,position,k);camera.up.copy(deck.frame.up);camera.lookAt(startLook.clone().lerp(look,k));
  }
- return {root,ball,gantry,hook,housing,sentries,update,camera,snapshot(){return {active,time:race.celebrationTime,party:active&&race.celebrationTime<DAY_42.seconds,seconds:DAY_42.seconds,lancers:sentries.map(s=>{const from=s.muzzle.getWorldPosition(new T.Vector3()),direction=Z.clone().applyQuaternion(s.muzzle.getWorldQuaternion(new T.Quaternion()));return {beam:s.ray.visible,aimDot:direction.dot(center.clone().sub(from).normalize())};})};}};
+ return {root,ball,gantry,hook,housing,sentries,collisionRig,update,camera,snapshot(){return {active,time:race.celebrationTime,party:active&&race.celebrationTime<DAY_42.seconds,seconds:DAY_42.seconds,lancers:sentries.map(s=>{const from=s.muzzle.getWorldPosition(new T.Vector3()),direction=Z.clone().applyQuaternion(s.muzzle.getWorldQuaternion(new T.Quaternion()));return {beam:s.ray.visible,aimDot:direction.dot(center.clone().sub(from).normalize())};})};}};
 }

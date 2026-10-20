@@ -3,7 +3,7 @@ import {fixtureColliders} from './collisions.js';
 import {rimRadius,bowlHeight,SINKHOLE_INNER} from '../upstream/stalheart/src/core/sinkhole-shape.js';
 export const RADIUS=753.3251493098921;
 export const CENTER=new Vector3(0,-RADIUS,0);
-export const DEFAULTS=Object.freeze({gravity:2.8,lift:13,capacity:100,gasRate:8.5,assistance:'stabilized',unlimited:false,holeScale:1,volume:.32});
+export const DEFAULTS=Object.freeze({gravity:2.8,lift:13,capacity:100,gasRate:8.5,gasRegen:.6,assistance:'stabilized',unlimited:false,holeScale:1,volume:.32});
 export const PAD_DEFS=[{name:'BASE',x:0,z:0},{name:'CROSSING',x:0,z:68},{name:'OFFSET',x:35,z:127},{name:'RECOVERY',x:-66,z:51}];
 export const HOLE_DEFS=[{name:'01 / FIRST CROSSING',x:0,z:35,r:10},{name:'02 / OFFSET',x:21,z:98,r:14},{name:'03 / RECOVERY BOWL',x:-65,z:83,r:19},{name:'04 / LONG CROSSING',x:112,z:130,r:23}];
 export function point(x,z,h=0){const d=Math.hypot(x,z),a=d/RADIUS,s=d>1e-8?Math.sin(a)/d:1/RADIUS;return new Vector3(x*s*(RADIUS+h),Math.cos(a)*(RADIUS+h)-RADIUS,z*s*(RADIUS+h));}

@@ -13,7 +13,7 @@ function stranded(course='race'){
  race.phase='racing';race.racers.slice(1).forEach(r=>r.penalty=999);r.gate=world.race.gates.length;r.stunts.score=777;
  s.pos.copy(d.origin).addScaledVector(d.frame.east,-8).addScaledVector(d.frame.north,-28).addScaledVector(d.frame.up,d.h+1.1);
  s.q.copy(d.frame.q).multiply(new Quaternion().setFromAxisAngle(new Vector3(1,0,0),Math.PI));s.vel.set(0,0,0);s.omega.set(0,0,0);
- s.spent=s.tune.capacity;s.contactCount=0;s.bodyContacts=0;s.wheelContact.fill(false);s.grounded=false;s.supportTime=0;
+ s.tune.gasRegen=0;s.spent=s.tune.capacity;s.contactCount=0;s.bodyContacts=0;s.wheelContact.fill(false);s.grounded=false;s.supportTime=0;
  run(race,{controlActive:true},.6);
  return {world,race,r,s};
 }

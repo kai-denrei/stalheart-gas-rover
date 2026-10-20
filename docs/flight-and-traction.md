@@ -28,8 +28,20 @@ Fixture and rover collisions retain the softer torque/friction response. Fast co
 
 Validation: `npm test`, `npm run test:planes`, and the rendered expedition race. The focused suite covers all input planes, five-second bounds, airborne exemption, authored flag height, gate stunt scoring, catastrophic impact, recovery locking and repair.
 
-Longitudinal boosts use the same finite gas reserve as lift and rotation, delivering 8 m/s² through opposed jets without added torque. Empty tanks disable the jets; the unlimited lab toggle keeps them firing. W/S still powers the wheels on the road; above motor cruise speed, boosting coasts the drivetrain instead of fighting the jets. Forward motor acceleration is now capped at 9 m/s² (previously 6). Powered drifting starts above 4.5 m/s, breaks rear grip faster, and adds 18% yaw authority at full drift; straightening restores grip.
+Longitudinal boosts use the same finite gas reserve as lift and rotation, delivering 8 m/s² through opposed jets without added torque. Gas regenerates at 0.6 units/s. An empty tank supplies only this weak trickle until the driver lets it recharge; the unlimited lab toggle keeps full thrust available. The last five units are isolated from tank leaks, so damaged plumbing cannot prevent saving up a recovery burst. Pads still refill the entire reserve. W/S still powers the wheels on the road; above motor cruise speed, boosting coasts the drivetrain instead of fighting the jets. Forward motor acceleration is now capped at 9 m/s² (previously 6). Powered drifting starts above 4.5 m/s, breaks rear grip faster, and adds 18% yaw authority at full drift; straightening restores grip.
 
 Pitch and roll flips preserve the chase-camera heading; yaw turns it. Landing eases the view back to the grounded heading. A newly wrecked chassis loses 80% of its linear momentum and 90% of its spin, cancels upward rebound, and settles with passive drag; the driving/righting controller is disabled throughout salvage.
 
 Automatic overturned recovery: after five continuous seconds tilted past 100° on a surface without driving input, recover with the normal three-second race penalty. A single roof contact counts, short contact gaps are tolerated, and sliding does not block rescue. Driving input, getting upright or becoming airborne clears the timer. This works with an empty tank after the final gate; recovery refills gas and preserves validated gates and scores. Wreck salvage keeps its separate timer.
+
+## Recovering from the roof or side
+
+Space plus Q/E lifts away from the surface and rolls the rover onto its wheels. A short burst (roughly half a second) followed by C gives a controlled recovery; W/S pitch is also available while overturned. This uses gas and damaged thrusters still reduce authority. Recovery lift uses the opposed RCS ports toward the local sky until the chassis is mostly upright; ordinary inverted flight keeps its body-relative lift. Merely rolling off the roof is not a completed-flip bonus. The existing five-second idle reset remains a fallback.
+
+## Small props and gantry structure
+
+Flag poles, pad posts, small rocks and small loose sinkhole fragments use restrained angular response and reduced damage severity. Shallow side strikes cannot turn forward motion into an upward launch, and contact-induced spin is bounded. They remain solid. Large barriers, the deck and gantry retain their structural collision response.
+
+The gantry now uses separate convex proxies from the visible model's connected beam, foot, rail and arm components, omitting tiny decorative trim. Its central underpass stays open; the arm and travelling assembly update their proxies with the celebration pose. Battle broad-phase envelopes include their full movement range.
+
+During the disco song, screen HUDs disappear and the canvas fills the viewport. H/Tab can still explicitly open controls/settings. ISAO remains controllable, and normal HUDs return when the song ends or the race restarts.

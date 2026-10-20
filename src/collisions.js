@@ -14,8 +14,8 @@ export function boxCollider(rock,id){const points=[];for(const x of [-rock.w/2,r
 export function cylinderCollider({radius,h,origin,frame},id){
  const points=[];for(const y of [0,h])for(let i=0;i<64;i++){const a=i*Math.PI/32;points.push(V(Math.sin(a)*radius,y,Math.cos(a)*radius).applyQuaternion(frame.q).add(origin));}return convexCollider(points,id);
 }
-export function fixtureColliders(rocks,pads){const out=rocks.map((r,i)=>boxCollider(r,'barrier-'+i));
- for(const [i,pad] of pads.entries())for(const side of [-1,1]){const pts=[];for(const y of [0,1.37])for(let j=0;j<12;j++){const a=j*Math.PI/6;pts.push(V(side*6+Math.cos(a)*.12,y,Math.sin(a)*.12).applyQuaternion(pad.frame.q).add(pad.origin));}out.push(convexCollider(pts,`pad-${i}-beacon-${side}`));}
+export function fixtureColliders(rocks,pads){const out=rocks.map((r,i)=>Object.assign(boxCollider(r,'barrier-'+i),{softImpact:r.h<=2&&r.w*r.d*r.h<=32}));
+ for(const [i,pad] of pads.entries())for(const side of [-1,1]){const pts=[];for(const y of [0,1.37])for(let j=0;j<12;j++){const a=j*Math.PI/6;pts.push(V(side*6+Math.cos(a)*.12,y,Math.sin(a)*.12).applyQuaternion(pad.frame.q).add(pad.origin));}out.push(Object.assign(convexCollider(pts,`pad-${i}-beacon-${side}`),{softImpact:true}));}
  return out;
 }
 export function nearColliders(world,center,radius){return world.colliders.filter(c=>center.distanceToSquared(c.center)<(c.radius+radius)**2);}
@@ -47,6 +47,6 @@ export function bakeSinkholeColliders(fx,owner){fx.group.updateWorldMatrix(true,
   mesh.getMatrixAt(i,instance);m.multiplyMatrices(inv,mesh.matrixWorld).multiply(instance);const a=mesh.geometry.attributes.position,points=[];
   for(let j=0;j<a.count;j++){const p=V().fromBufferAttribute(a,j).applyMatrix4(m);p.fromArray(breachPoint(p.toArray(),fx.tune.planetRadius)).applyMatrix4(fx.group.matrixWorld);points.push(p);}
   const bounds=new Box3().setFromPoints(points);if(bounds.getSize(V()).length()<.12)continue;
-  const c=convexCollider(points,`${owner}-rock-${out.length}`,owner);if(c)out.push(c);
+  const c=convexCollider(points,`${owner}-rock-${out.length}`,owner);if(c){c.softImpact=c.radius<1.5;out.push(c);}
  }return out;
 }

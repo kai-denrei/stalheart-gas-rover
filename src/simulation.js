@@ -19,7 +19,7 @@ export class Simulation {
   // A new opening can scatter solid debris over a pad. Pick a clear point inside
   // the checkpoint ring instead of resetting the rover inside a boulder.
   for(const radius of [0,2,3.5]){let found=false;for(let i=0;i<(radius?12:1);i++){const angle=i*Math.PI/6,p=pad.origin.clone().addScaledVector(pad.frame.up,.46).addScaledVector(pad.frame.east,Math.cos(angle)*radius).addScaledVector(pad.frame.north,Math.sin(angle)*radius),near=nearColliders(this.world,p,3.5);if(!ROVER_SOLIDS.some(shape=>{const c=shape.center.clone().applyQuaternion(pad.frame.q).add(p);return near.some(solid=>sphereContact(solid,c,shape.radius));})){this.pos.copy(p);found=true;break;}}if(found)break;}
-  this.vel.set(0,0,0);this.omega.set(0,0,0);this.spent=0;this.exhausted=null;this.grounded=true;this.supportTime=.1;this.contactCount=6;this.bodyContacts=0;this.inverted=0;this.invertedSupport=0;this.tilt=0;this.age=0;this.padTime=0;this.refilled=true;this.burn=allocate(V(),V(),this.tune.lift/8);this.airtime=0;this.peak=0;this.impact=0;this.steering=0;this.drift=0;this.wheelContact=Array(6).fill(true);this.traction=1;this.trickAxes=[false,false,false];this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];this.rcs=reactionBurn(V(),V());this.parked=false;this.wheelSpin=Array(6).fill(0);this.lastCollision=null;this.collisionCooldown=0;this.kickFlight=false;this.kickAngle=0;this.kickTurns=0;this.kickInput=0;this.kickTotal??=0;this.figureTotal??=0;this.enemyPrevious=null;this.lastReason=reason;this.event('reset',{reason});this.motion.capture();}
+  this.vel.set(0,0,0);this.omega.set(0,0,0);this.spent=0;this.exhausted=null;this.grounded=true;this.supportTime=.1;this.contactCount=6;this.bodyContacts=0;this.inverted=0;this.invertedSupport=0;this.rightingBoost=false;this.tilt=0;this.age=0;this.padTime=0;this.refilled=true;this.burn=allocate(V(),V(),this.tune.lift/8);this.airtime=0;this.peak=0;this.impact=0;this.steering=0;this.drift=0;this.wheelContact=Array(6).fill(true);this.traction=1;this.trickAxes=[false,false,false];this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];this.rcs=reactionBurn(V(),V());this.parked=false;this.wheelSpin=Array(6).fill(0);this.lastCollision=null;this.collisionCooldown=0;this.kickFlight=false;this.kickAngle=0;this.kickTurns=0;this.kickInput=0;this.kickTotal??=0;this.figureTotal??=0;this.enemyPrevious=null;this.lastReason=reason;this.event('reset',{reason});this.motion.capture();}
  receiveImpact(hit){
   if(!this.damageEnabled)return null;
   const wasWreck=this.damage.wreck;
@@ -51,18 +51,19 @@ export class Simulation {
   this.steering+=(-input.steer*.52*health.steer-this.steering)*Math.min(1,dt*10*Math.max(.2,health.steer));
   this.time+=dt;this.age+=dt;this.impact*=Math.exp(-dt*9);
   const up=upAt(this.pos),bodyUp=new Vector3(0,1,0).applyQuaternion(this.q),bodyForward=new Vector3(0,0,1).applyQuaternion(this.q),right=new Vector3(1,0,0).applyQuaternion(this.q);
-  const inv=this.q.clone().invert(),wasGround=this.grounded,groundMode=this.contactCount>0&&input.lift===0;
-  const force=new Vector3(0,input.lift*this.tune.lift,0),angular=this.omega.clone().applyQuaternion(inv);
+  const inv=this.q.clone().invert(),wasGround=this.grounded,onSurface=this.contactCount+this.bodyContacts>0,righting=onSurface&&bodyUp.dot(up)<.35,groundMode=this.contactCount>0&&bodyUp.dot(up)>.35&&input.lift===0&&!(input.stabilize&&bodyUp.dot(up)<.94);
+  this.rightingBoost=!!(input.lift&&(righting||this.rightingBoost&&bodyUp.dot(up)<.7));
+  const force=new Vector3(0,this.rightingBoost?0:input.lift*this.tune.lift,0),angular=this.omega.clone().applyQuaternion(inv);
   const clearAir=this.contactCount===0&&this.bodyContacts===0;
   if(clearAir){if(firingKick)this.trickAxes[2]=true;if(input.acro&&input.pitch)this.trickAxes[0]=true;if(input.acro&&input.yaw){this.trickAxes[1]=true;this.figureLabels[1]='Transverse Flip';}}
   if(input.stabilize){this.trickAxes.fill(false);this.kickFlight=false;this.kickAngle=0;this.kickTurns=0;this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];}
-  const targetAccel=input.stabilize?V():new Vector3(input.pitch*5.4,input.yaw*5.4,firingKick?firingKick*5.4:input.roll*2.1);
+  const targetAccel=input.stabilize?V():new Vector3(input.pitch*5.4,input.yaw*5.4,(firingKick||righting&&kick)?kick*5.4:input.roll*2.1);
   if(!groundMode&&(this.tune.assistance!=='manual'||input.stabilize)){
    const damping=angular.clone().multiplyScalar(input.stabilize?-5:-3.4);
-   for(let i=0;i<3;i++)if(this.trickAxes[i])damping.setComponent(i,0);
+   for(let i=0;i<3;i++)if(this.trickAxes[i]||!input.stabilize&&righting&&(i===2&&kick||i===0&&input.pitch))damping.setComponent(i,0);
    targetAccel.add(damping);
    if(this.tune.assistance==='stabilized'||input.stabilize){const level=new Vector3().crossVectors(bodyUp,up);if(input.stabilize){const correction=new Quaternion().setFromUnitVectors(bodyUp,up);level.set(correction.x,correction.y,correction.z);const length=level.length();if(length>1e-8)level.multiplyScalar(2*Math.atan2(length,correction.w)/length);}level.applyQuaternion(inv).multiplyScalar(5.5);
-    if((input.stabilize||!input.pitch)&&!this.trickAxes[0])targetAccel.x+=level.x;if((input.stabilize||!input.roll)&&!this.trickAxes[2])targetAccel.z+=level.z;
+    if((input.stabilize||!input.pitch)&&!this.trickAxes[0])targetAccel.x+=level.x;if((input.stabilize||!input.roll&&!kick)&&!this.trickAxes[2])targetAccel.z+=level.z;
    }
   }
   targetAccel.clampLength(0,9);
@@ -70,7 +71,7 @@ export class Simulation {
   // secretly lifting, and opposed jets can brake or push down in any attitude.
   let burn=allocate(force,V(),this.tune.lift/8,health);
   const correction=groundMode?V():new Vector3(-input.steer*7,0,input.drive*7);
-  correction.addScaledVector(up.clone().applyQuaternion(inv),-(input.down||0)*8);
+  correction.addScaledVector(up.clone().applyQuaternion(inv),(this.rightingBoost?8:0)-(input.down||0)*8);
   // Opposed longitudinal jets act through the COM, on the road or in flight.
   // They share the lift/rotation fuel budget and remain body-forward when tilted.
   correction.z+=(input.boost||0)*8;
@@ -78,7 +79,10 @@ export class Simulation {
   this.rcs=reactionBurn(correction,groundMode?V():targetAccel.multiply(INERTIA),health);
   if(groundMode)burn=allocate(V(),V(),this.tune.lift/8);
   burn.force.add(this.rcs.force);burn.torque.add(this.rcs.torque);burn.effort+=this.rcs.effort;
-  this.spent+=Math.min(this.reserve,health.leakRate*dt);
+  // A tiny emergency accumulator is isolated from damaged tank plumbing.
+  // Leaks still drain the main tank; the last 5 units can rebuild for recovery.
+  if(!this.damage.wreck){if(!this.tune.unlimited)this.spent=Math.min(this.spent,this.tune.capacity);this.spent=Math.max(0,this.spent-(this.tune.gasRegen||0)*dt);}
+  this.spent+=Math.min(Math.max(0,this.reserve-5),health.leakRate*dt);
   const wanted=burn.effort/this.tune.lift*this.tune.gasRate*dt;
   const fraction=this.tune.unlimited||wanted===0?1:Math.min(1,this.reserve/wanted);
   for(const f of burn.forces)f.multiplyScalar(fraction);burn.force.multiplyScalar(fraction);burn.torque.multiplyScalar(fraction);burn.effort*=fraction;for(const f of this.rcs.forces)f.multiplyScalar(fraction);this.rcs.force.multiplyScalar(fraction);this.rcs.torque.multiplyScalar(fraction);this.rcs.effort*=fraction;
@@ -112,7 +116,7 @@ export class Simulation {
   this.pos.addScaledVector(this.vel,dt);
   const angle=this.omega.length()*dt;if(angle>1e-10)this.q.premultiply(new Quaternion().setFromAxisAngle(this.omega.clone().normalize(),angle)).normalize();
   let wheelContacts=0,bodyContacts=0,maxImpact=0,collision=null;const supported=new Set(),solids=nearColliders(this.world,this.pos,3.5);
-  const incomingVel=this.vel.clone(),incomingOmega=this.omega.clone(),terrainHits=new Map();
+  const incomingVel=this.vel.clone(),incomingOmega=this.omega.clone(),terrainHits=new Map();let softContact=false;
   // Iterated chassis + wheel constraints; sample positions are recomputed after each impulse pass.
   for(let pass=0;pass<4;pass++){
    for(let i=0;i<WHEELS.length+HULL.length;i++){
@@ -128,14 +132,23 @@ export class Simulation {
    let deepest=0,correction=null;
    for(const shape of ROVER_SOLIDS){const center=shape.center.clone().applyQuaternion(this.q).add(this.pos);
     for(const solid of solids){const hit=sphereContact(solid,center,shape.radius);if(!hit)continue;
-     const closing=this.contact(hit.point,hit.normal,hit.depth,.08,true);maxImpact=Math.max(maxImpact,closing);
+     const closing=this.contact(hit.point,hit.normal,hit.depth,.08,true);
+     if(solid.softImpact)softContact=true;
+     maxImpact=Math.max(maxImpact,closing*(solid.softImpact?.35:1));
      if(pass===0){if(shape.wheel!==undefined&&hit.normal.dot(up)>.45)supported.add(shape.wheel);else bodyContacts++;}
-     const impactSpeed=Math.max(0,-incomingVel.clone().add(new Vector3().crossVectors(incomingOmega,hit.point.clone().sub(this.pos))).dot(hit.normal));
+     const impactSpeed=Math.max(0,-incomingVel.clone().add(new Vector3().crossVectors(incomingOmega,hit.point.clone().sub(this.pos))).dot(hit.normal))*(solid.softImpact?.35:1);
      if(impactSpeed>(collision?.speed||0))collision={speed:impactSpeed,point:hit.point.toArray(),normal:hit.normal.toArray(),collider:solid.id,zone:shape.zone};
      if(hit.depth>deepest){deepest=hit.depth;correction=hit.normal;}
     }
    }
    if(deepest>.008)this.pos.addScaledVector(correction,Math.min(.045,(deepest-.008)*.3));
+  }
+  if(softContact){
+   // Resolve the full contact manifold before dissipating prop-induced spin.
+   // Clamping each individual impulse makes later probes repeatedly brake the
+   // same glancing contact and can pin the rover against tiny rubble.
+   this.omega.clampLength(0,Math.max(2,incomingOmega.length()));
+   const rise=this.vel.dot(up)-Math.max(1,incomingVel.dot(up));if(rise>0)this.vel.addScaledVector(up,-rise);
   }
   if(this.age>.3){for(const hit of terrainHits.values())this.receiveImpact(hit);if(collision)this.receiveImpact(collision);}
   wheelContacts=supported.size;this.wheelContact=Array.from({length:6},(_,i)=>supported.has(i));this.traction=wheelContacts/6;
