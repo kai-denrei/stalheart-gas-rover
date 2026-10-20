@@ -15,16 +15,17 @@ For the five-rover race, open **[The Last Leap](https://kai-denrei.github.io/sta
 
 For **[Three-plane flip practice](https://kai-denrei.github.io/stalheart-gas-rover/?mode=kickflip)**, boost into the air, use **Q/E** for Coronal Flip, **W/S** for Sagittal Flip, or **A/D** for Transverse Flip, release to coast, then counter with the opposite roll key. A full airborne 360° earns a brief CRT-style callout. [Trick controls and scoring](docs/kick-flip-mode.md). [Flight, braking and traction](docs/flight-and-traction.md).
 
-Click **Enter proving ground**. Start with a short run-up on W, tap/hold Space before the rim, then use S to reduce forward speed in flight. Releasing Space lets gravity bring you down. Keep gas for the landing. Timing is experimental; repeated short attempts are the point of the lab.
+Click **Enter proving ground**. Start with a short run-up on W, tap/hold Space before the rim, then use Shift+S to reduce forward speed in flight. Releasing Space lets gravity bring you down. Keep gas for the landing. Timing is experimental; repeated short attempts are the point of the lab.
 
 | Input | Action |
 | --- | --- |
-| W / S | Drive / brake then reverse; forward / backward jets airborne |
-| A / D | Steer; sideways jets airborne |
+| W / S | Drive / brake then reverse; sagittal pitch airborne |
+| A / D | Steer; transverse yaw airborne |
 | Space | Upward boost |
 | Shift + W/S | Forward/backward gas boost, grounded or airborne |
-| Shift alone | Ground handbrake; airborne downward thrust |
-| X / C | Air brake / stabilize and level (uses gas) |
+| Shift + Space | Straight downward thrust; Shift alone does nothing |
+| X | Ground handbrake / drift; air brake (uses gas airborne) |
+| C | Stabilize and level airborne (uses gas) |
 | Up / Down | Nose up / down |
 | Left / Right | Yaw left / right |
 | Q / E | Roll |
@@ -67,7 +68,7 @@ Driving and racing now include accumulated rover damage: D1 cosmetic wear, D2 re
 
 The race now runs through a dome city with distance-based detail. Jumps 2 and 4 tremble and open when the first racer approaches. Once the third podium spot is claimed, Stalheart’s day-42 disco ball and music celebrate the finish, with two LANCER sentries aiming lasers at the ball. [Race details](docs/race-mode.md).
 
-Hold **Shift** while steering to drift the rear wheels; release to regain grip. The race finish now has the real Stalheart gantry and tiered podiums. Twelve dome sentries and sixteen ground sentries protect the course and podium against Reed and Red Core waves. Near the podium, the HUD explains any missing gate or positioning requirement before the shield can be claimed. Distant Gunship and SOL fire support the battle, including two staggered three-strike nuclear salvos during the finale, separated by seven seconds. The last distant blast is three times larger. After finishing, explore as ISAO: A/D rotate left/right, W/S move forward/backward, Space rises, and Shift descends. Race starts use five red lights and matching beeps; stunt scores track flips and obstacle bonuses.
+Hold **X** while steering to drift the rear wheels; release to regain grip. The race finish now has the real Stalheart gantry and tiered podiums. Twelve dome sentries and sixteen ground sentries protect the course and podium against Reed and Red Core waves. Near the podium, the HUD explains any missing gate or positioning requirement before the shield can be claimed. Distant Gunship and SOL fire support the battle, including two staggered three-strike nuclear salvos during the finale, separated by seven seconds. The last distant blast is three times larger. After finishing, explore as ISAO: A/D rotate left/right, W/S move forward/backward, Space rises, and Shift+Space descends. Race starts use five red lights and matching beeps; stunt scores track flips and obstacle bonuses.
 
 Publishing uses GitHub Pages. Every push to `main` runs the simulation tests, verifies pinned assets and module imports, builds the static site, and deploys it. Run `npm run build` to prepare the same site locally in `dist/`; no dependency installation is required.
 

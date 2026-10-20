@@ -10,7 +10,7 @@ Claiming any podium automatically hands control to ISAO. Players who miss the po
 | --- | --- |
 | A / D | Rotate left / right |
 | W / S | Forward / backward along ISAO’s heading |
-| Shift / Space | Descend / ascend |
+| Shift+Space / Space | Descend / ascend |
 | Drag | Orbit the third-person camera |
 | Mouse wheel | Zoom |
 | F | ISAO / rover view |

@@ -9,11 +9,12 @@ Controls switch on actual supporting wheel contact. With any wheel touching, the
 | Q / E | Inactive | Coronal Flip: roll left / right |
 | Space | Take off | Main lift jets |
 | Shift + W / S | Forward / backward gas boost, plus drive / braking | Body-forward / backward gas boost; no W/S pitch or downward thrust |
-| Shift alone | Rear handbrake / drift | Thrust toward the planet |
-| X | Inactive | Brake translation without stopping rotation |
+| Shift + Space | Downforce toward the planet; no lift | Straight down-thrust toward the planet |
+| Shift alone | No action | No action |
+| X | Rear handbrake / drift | Brake translation without stopping rotation |
 | C | Inactive | Counter angular velocity and level out |
 
-Arrow keys remain pitch/yaw aliases. All three rotation pairs have matching initial angular acceleration. Release to coast; press the opposite key to counter. C discards partial winding and restores stabilization. WASD no longer provides directional translation in the air: rotate the rover, then use lift to redirect it. X remains a direct flight brake. Every reaction jet consumes the same finite gas reserve and scales with thruster damage.
+Arrow keys remain pitch/yaw aliases. All three rotation pairs have matching initial angular acceleration. Release to coast; press the opposite key to counter. C discards partial winding and restores stabilization. Unmodified W/S rotates in the air; Shift+W/S supplies body-forward/backward translation. Shift+Space replaces lift with down-thrust and can combine with those longitudinal boosts. Releasing W/S while keeping Shift held adds no force. X remains a direct flight brake. Every reaction jet consumes the same finite gas reserve and scales with thruster damage.
 
 The painted road remains 18 m wide. Out-of-bounds checking adds 4 m beyond each edge and checks only wheel contact positions. A countdown starts only when every touching wheel is outside that generous boundary. `OUT OF BOUNDS 5 → 4 → 3 → 2 → 1` gives five seconds to return; returning any touching wheel inside or becoming airborne clears it. Expiry triggers the normal three-second checkpoint penalty. Airborne travel alone never triggers out-of-bounds recovery.
 

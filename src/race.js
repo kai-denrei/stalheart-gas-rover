@@ -32,7 +32,7 @@ export class Race {
  claimStatus(r){const open=this.world.race.spots.find(s=>s.owner===null);if(r.place)return `P${r.place} SECURED`;if(!open)return 'RACE COMPLETE';if(r.gate<this.world.race.gates.length)return `GATE ${r.gate+1} MISSED · PASS BETWEEN THE FLAGS`;if(r.sim.damage.wreck)return 'WRECKED · R TO RECOVER';
   if(r.sim.pos.distanceTo(open.origin)>8)return `LAND ON #${open.number} · OTHER SPOTS LOCKED`;
   if(!r.sim.grounded)return 'LAND ALL WHEELS ON THE PODIUM';if(r.sim.pos.clone().sub(open.origin).dot(this.world.race.deck.frame.up)<.2)return `BOOST UP ONTO #${open.number}`;
-  if(r.sim.vel.length()>this.world.race.rules.stopSpeed||r.sim.omega.length()>this.world.race.rules.stopSpin)return 'HOLD SHIFT TO BRAKE · RELEASE STEERING';
+  if(r.sim.vel.length()>this.world.race.rules.stopSpeed||r.sim.omega.length()>this.world.race.rules.stopSpin)return 'HOLD X TO BRAKE · RELEASE STEERING';
   if(!this.insideSpot(r,open))return `CENTER THE WHOLE ROVER IN #${open.number}`;
   return `CLAIMING #${open.number} · HOLD STILL`;
  }

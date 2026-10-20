@@ -4,9 +4,9 @@ Open http://localhost:8166/?mode=race and refresh an existing tab.
 
 ## Controls
 
-After a podium claim or race completion, ISAO takes over as before. A/D rotates left/right; W/S flies forward/backward along his heading. Shift descends, Space ascends. Releasing the controls brakes to a hover. Drag orbits the camera without steering the drone; F swaps views. Heading is retained while reversing. Ground/world collision, pause, interpolation and the 130 m ceiling remain active.
+After a podium claim or race completion, ISAO takes over as before. A/D rotates left/right; W/S flies forward/backward along his heading. Shift+Space descends, Space ascends. Releasing the controls brakes to a hover. Drag orbits the camera without steering the drone; F swaps views. Heading is retained while reversing. Ground/world collision, pause, interpolation and the 130 m ceiling remain active.
 
-Racing rovers use Q/E for Coronal Flip (roll), W/S for Sagittal Flip (pitch) and A/D for Transverse Flip (yaw) while no wheels touch the surface. Release to coast and counter with the opposite key. X brakes flight, Shift thrusts down, and C levels. Ground W/S drives, A/D steers and Shift drifts. [Current controls, scoring and crash rules](flight-and-traction.md).
+Racing rovers use Q/E for Coronal Flip (roll), W/S for Sagittal Flip (pitch) and A/D for Transverse Flip (yaw) while no wheels touch the surface. Release to coast and counter with the opposite key. X brakes flight, Shift+Space thrusts down, and C levels. Ground W/S drives, A/D steers and X brakes/drifts. [Current controls, scoring and crash rules](flight-and-traction.md).
 
 ## Points and callouts
 

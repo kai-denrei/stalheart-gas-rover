@@ -10,7 +10,7 @@ The course has straights, right-angle corners, two tight hairpins, seven solid r
 
 - **W/S:** accelerate / brake then reverse; forward/backward jets in flight.
 - **A/D:** steer; lateral jets in flight.
-- **Shift:** rear handbrake. Hold while steering to drift; release to regain grip. Hold without throttle to stop.
+- **X:** rear handbrake. Hold while steering to drift; release to regain grip. Hold without throttle to stop.
 - **Space:** boost. Gravity brings the rover down when released.
 - **Arrow keys / Q/E:** pitch, yaw and roll corrections.
 - **R:** recover to the last validated gate, refill, and wait three seconds.
@@ -69,7 +69,7 @@ Run `npm run test:city` for browser checks of visible warning/opening, shared ph
 
 ## Rear-wheel drift and player claims
 
-Shift brakes the rear wheels and reduces rear lateral grip while the front axle retains bite. Countersteer during the slide and release Shift to recover traction; bounded rear tyre marks show the path. This applies in driving and racing. The flip lab uses Q/E for coronal, W/S for sagittal and A/D for transverse rotation while airborne.
+X brakes the rear wheels and reduces rear lateral grip while the front axle retains bite. Countersteer during the slide and release X to recover traction; bounded rear tyre marks show the path. This applies in driving and racing. The flip lab uses Q/E for coronal, W/S for sagittal and A/D for transverse rotation while airborne.
 
 The claim regression exposed a slightly off-center physical landing whose wheels appeared inside the old ring while the full bumper footprint was outside it. Wider 4.8 m rings fit the new 10 m square podiums; the entire rover still has to fit. Static wheel support now holds a resting rover without tiny contact-bias velocities repeatedly interrupting the 1.25-second hold. Input, external impulses and lost wheel support wake it again. Close to the finish, the HUD identifies the next missing gate, wrong podium, incomplete landing, movement or footprint problem. Every gate is still mandatory. Player-ID-zero ownership is tested through real falling/landing/stopping physics on all three tiers and in the browser.
 
@@ -81,7 +81,7 @@ Three small Reeds enter from alternating sides every eight seconds, capped at 18
 
 The Reed surface and its exposed tetrahedral distance mesh come from Stalheart’s actual `reed.json` / `reed.bin` assets, with the source license retained. This background adaptation uses instanced geometry and a lightweight shader gait, **not** the full soft-body solver. No transmission pass, new lights or shadow maps. The Stalheart gantry uses the articulated 10-draw LOD1 asset. New copies are hashed in the existing asset lock.
 
-Validation commands: `npm run test:drift` (real Shift/W/D input and tyre marks), `npm run test:expansion` (physical human claim, gantry hook, working guns and waves), plus existing full-race/city/damage/trick checks. Reports and images are in `artifacts/drift-browser-report.json`, `artifacts/expansion-browser-report.json`, `artifacts/expansion-*.png`, and the usual race performance files.
+Validation commands: `npm run test:drift` (real X/W/D input and tyre marks), `npm run test:expansion` (physical human claim, gantry hook, working guns and waves), plus existing full-race/city/damage/trick checks. Reports and images are in `artifacts/drift-browser-report.json`, `artifacts/expansion-browser-report.json`, `artifacts/expansion-*.png`, and the usual race performance files.
 
 Next stage requested by the owner: heavier enemies and distant Gunship/SOL support. The current pass contains only small Reed streams and dome sentries.
 

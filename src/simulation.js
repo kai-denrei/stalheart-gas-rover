@@ -62,7 +62,8 @@ export class Simulation {
   // Existing eight gimbals provide lift. Balanced RCS couples can rotate without
   // secretly lifting, and opposed jets can brake or push down in any attitude.
   let burn=allocate(force,V(),this.tune.lift/8,health);
-  const correction=groundMode?V():new Vector3(-input.steer*7,0,input.drive*7).addScaledVector(up.clone().applyQuaternion(inv),-(input.down||0)*8);
+  const correction=groundMode?V():new Vector3(-input.steer*7,0,input.drive*7);
+  correction.addScaledVector(up.clone().applyQuaternion(inv),-(input.down||0)*8);
   // Opposed longitudinal jets act through the COM, on the road or in flight.
   // They share the lift/rotation fuel budget and remain body-forward when tilted.
   correction.z+=(input.boost||0)*8;
@@ -77,7 +78,7 @@ export class Simulation {
   this.spent+=wanted*fraction;
   if(this.spent>=this.tune.capacity-1e-8&&!this.exhausted){this.exhausted={time:this.time,position:this.pos.toArray()};this.event('empty');}
   this.burn=burn;
-  const resting=this.parked&&groundMode&&!input.drive&&!input.steer&&!input.boost&&this.vel.lengthSq()===0&&this.omega.lengthSq()===0;
+  const resting=this.parked&&groundMode&&!input.drive&&!input.steer&&!input.boost&&!input.down&&this.vel.lengthSq()===0&&this.omega.lengthSq()===0;
   this.vel.addScaledVector(up,resting?0:-this.tune.gravity*dt).addScaledVector(burn.force.clone().applyQuaternion(this.q),dt);
   this.omega.addScaledVector(burn.torque.clone().divide(INERTIA).applyQuaternion(this.q),dt);
   if(groundMode){
@@ -153,7 +154,7 @@ export class Simulation {
   for(let i=0;i<6;i++){const p=WHEELS[i],v=this.vel.clone().add(new Vector3().crossVectors(this.omega,p.clone().applyQuaternion(this.q))).applyQuaternion(this.q.clone().invert());const angle=p.z>1?this.steering:0;if(this.wheelContact[i]&&this.damage.states['WHEEL_'+['RL','ML','FL','RR','MR','FR'][i]]<3)this.wheelSpin[i]+=(v.z*Math.cos(angle)+v.x*Math.sin(angle))*dt/.48*(p.z<0?(input.brake?1-this.drift:1+this.drift*.12*Math.max(0,input.drive)):1);}
   this.contactCount=wheelContacts;this.bodyContacts=bodyContacts;this.supportTime=wheelContacts>=2?.10:Math.max(0,this.supportTime-dt);this.grounded=this.supportTime>0&&this.vel.dot(up)<1.1;
   // Static tyre friction catches the last tiny roll instead of leaving a perpetual crawl on a tilted deck.
-  this.parked=this.grounded&&wheelContacts>=4&&!input.drive&&!input.steer&&!input.boost&&!input.lift&&this.vel.clone().projectOnPlane(up).length()<.12&&Math.abs(this.vel.dot(up))<.3&&this.omega.length()<.12;
+  this.parked=this.grounded&&wheelContacts>=4&&!input.drive&&!input.steer&&!input.boost&&!input.down&&!input.lift&&this.vel.clone().projectOnPlane(up).length()<.12&&Math.abs(this.vel.dot(up))<.3&&this.omega.length()<.12;
   if(this.parked){this.vel.set(0,0,0);this.omega.set(0,0,0);}
   this.tilt=Math.acos(Math.max(-1,Math.min(1,bodyUp.dot(up))))*180/Math.PI;
   if(!this.grounded){this.airtime+=dt;this.refilled=false;}else if(!wasGround&&this.airtime>.25){this.event('landing',{airtime:this.airtime,speed:maxImpact});this.impact=Math.min(1,maxImpact/8);this.airtime=0;}

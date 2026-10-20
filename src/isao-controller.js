@@ -48,7 +48,7 @@ export class IsaoController {
   this.yaw+=(Number(k.has('KeyA'))-Number(k.has('KeyD')))*1.6*dt;
   const forward=frame.north.clone().applyAxisAngle(frame.up,this.yaw);
   const desired=forward.multiplyScalar(12*(Number(k.has('KeyW'))-Number(k.has('KeyS'))));
-  desired.addScaledVector(frame.up,8*(Number(k.has('Space'))-Number(k.has('ShiftLeft')||k.has('ShiftRight'))));
+  desired.addScaledVector(frame.up,8*Number(k.has('Space'))*(k.has('ShiftLeft')||k.has('ShiftRight')?-1:1));
   this.velocity.lerp(desired,1-Math.exp(-dt*7));this.position.addScaledVector(this.velocity,dt);this.resolveContacts();
   const target=frameAt(this.position).q.multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),this.yaw));
   this.rotation.slerp(target,1-Math.exp(-dt*8));
