@@ -14,7 +14,7 @@ export async function loadRoverFleet(types){
  const kit=types.includes('xb12')?(banks.r47x?.[0]||(await new GLTFLoader().loadAsync(path('r47x',0))).scene):null;
  return {types,banks,create(index=0,color){
   const family=types[index%types.length],bank=banks[family],model=bank[0].clone(true);
-  model.userData.roverFamily=family;model.name=ROVER_FAMILIES[family].label;model.position.y=-.44;
+  model.userData.roverFamily=family;model.name=ROVER_FAMILIES[family].label;model.scale.setScalar(ROVER_FAMILIES[family].scale);model.position.y=-.44*ROVER_FAMILIES[family].scale;
   if(family==='xb12'){
    const chassis=model.getObjectByName('XB12_CHASSIS');
    for(const id of NOZZLE_IDS){const g=kit.getObjectByName('GIMBAL_'+id).clone(true);g.position.y+=.84;if(id.startsWith('L_'))g.position.x*=1.22;chassis.add(g);}

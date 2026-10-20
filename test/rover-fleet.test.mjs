@@ -17,12 +17,12 @@ test('fleet selection excludes omitted types and preserves the proving-ground de
  assert.equal(fleetSelection(new URLSearchParams('fleet=__proto__&rover=constructor')).fleet,'mixed');
 });
 test('XB-12 drives on four real wheel stations with full traction and no phantom middle axle',()=>{
- const s=new Simulation(createWorld());s.setFamily('xb12');s.pos.copy(point(0,-170,.46));s.q.copy(frameAt(s.pos).q);s.motion.capture();
+ const s=new Simulation(createWorld());s.setFamily('xb12');s.pos.copy(point(0,-170,s.spawnHeight));s.q.copy(frameAt(s.pos).q);s.motion.capture();
  for(let i=0;i<180;i++)s.step({...commands(),drive:1});
  assert.equal(s.contactCount,4);assert.equal(s.traction,1);assert.deepEqual(s.wheelContact,[true,false,true,true,false,true]);
  assert.ok(s.vel.length()>9);assert.equal(s.wheelSpin[1],0);assert.equal(s.wheelSpin[4],0);
  assert.ok(s.wheelSpin[2]>2);assert.ok(s.solids.every(shape=>![1,4].includes(shape.wheel)));
- assert.equal(s.wheels[0].x,-1.2);assert.equal(s.wheels[0].z,-1.475);
+ assert.equal(s.wheels[0].x,-.6);assert.equal(s.wheels[0].z,-.7375);
  s.reset();assert.equal(s.family,'xb12');assert.equal(s.contactCount,4);assert.equal(s.damage.family,'xb12');
 });
 test('XB-12 whole-rover damage degrades steering and disables a wreck, then repairs cleanly',()=>{
@@ -41,10 +41,11 @@ test('AI escapes a cleared corner pole without bypassing an uncleared gate',()=>
  pole.id='flag-8--1-Pole_shaft';
  const approaching=pilot(r,race,1/120);assert.ok(Math.abs(approaching.yaw)<.02);assert.equal(r.gate,8);
 });
-test('podium claims include the XB-12 outer wheel width',()=>{
+test('half-size XB-12 fits podium spaces too narrow for the R-47X',()=>{
  const w=createRaceWorld(),race=new Race(w,new Simulation(w)),r=race.racers[0],spot=w.race.spots[0],d=w.race.deck;
- r.sim.pos.copy(spot.origin).addScaledVector(d.frame.up,.44).addScaledVector(d.frame.east,2.8);r.sim.q.copy(d.frame.q);
+ r.sim.pos.copy(spot.origin).addScaledVector(d.frame.up,.44).addScaledVector(d.frame.east,3.6);r.sim.q.copy(d.frame.q);
  r.sim.grounded=true;r.sim.vel.set(0,0,0);r.sim.omega.set(0,0,0);
- assert.equal(race.insideSpot(r,spot),true);r.sim.setFamily('xb12');assert.equal(race.insideSpot(r,spot),false);
- r.sim.pos.copy(spot.origin).addScaledVector(d.frame.up,.44);assert.equal(race.insideSpot(r,spot),true);
+ assert.equal(race.insideSpot(r,spot),false);r.sim.setFamily('xb12');r.sim.pos.addScaledVector(d.frame.up,-.22);assert.equal(race.insideSpot(r,spot),true);
+ r.sim.pos.addScaledVector(d.frame.east,.5);assert.equal(race.insideSpot(r,spot),false);
+ r.sim.pos.copy(spot.origin).addScaledVector(d.frame.up,.22);assert.equal(race.insideSpot(r,spot),true);
 });

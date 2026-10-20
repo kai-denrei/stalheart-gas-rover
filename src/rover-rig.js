@@ -22,7 +22,7 @@ export class RoverRig {
   this.gimbals=NOZZLE_IDS.map(id=>model.getObjectByName('GIMBAL_'+id));this.intensities=Object.fromEntries(NOZZLE_IDS.map(id=>[id,0]));
   this.mast=model.getObjectByName(this.family==='xb12'?'SENSOR_YAW':'SENSOR_MAST_YAW');this.optics=model.getObjectByName(this.family==='xb12'?'SENSOR_PITCH':'OPTICS_HEAD_PITCH');
   // Source dust assumes an infinite flat floor. Disable it on our spherical terrain.
-  this.fx=createColdGasSystem(T,model,{texture,dust:false,groundY:-Infinity,maxPlumeParticles:320});scene.add(this.fx.group);this.fx.clear();
+  this.fx=createColdGasSystem(T,model,{texture,dust:false,groundY:-Infinity,maxPlumeParticles:320,plumePointSize:.26*this.vehicle.scale});scene.add(this.fx.group);this.fx.clear();
   const enable=this.fx.setEnabled.bind(this.fx);this.fx.setEnabled=value=>{enable(value);this.fx.setLeakEnabled(value);this.fx.group.visible=Boolean(value);if(!value)this.fx.clear();};this.fx.setEnabled(true);
   this.leaks={NEG_X:0,POS_X:0,REAR:0};
   this.reactions=createReactionEffects(model);this.displays=createOnboardDisplays(T,model);this.stats={activePlumeCount:0,activeDustCount:0};
@@ -45,8 +45,8 @@ export class RoverRig {
   const reset=sim.age<this.lastAge,dt=reset?0:clamp(sim.time-this.lastTime,0,.08);this.lastTime=sim.time;this.lastAge=sim.age;this.wreckFX.update(sim,dt);
   if(reset){this.fx.clear();this.fxClock=0;this.displayClock=1;}
   for(const w of this.wheels){
-   const p=new T.Vector3(w.side*this.vehicle.track,-.44,w.z).applyQuaternion(sim.q).add(sim.pos),ground=terrainSample(this.world,p,false);
-   const travel=sim.grounded&&Number.isFinite(ground.signed)?clamp(-Math.min(ground.signed,solidSupport(this.world,p,upAt(p))),-.12,.14):-.12;
+   const p=new T.Vector3(w.side*this.vehicle.track,-.44,w.z).multiplyScalar(this.vehicle.scale).applyQuaternion(sim.q).add(sim.pos),ground=terrainSample(this.world,p,false);
+   const travel=sim.grounded&&Number.isFinite(ground.signed)?clamp(-Math.min(ground.signed,solidSupport(this.world,p,upAt(p)))/this.vehicle.scale,-.12,.14):-.12;
    const level=damage.states['WHEEL_'+w.id],policy=this.family==='xb12'?damagePolicy(damage.assetLevel,w.id):null,flex=policy?policy.travel:(this.family==='r47xs'?[1,1,.4,0]:[1,1,.65,.2])[level];
    const compression=policy?.locked?-.08:this.family==='r47xs'&&level===3?-.11:travel*flex;
    w.susp.rotation.z=clamp(w.side*Math.asin(compression/this.vehicle.arm),-16*rad,14*rad);
@@ -70,7 +70,7 @@ export class RoverRig {
   if(this.displayClock>=.1){
    this.displayClock=0;const inv=sim.q.clone().invert(),rates=sim.omega.clone().applyQuaternion(inv).multiplyScalar(180/Math.PI);
    const attitude=new T.Euler().setFromQuaternion(frameAt(sim.pos).q.clone().invert().multiply(sim.q),'YXZ');
-   const ground=terrainSample(this.world,sim.pos,false),height=Number.isFinite(ground.height)?Math.max(0,ground.signed-.44):Math.max(0,sim.altitude||0);
+   const ground=terrainSample(this.world,sim.pos,false),height=Number.isFinite(ground.height)?Math.max(0,ground.signed-sim.rideHeight):Math.max(0,sim.altitude||0);
    this.displays.update({damageLevel:damage.core,speedMps:speed,verticalThrust:sim.burn.effort/sim.tune.lift,gasReserve:sim.reserve/sim.tune.capacity,heightM:height,yawRateDeg:rates.y,pitchRateDeg:rates.x,rollRateDeg:rates.z,pitchDeg:-attitude.x/rad,rollDeg:attitude.z/rad,mastYawDeg:Math.atan2(Math.sin(this.mast.rotation.y),Math.cos(this.mast.rotation.y))/rad,mastPitchDeg:-this.optics.rotation.x/rad});
   }
  }

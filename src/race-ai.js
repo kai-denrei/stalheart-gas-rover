@@ -9,7 +9,7 @@ export function pilot(racer,race,dt){
  if(!spot||s.damage.wreck)return c;
  // Service pads use the same stop-and-refill rule as the human rover.
  if(s.grounded&&s.reserve<s.tune.capacity*.7&&race.world.pads.some(p=>p.service&&s.pos.distanceTo(p.origin)<4.5)){c.brake=1;return c;}
- let target,desiredHeight=.38,air=false;
+ let target,desiredHeight=.38*s.vehicle.scale,air=false;
  if(final){
   const local=s.pos.clone().sub(deck.origin).applyQuaternion(deck.frame.q.clone().invert());
   // Avoid endlessly ramming a rover that is already settling into the circle.
@@ -20,7 +20,7 @@ export function pilot(racer,race,dt){
   // Fly to the near lip before fanning out to the currently open podium spot.
   target=local.z< -deck.d/2-4?new Vector3(spot.number>1?spot.local.x:0,deck.h,-deck.d/2+2).applyQuaternion(deck.frame.q).add(deck.origin):landing;
   if(!yielding&&spot.number>1&&local.z< -22&&Math.abs(local.x-spot.local.x)>2)target=new Vector3(spot.local.x,deck.h,-deck.d/2+1).applyQuaternion(deck.frame.q).add(deck.origin);
-  desiredHeight=(yielding?deck.h:spot.local.y)+.36+(s.pos.distanceTo(landing)>8?1.8:0);air=true;
+  desiredHeight=(yielding?deck.h:spot.local.y)+.36*s.vehicle.scale+(s.pos.distanceTo(landing)>8?1.8:0);air=true;
   if(local.z< -deck.d/2-17&&s.grounded){air=false;target=new Vector3(0,0,-deck.d/2-12).applyQuaternion(deck.frame.q).add(deck.origin);}
   if(s.grounded&&local.y>deck.h&&s.pos.distanceTo(landing)<1.1&&v.length()<.3)return c;
  }else{

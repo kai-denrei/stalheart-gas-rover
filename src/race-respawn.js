@@ -8,7 +8,7 @@ export function respawnClear(race,r,pos,q){
  const {x,z}=coords(pos),near=nearColliders(race.world,pos,4);
  if(!onCourse(race.world,x,z))return false;
  for(const x of [-1.4,1.4])for(const z of [-2.6,2.6]){
-  const p=new Vector3(x,-.44,z).applyQuaternion(q).add(pos),c=coords(p),ground=terrainSample(race.world,p,false);
+  const p=new Vector3(x,-.44,z).multiplyScalar(r.sim.vehicle?.scale||1).applyQuaternion(q).add(pos),c=coords(p),ground=terrainSample(race.world,p,false);
   if(!onCourse(race.world,c.x,c.z)||ground.throat||ground.signed<-.12||ground.signed>.3)return false;
  }
  if((r.sim.solids||ROVER_SOLIDS).some(s=>near.some(c=>sphereContact(c,s.center.clone().applyQuaternion(q).add(pos),s.radius))))return false;
@@ -23,7 +23,7 @@ export function findRespawn(race,r){
   const a=route[gate],b=route[gate+1]||[race.world.race.deck.x,race.world.race.deck.z],heading=Math.atan2(b[0]-a[0],b[1]-a[1]);
   for(const back of [0,3,6,9,12,18,24])for(const side of [...new Set([r.lane*.4,0,-3.5,3.5,-6,6])]){
    const x=a[0]+Math.cos(heading)*side-Math.sin(heading)*back,z=a[1]-Math.sin(heading)*side-Math.cos(heading)*back;
-   const pos=point(x,z,.46),q=frameAt(pos).q.multiply(new Quaternion().setFromAxisAngle(new Vector3(0,1,0),heading));
+   const pos=point(x,z,r.sim.spawnHeight??.46),q=frameAt(pos).q.multiply(new Quaternion().setFromAxisAngle(new Vector3(0,1,0),heading));
    if(respawnClear(race,r,pos,q))return {x,z,heading};
   }
  }

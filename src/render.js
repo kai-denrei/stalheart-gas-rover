@@ -102,7 +102,7 @@ export class Presentation {
   if(this.rover){this.rover.visible=!this.sim.recovering;this.rover.position.copy(s.pos);this.rover.quaternion.copy(s.q);this.rig.update(s,s.vel.clone().projectOnPlane(up).length());}
 
   const ground=terrainSample(this.world,s.pos,false),alt=Number.isFinite(ground.height)?Math.max(0,ground.altitude-ground.height):100;
-  this.shadow.visible=Number.isFinite(ground.height)&&alt<30;if(this.shadow.visible){this.shadow.position.copy(s.pos.clone().sub(CENTER).normalize().multiplyScalar(RADIUS+ground.height+.06).add(CENTER));this.shadow.quaternion.setFromUnitVectors(new T.Vector3(0,0,1),up);this.shadow.material.opacity=.24*Math.max(0,1-alt/30);this.shadow.scale.setScalar(1+alt*.03);}
+  this.shadow.visible=Number.isFinite(ground.height)&&alt<30;if(this.shadow.visible){this.shadow.position.copy(s.pos.clone().sub(CENTER).normalize().multiplyScalar(RADIUS+ground.height+.06).add(CENTER));this.shadow.quaternion.setFromUnitVectors(new T.Vector3(0,0,1),up);this.shadow.material.opacity=.24*Math.max(0,1-alt/30);this.shadow.scale.setScalar((1+alt*.03)*s.vehicle.scale);}
   this.exhaustionMarker.visible=!!s.exhausted;if(s.exhausted){this.exhaustionMarker.position.fromArray(s.exhausted.position);this.exhaustionMarker.rotation.y=s.time;}
   if(!this.isao?.active){
   const orbitF=fwd.clone().applyAxisAngle(up,this.orbit);let wanted,target=s.pos.clone().addScaledVector(up,.4);

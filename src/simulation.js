@@ -16,26 +16,29 @@ export function commands(){return {drive:0,steer:0,boost:0,lift:0,pitch:0,yaw:0,
 export class Simulation {
  constructor(world){this.setFamily('r47x');this.damage=new RoverDamage();this.damageEnabled=true;this.world=world;this.tune={...DEFAULTS};this.pos=V();this.vel=V();this.q=new Quaternion();this.omega=V();this.time=0;this.checkpoint=0;this.events=[];this.motion=new RoverMotion(this);this.reset();}
  setFamily(family){
-  this.family=Object.hasOwn(ROVER_FAMILIES,family)?family:'r47x';this.vehicle=ROVER_FAMILIES[this.family];const v=this.vehicle;
+  this.family=Object.hasOwn(ROVER_FAMILIES,family)?family:'r47x';this.vehicle=ROVER_FAMILIES[this.family];const v=this.vehicle;this.rideHeight=.44*v.scale;this.spawnHeight=.46*v.scale;
   this.wheels=WHEELS.map(p=>new Vector3(Math.sign(p.x)*v.track,p.y,p.z===-.42?p.z:Math.sign(p.z)*v.axle));
-  this.solids=ROVER_SOLIDS.filter(s=>s.wheel===undefined||v.wheels.includes(s.wheel)).map(s=>{const center=s.center.clone();if(s.wheel!==undefined){center.add(this.wheels[s.wheel].clone().sub(WHEELS[s.wheel]));center.y+=v.radius-.48;}else if(this.family==='xb12'&&s.zone==='sensor')center.set(0,1.4,-1.15);return {...s,center};});
+  this.solids=ROVER_SOLIDS.filter(s=>s.wheel===undefined||v.wheels.includes(s.wheel)).map(s=>{const center=s.center.clone();if(s.wheel!==undefined){center.add(this.wheels[s.wheel].clone().sub(WHEELS[s.wheel]));center.y+=v.radius-.48;}else if(this.family==='xb12'&&s.zone==='sensor')center.set(0,1.4,-1.15);return {...s,center:center.multiplyScalar(v.scale),radius:s.radius*v.scale};});
+  this.wheels.forEach(p=>p.multiplyScalar(v.scale));this.hullPoints=HULL.map(p=>p.clone().multiplyScalar(v.scale));
   if(this.damage){this.damage.family=this.family;this.damage.refresh();this.contactCount=v.wheels.length;this.wheelContact=Array.from({length:6},(_,i)=>v.wheels.includes(i));this.motion.capture();}
  }
  event(type,detail={}){this.events.push({type,time:this.time,...detail});if(this.events.length>40)this.events.shift();}
- reset(reason='READY'){if(reason!=='READY'&&this.catastrophic&&this.wreckTime<this.wreckDelay)return;if(this.onReset&&reason!=='READY')return this.onReset(reason);this.damage.reset();this.wreckTime=0;this.wreckDelay=3;this.catastrophic=null;this.flightTurns=0;const pad=this.world.pads[this.checkpoint];this.pos.copy(pad.origin).addScaledVector(pad.frame.up,.46);this.q.copy(pad.frame.q);
+ reset(reason='READY'){if(reason!=='READY'&&this.catastrophic&&this.wreckTime<this.wreckDelay)return;if(this.onReset&&reason!=='READY')return this.onReset(reason);this.damage.reset();this.wreckTime=0;this.wreckDelay=3;this.catastrophic=null;this.flightTurns=0;const pad=this.world.pads[this.checkpoint];this.pos.copy(pad.origin).addScaledVector(pad.frame.up,this.spawnHeight);this.q.copy(pad.frame.q);
   // A new opening can scatter solid debris over a pad. Pick a clear point inside
   // the checkpoint ring instead of resetting the rover inside a boulder.
-  for(const radius of [0,2,3.5]){let found=false;for(let i=0;i<(radius?12:1);i++){const angle=i*Math.PI/6,p=pad.origin.clone().addScaledVector(pad.frame.up,.46).addScaledVector(pad.frame.east,Math.cos(angle)*radius).addScaledVector(pad.frame.north,Math.sin(angle)*radius),near=nearColliders(this.world,p,3.5);if(!this.solids.some(shape=>{const c=shape.center.clone().applyQuaternion(pad.frame.q).add(p);return near.some(solid=>sphereContact(solid,c,shape.radius));})){this.pos.copy(p);found=true;break;}}if(found)break;}
+  for(const radius of [0,2,3.5]){let found=false;for(let i=0;i<(radius?12:1);i++){const angle=i*Math.PI/6,p=pad.origin.clone().addScaledVector(pad.frame.up,this.spawnHeight).addScaledVector(pad.frame.east,Math.cos(angle)*radius).addScaledVector(pad.frame.north,Math.sin(angle)*radius),near=nearColliders(this.world,p,3.5);if(!this.solids.some(shape=>{const c=shape.center.clone().applyQuaternion(pad.frame.q).add(p);return near.some(solid=>sphereContact(solid,c,shape.radius));})){this.pos.copy(p);found=true;break;}}if(found)break;}
   this.vel.set(0,0,0);this.omega.set(0,0,0);this.spent=0;this.exhausted=null;this.grounded=true;this.supportTime=.1;this.contactCount=this.vehicle.wheels.length;this.bodyContacts=0;this.inverted=0;this.invertedSupport=0;this.rightingBoost=false;this.tilt=0;this.age=0;this.padTime=0;this.refilled=true;this.burn=allocate(V(),V(),this.tune.lift/8);this.airtime=0;this.peak=0;this.impact=0;this.steering=0;this.drift=0;this.oversteer=0;this.wheelContact=Array.from({length:6},(_,i)=>this.vehicle.wheels.includes(i));this.traction=1;this.trickAxes=[false,false,false];this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];this.rcs=reactionBurn(V(),V());this.parked=false;this.wheelSpin=Array(6).fill(0);this.lastCollision=null;this.collisionCooldown=0;this.kickFlight=false;this.kickAngle=0;this.kickTurns=0;this.kickInput=0;this.kickTotal??=0;this.figureTotal??=0;this.enemyPrevious=null;this.lastReason=reason;this.event('reset',{reason});this.motion.capture();}
  receiveImpact(hit){
   if(!this.damageEnabled)return null;
   const wasWreck=this.damage.wreck;
   const local=hit.local||(hit.point?new Vector3().fromArray(hit.point).sub(this.pos).applyQuaternion(this.q.clone().invert()).toArray():[0,0,0]);
+  // Damage zones are authored in the original asset coordinate system.
+  const damageLocal=local.map(v=>v/this.vehicle.scale);
   let result;
   if(!this.damage.wreck&&this.flightTurns>=2&&hit.speed>=16){
    this.catastrophic={time:this.time,speed:hit.speed,turns:this.flightTurns,position:this.pos.toArray()};this.wreckDelay=8;
-   result=this.damage.destroy({...hit,local,source:hit.collider||hit.source||'environment',time:this.time});this.event('total-wreck',this.catastrophic);
-  }else result=this.damage.impact({...hit,local,source:hit.collider||hit.source||'environment',time:this.time});
+   result=this.damage.destroy({...hit,local:damageLocal,source:hit.collider||hit.source||'environment',time:this.time});this.event('total-wreck',this.catastrophic);
+  }else result=this.damage.impact({...hit,local:damageLocal,source:hit.collider||hit.source||'environment',time:this.time});
   if(!wasWreck&&this.damage.wreck){
    // Crushing the chassis absorbs momentum; it cannot spring back into flight.
    const up=upAt(this.pos);this.vel.multiplyScalar(.2);this.vel.addScaledVector(up,-Math.max(0,this.vel.dot(up)));this.omega.multiplyScalar(.1);this.drift=0;
@@ -131,7 +134,7 @@ export class Simulation {
   for(let pass=0;pass<4;pass++){
    for(let i=0;i<WHEELS.length+HULL.length;i++){
     if(i<6&&!this.vehicle.wheels.includes(i))continue;
-    const local=i<WHEELS.length?this.wheels[i]:HULL[i-WHEELS.length];const p=local.clone().applyQuaternion(this.q).add(this.pos),s=terrainSample(this.world,p);
+    const local=i<WHEELS.length?this.wheels[i]:this.hullPoints[i-WHEELS.length];const p=local.clone().applyQuaternion(this.q).add(this.pos),s=terrainSample(this.world,p);
     if(s.signed<.025&&!s.throat){const hit=this.contact(p,s.normal,Math.max(0,-s.signed));if(pass===0){maxImpact=Math.max(maxImpact,hit);if(i<6)supported.add(i);else bodyContacts++;
      const closing=-incomingVel.clone().add(new Vector3().crossVectors(incomingOmega,p.clone().sub(this.pos))).dot(s.normal);
      const zone=i<6?'wheel_'+['RL','ML','FL','RR','MR','FR'][i]:'chassis';
@@ -181,7 +184,7 @@ export class Simulation {
   if(collision&&collision.speed>1.5&&this.collisionCooldown===0){this.lastCollision={...collision,time:this.time,severity:collision.speed>=12?'heavy':collision.speed>=6?'moderate':'light'};this.event('collision',this.lastCollision);this.impact=Math.max(this.impact,Math.min(1,collision.speed/15));this.collisionCooldown=.3;}
 
   // Integrate wheel roll from actual hub velocity, in simulation time (pause-safe).
-  for(const i of this.vehicle.wheels){const p=this.wheels[i],v=this.vel.clone().add(new Vector3().crossVectors(this.omega,p.clone().applyQuaternion(this.q))).applyQuaternion(this.q.clone().invert());const angle=p.z>1?this.steering:0;if(this.wheelContact[i]&&(this.family==='xb12'?this.damage.assetLevel<3:this.damage.states['WHEEL_'+['RL','ML','FL','RR','MR','FR'][i]]<3))this.wheelSpin[i]+=(v.z*Math.cos(angle)+v.x*Math.sin(angle))*dt/this.vehicle.radius*(p.z<0?(input.brake?1-this.drift:1+this.drift*.12*Math.max(0,input.drive)):1);}
+  for(const i of this.vehicle.wheels){const p=this.wheels[i],v=this.vel.clone().add(new Vector3().crossVectors(this.omega,p.clone().applyQuaternion(this.q))).applyQuaternion(this.q.clone().invert());const angle=i===2||i===5?this.steering:0;if(this.wheelContact[i]&&(this.family==='xb12'?this.damage.assetLevel<3:this.damage.states['WHEEL_'+['RL','ML','FL','RR','MR','FR'][i]]<3))this.wheelSpin[i]+=(v.z*Math.cos(angle)+v.x*Math.sin(angle))*dt/(this.vehicle.radius*this.vehicle.scale)*(p.z<0?(input.brake?1-this.drift:1+this.drift*.12*Math.max(0,input.drive)):1);}
   this.contactCount=wheelContacts;this.bodyContacts=bodyContacts;this.supportTime=wheelContacts>=2?.10:Math.max(0,this.supportTime-dt);this.grounded=this.supportTime>0&&this.vel.dot(up)<1.1;
   // Static tyre friction catches the last tiny roll instead of leaving a perpetual crawl on a tilted deck.
   this.parked=this.grounded&&wheelContacts>=4&&!input.drive&&!input.steer&&!input.boost&&!input.down&&!input.lift&&this.vel.clone().projectOnPlane(up).length()<.12&&Math.abs(this.vel.dot(up))<.3&&this.omega.length()<.12;
@@ -191,7 +194,7 @@ export class Simulation {
   this.wreckTime=this.damage.wreck?this.wreckTime+dt:0;
   if(this.wreckTime>=this.wreckDelay){this.reset(this.catastrophic?'TOTAL DESTRUCTION · RECOVERY / REPAIRED':'WRECKED · RECOVERY / REPAIRED');return;}
   if(!this.damageEnabled&&maxImpact>20&&this.age>1){this.reset('HARD IMPACT · TRY AGAIN');return;}
-  const terrain=terrainSample(this.world,this.pos,false);this.altitude=terrain.altitude-.46;
+  const terrain=terrainSample(this.world,this.pos,false);this.altitude=terrain.altitude-this.spawnHeight;
   if(terrain.altitude<-32||!this.world.race&&this.pos.distanceTo(CENTER)>RADIUS+220){this.reset(terrain.altitude<0?'LOST IN THE THROAT':'OUT OF TEST RANGE');return;}
   const pad=this.world.pads.findIndex(p=>{const c=localOnSphere(this.pos,p.frame);return Math.hypot(c.x,c.z)<5;});
   if(pad>=0&&this.grounded&&this.vel.length()<1&&this.tilt<18&&!input.lift){this.padTime+=dt;if(this.padTime>1.2&&!this.refilled){this.checkpoint=pad;this.spent=0;this.exhausted=null;this.refilled=true;this.event('refill',{pad:this.world.pads[pad].name});}}

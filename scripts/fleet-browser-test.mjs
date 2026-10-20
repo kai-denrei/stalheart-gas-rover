@@ -8,10 +8,10 @@ for(const family of ['r47x','r47xs','xb12']){
   for(let i=0;i<480;i++){if(await b.evaluate('!!window.roverLab?.ready()'))break;await new Promise(r=>setTimeout(r,150));}
   assert.equal(await b.evaluate('roverLab.ready()'),true);
   await b.evaluate(`document.getElementById('start').click();roverLab.pause();roverLab.place(0,-170);roverLab.step({drive:1,steer:.4},.5)`);
-  const driven=await b.evaluate(`(()=>{const {sim:s,view:v}=roverLab;return {family:s.family,contacts:s.contactCount,traction:s.traction,speed:s.vel.length(),steer:v.rig.wheels.filter(w=>w.z>1).map(w=>w.steer.rotation.y),spin:v.rig.wheels.map(w=>w.spin.rotation.x),middle:[s.wheelContact[1],s.wheelContact[4]]};})()`);
-  assert.equal(driven.family,family);assert.equal(driven.contacts,family==='xb12'?4:6);assert.equal(driven.traction,1);assert.ok(driven.speed>3);assert.ok(driven.steer.every(a=>Math.abs(a)>.1));assert.ok(driven.spin.some(a=>Math.abs(a)>1));
+  const driven=await b.evaluate(`(()=>{const {sim:s,view:v}=roverLab;return {family:s.family,scale:v.rig.model.scale.toArray(),contacts:s.contactCount,traction:s.traction,speed:s.vel.length(),steer:v.rig.wheels.filter(w=>w.z>1).map(w=>w.steer.rotation.y),spin:v.rig.wheels.map(w=>w.spin.rotation.x),middle:[s.wheelContact[1],s.wheelContact[4]]};})()`);
+  assert.equal(driven.family,family);assert.deepEqual(driven.scale,Array(3).fill(family==='xb12'?.5:1));assert.equal(driven.contacts,family==='xb12'?4:6);assert.equal(driven.traction,1);assert.ok(driven.speed>3);assert.ok(driven.steer.every(a=>Math.abs(a)>.1));assert.ok(driven.spin.some(a=>Math.abs(a)>1));
   if(family==='xb12')assert.deepEqual(driven.middle,[false,false]);
-  const articulation=await b.evaluate(`(()=>{const l=roverLab,s=l.sim,r=l.view.rig,results=[];for(const height of [.32,.58]){l.place(0,-170,height);s.grounded=true;s.time+=.1;r.update(s,3);r.model.updateWorldMatrix(true,true);results.push(r.wheels.map(w=>({angle:w.susp.rotation.z,error:w.rod?w.rod.getWorldPosition(s.pos.clone()).distanceTo(w.lower.getWorldPosition(s.pos.clone())):0,rod:w.rod?.position.y})));}return results;})()`);
+  const articulation=await b.evaluate(`(()=>{const l=roverLab,s=l.sim,r=l.view.rig,results=[];for(const height of [.32,.58]){l.place(0,-170,height*s.vehicle.scale);s.grounded=true;s.time+=.1;r.update(s,3);r.model.updateWorldMatrix(true,true);results.push(r.wheels.map(w=>({angle:w.susp.rotation.z,error:w.rod?w.rod.getWorldPosition(s.pos.clone()).distanceTo(w.lower.getWorldPosition(s.pos.clone())):0,rod:w.rod?.position.y})));}return results;})()`);
   assert.ok(Math.abs(articulation[0][0].angle-articulation[1][0].angle)>.15);
   assert.ok(articulation.flat().every(w=>w.error<1e-6));
   await b.evaluate(`roverLab.place(0,-170,5);roverLab.step({lift:1},.4)`);
