@@ -1,7 +1,9 @@
 import {commands} from './simulation.js';
+const CONTROL_KEYS=new Set(['KeyW','KeyS','KeyA','KeyD','KeyQ','KeyE','KeyX','KeyC','Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight']);
 // The control set changes on actual supporting wheel contact, not the
 // suspension's short grounded grace period. Rotation uses body-local planes.
 export function roverInput(keys,wheelsTouching){const c=commands(),on=code=>Number(keys.has(code)),shift=on('ShiftLeft')||on('ShiftRight'),boostChord=shift&&(on('KeyW')||on('KeyS')),longitudinal=on('KeyW')-on('KeyS');
+ c.controlActive=[...keys].some(key=>CONTROL_KEYS.has(key));
  c.lift=shift?0:on('Space');
  c.down=shift?on('Space'):0;
  c.boost=boostChord?longitudinal:0;
