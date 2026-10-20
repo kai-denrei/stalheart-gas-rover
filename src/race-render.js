@@ -30,8 +30,8 @@ export class RacePresentation {
    const wire=new T.LineSegments(new T.WireframeGeometry(new T.SphereGeometry(w.race.rules.bubbleRadius,16,8)),new T.LineBasicMaterial({color:0xaff3ce,transparent:true,opacity:.12}));bubble.add(wire);this.spots.push({ring,tag,bubble,wire});
   }
   for(const r of race.racers){const grid=new T.LineSegments(new T.EdgesGeometry(new T.BoxGeometry(3.3,.015,5.6)),new T.LineBasicMaterial({color:r.color}));const pose=gridPose(w,r);grid.position.copy(point(pose.x,pose.z,.16));grid.quaternion.copy(frameAt(grid.position).q).multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),pose.heading));scene.add(grid);if(!r.id)continue;
-   const model=view.roverTemplate.clone(true);model.position.y=-.44;model.traverse(o=>{if(o.isMesh){o.material=o.material.clone();if(o.name==='CHASSIS_ARMOR_BODY'){o.material.color.set(r.color);o.material.roughness=.55;}}});model.getObjectByName('COLD_GAS_PLUMES').visible=false;
-   const group=new T.Group();group.add(model);scene.add(group);const instruments=createRoverInstruments(model),rig=new RoverRig(model,scene,w,view.puffTexture,view.damageBank);this.rivals.push({r,group,rig,instruments});
+   const {model,bank,family}=view.fleet.create(r.id,r.color);
+   const group=new T.Group();group.add(model);scene.add(group);const instruments=createRoverInstruments(model),rig=new RoverRig(model,scene,w,view.puffTexture,bank);this.rivals.push({r,group,rig,instruments,family});
   }
  }
  async loadEnvironment(){[this.city,this.celebration,this.traffic,this.arrival]=await Promise.all([createRaceCity(this.view),createRaceCelebration(this.view,this.race),createBaseTraffic(this.view,this.race),createBaseTraffic(this.view,this.race,{celebration:true})]);this.defense=await createCityDefense(this.view,this.race,this.city);this.race.stuntEnemies=()=>this.defense.defense.enemies;[this.scoreboard,this.startLights]=await Promise.all([createStuntBoard(this.view,this.race),createRaceStart(this.view,this.race)]);}

@@ -9,6 +9,7 @@ import {TREMOR} from './race-hazards.js';
 import {createDriftTrails} from './drift-trails.js';
 import {RoverRig} from './rover-rig.js';
 import {createRoverInstruments} from './rover-instruments.js';
+import {loadRoverFleet} from './rover-fleet.js';
 import {createStalheartSky} from './sky.js';
 import {PerformanceMonitor} from './performance.js';
 import {RoverCameraHeading} from './rover-camera-heading.js';
@@ -56,8 +57,7 @@ export class Presentation {
   if(!this.world.race)for(let z=8;z<24;z+=3){for(const x of [-4.5,4.5]){const g=new T.Mesh(new T.BoxGeometry(.12,.035,.9),new T.MeshBasicMaterial({color:0xd3e2b6}));g.position.copy(point(x,z,.05));g.quaternion.copy(frameAt(g.position).q);this.scene.add(g);}}
  }
  async loadRover(){
-  const variants=await Promise.all([0,1,2,3].map(d=>new GLTFLoader().loadAsync(`./assets/recon-rover/damage/r47x_recon_rover_d${d}_lod1.glb`)));this.damageBank=Object.fromEntries(variants.map((g,d)=>[d,g.scene]));this.rover=new T.Group();this.model=this.damageBank[0].clone(true);this.roverTemplate=this.world.race?this.model.clone(true):null;this.model.position.y=-.44;this.rover.add(this.model);this.scene.add(this.rover);const oldPlumes=this.model.getObjectByName('COLD_GAS_PLUMES');if(oldPlumes)oldPlumes.visible=false;
-  this.model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;if(o.material){o.material.roughness=.68;o.material.metalness=.15;}}});
+  this.fleet=await loadRoverFleet(this.fleetTypes||['r47x']);const entry=this.fleet.create(0);this.damageBank=entry.bank;this.model=entry.model;this.rover=new T.Group();this.rover.add(this.model);this.scene.add(this.rover);
   this.instruments=createRoverInstruments(this.model);
   const texture=await new T.TextureLoader().loadAsync('./assets/recon-rover/cold-gas-puff.png');
   this.driftTrails=createDriftTrails(this.scene);this.puffTexture=texture;this.rig=new RoverRig(this.model,this.scene,this.world,texture,this.damageBank);

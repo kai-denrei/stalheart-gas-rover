@@ -30,7 +30,9 @@
     "test:polish": "node scripts/rover-polish-browser-test.mjs",
     "test:handoff": "node scripts/podium-handoff-browser-test.mjs",
     "test:stage": "node scripts/stage-maker-browser-test.mjs && node scripts/stage-template-browser-test.mjs",
-    "test:overturned": "node scripts/overturned-browser-test.mjs"
+    "test:overturned": "node scripts/overturned-browser-test.mjs",
+    "test:fleet": "node scripts/fleet-browser-test.mjs",
+    "profile:fleet": "node scripts/profile-fleet.mjs"
   },
   "engines": {
     "node": ">=22"

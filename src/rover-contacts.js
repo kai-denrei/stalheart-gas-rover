@@ -1,7 +1,7 @@
 import {Vector3} from '../upstream/stalheart/vendor/three.module.js';
 import {upAt} from './world.js';
 const V=(x=0,y=0,z=0)=>new Vector3(x,y,z),HALF=[1.23,.84,2.4],CENTER=V(0,.4,0);
-function hull(s,p=s.pos,q=s.q){return {center:CENTER.clone().applyQuaternion(q).add(p),axes:[V(1),V(0,1),V(0,0,1)].map(v=>v.applyQuaternion(q)),half:HALF};}
+function hull(s,p=s.pos,q=s.q){return {center:CENTER.clone().applyQuaternion(q).add(p),axes:[V(1),V(0,1),V(0,0,1)].map(v=>v.applyQuaternion(q)),half:s.family==='xb12'?[1.47,1.1,2.4]:HALF};}
 const extent=(b,n)=>b.axes.reduce((v,a,i)=>v+Math.abs(a.dot(n))*b.half[i],0);
 export function roverOverlap(a,b){
  const delta=a.center.clone().sub(b.center);let best=null;

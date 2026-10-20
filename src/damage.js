@@ -23,6 +23,13 @@ export class RoverDamage {
   const wheel=WHEEL_IDS.map(id=>this.states['WHEEL_'+id]),avg=a=>a.reduce((s,n)=>s+n,0)/a.length;
   const drive=wheel.map(d=>[1,1,.6,0][d]),grip=wheel.map(d=>[1,1,.5,.18][d]),steering=wheel.slice(0,2).map(d=>[1,1,.5,0][d]);
   this.effects={drive:this.wreck?0:avg(drive)*(this.core===2?.8:1),grip:avg(grip),steer:avg(steering),wheelSteer:steering,pull:(avg([drive[0],drive[2],drive[4]])-avg([drive[1],drive[3],drive[5]]))*.32,thrust:JET_IDS.map(id=>[1,1,.5,0][this.states['NOZZLE_'+id]]),gimbal:JET_IDS.map(id=>[1,1,.45,0][this.states['NOZZLE_'+id]])};
+  // XB-12 supplies whole-rover damage, not localized replacement meshes.
+  // Stage 3 is reserved for a disabled chassis; isolated failed parts show D2.
+  this.assetLevel=this.family==='xb12'?(this.wreck?3:Math.max(this.core,Math.min(2,Math.max(...Object.values(this.states))))):this.core;
+  if(this.family==='xb12'){
+   const level=this.assetLevel,drive=level===3?0:level===2?.7:1;
+   Object.assign(this.effects,{drive,grip:level===3?.18:level===2?.75:1,steer:level===3?0:level===2?.75:1,wheelSteer:level===3?[0,0]:level===2?[.5,1]:[1,1],pull:level===2?-.096:0});
+  }
   const leak=(...ids)=>Math.max(...ids.map(id=>[0,0,.6,1][this.states[id]]));
   this.leaks={NEG_X:leak('FLANK_NEG_X','NOZZLE_L_FL','NOZZLE_L_RL'),POS_X:leak('FLANK_POS_X','NOZZLE_L_FR','NOZZLE_L_RR'),REAR:leak('REAR_PANEL','NOZZLE_V_RL','NOZZLE_V_RR')};
   this.effects.leakRate=this.wreck?0:Object.values(this.leaks).reduce((s,n)=>s+n,0)*.8;
@@ -57,5 +64,5 @@ export class RoverDamage {
   const changed=ZONES.filter(id=>before[id]!==this.states[id]);
   this.lastHit={zone:primary,speed,source,time,level:this.states[primary],changed,coreChanged:oldCore!==this.core,hits:this.hits};return this.lastHit;
  }
- snapshot(){return {states:{...this.states},core:this.core,hits:this.hits,wreck:this.wreck,effects:{...this.effects,thrust:[...this.effects.thrust],gimbal:[...this.effects.gimbal],wheelSteer:[...this.effects.wheelSteer]},lastHit:this.lastHit};}
+ snapshot(){return {assetLevel:this.assetLevel,states:{...this.states},core:this.core,hits:this.hits,wreck:this.wreck,effects:{...this.effects,thrust:[...this.effects.thrust],gimbal:[...this.effects.gimbal],wheelSteer:[...this.effects.wheelSteer]},lastHit:this.lastHit};}
 }

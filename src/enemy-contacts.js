@@ -10,7 +10,7 @@ export function resolveEnemyContact(r,e,defense){
  if(s.pos.distanceToSquared(e.position)>(radius+3+travel)**2)return false;
  let hit=null;const count=Math.min(20,Math.max(1,Math.ceil(travel/.45)));
  for(let sample=1;sample<=count&&!hit;sample++){const at=old.clone().lerp(s.pos,sample/count);
-  for(const shape of ROVER_SOLIDS){const center=shape.center.clone().applyQuaternion(s.q).add(at),delta=center.clone().sub(e.position),distance=delta.length(),depth=shape.radius+radius-distance;
+  for(const shape of s.solids||ROVER_SOLIDS){const center=shape.center.clone().applyQuaternion(s.q).add(at),delta=center.clone().sub(e.position),distance=delta.length(),depth=shape.radius+radius-distance;
    if(depth<=0)continue;const normal=distance>1e-6?delta.divideScalar(distance):new Vector3(0,0,-1).applyQuaternion(s.q);if(!hit||depth>hit.depth)hit={normal,depth,point:center.addScaledVector(normal,-shape.radius),shape,at};}
  }
  if(!hit)return false;

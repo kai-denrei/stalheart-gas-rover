@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102027"><title>R-47X · Stalheart Rover Lab</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2314262c'/%3E%3Cpath d='M12 44V20h25l12 12-12 12H12m10-12h17' fill='none' stroke='%23b0efd0' stroke-width='5'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#102027"><title>Stalheart Rover Lab</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2314262c'/%3E%3Cpath d='M12 44V20h25l12 12-12 12H12m10-12h17' fill='none' stroke='%23b0efd0' stroke-width='5'/%3E%3C/svg%3E"><link rel="stylesheet" href="style.css"></head>
 <body>
 <canvas id="world" aria-label="3D rover proving ground"></canvas>
 <header><a class="brand" href="./"><span class="sigil">S /</span> STÅLHEART <span class="slash">/</span> RESEARCH</a><div class="header-right"><span class="live-dot"></span> LOCAL FIELD LAB <span class="version">R–47X / 001</span></div></header>
@@ -11,6 +11,8 @@
 <aside class="panel" id="labPanel" hidden><div class="panel-head"><div><div class="eyebrow">EXPERIMENT CONTROLS</div><h2>Make it yours.</h2></div><button id="closeLab" aria-label="Close settings">×</button></div>
 <a id="stageMaker" class="editor-return" href="./stage-maker.html">Open Stage Maker ↗</a>
 <p id="damageDetail" class="damage-detail">Collisions accumulate damage. R recovers and repairs.</p>
+<label>Starting lineup<select id="roverFleet"></select></label>
+<label>Your rover<select id="playerRover"></select><small>Changing a rover or lineup restarts the session.</small></label>
 <label>Flight assistance<select id="assistance"><option value="stabilized">Stabilized · auto-level</option><option value="assisted">Assisted · damp rotation</option><option value="manual">Manual · counter-bursts</option></select></label>
 <label class="switch"><span>Unlimited refill<small>Tracks when normal gas would run out</small></span><input type="checkbox" id="unlimited"></label>
 <label>Gravity <output id="gravityValue">2.8 m/s²</output><input id="gravity" type="range" min="1" max="7" step="0.1" value="2.8"></label>

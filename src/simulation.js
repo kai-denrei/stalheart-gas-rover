@@ -4,6 +4,7 @@ import {allocate,INERTIA} from './thrusters.js';
 import {nearColliders,sphereContact,ROVER_SOLIDS} from './collisions.js';
 import {RoverMotion} from './motion.js';
 import {reactionBurn} from './reaction-thrusters.js';
+import {ROVER_FAMILIES} from './rover-families.js';
 import {RoverDamage} from './damage.js';
 export const STEP=1/120;
 export const OVERTURN_RECOVERY_DELAY=5;
@@ -13,13 +14,19 @@ export const WHEELS=[-.98,.98].flatMap(x=>[-1.44,-.42,1.44].map(z=>new Vector3(x
 const HULL=[-1,1].flatMap(x=>[-1.9,1.9].flatMap(z=>[.2,.96].map(y=>new Vector3(x,y,z))));
 export function commands(){return {drive:0,steer:0,boost:0,lift:0,pitch:0,yaw:0,roll:0,kick:0,brake:0,down:0,airBrake:0,stabilize:0,acro:false,controlActive:false};}
 export class Simulation {
- constructor(world){this.damage=new RoverDamage();this.damageEnabled=true;this.world=world;this.tune={...DEFAULTS};this.pos=V();this.vel=V();this.q=new Quaternion();this.omega=V();this.time=0;this.checkpoint=0;this.events=[];this.motion=new RoverMotion(this);this.reset();}
+ constructor(world){this.setFamily('r47x');this.damage=new RoverDamage();this.damageEnabled=true;this.world=world;this.tune={...DEFAULTS};this.pos=V();this.vel=V();this.q=new Quaternion();this.omega=V();this.time=0;this.checkpoint=0;this.events=[];this.motion=new RoverMotion(this);this.reset();}
+ setFamily(family){
+  this.family=Object.hasOwn(ROVER_FAMILIES,family)?family:'r47x';this.vehicle=ROVER_FAMILIES[this.family];const v=this.vehicle;
+  this.wheels=WHEELS.map(p=>new Vector3(Math.sign(p.x)*v.track,p.y,p.z===-.42?p.z:Math.sign(p.z)*v.axle));
+  this.solids=ROVER_SOLIDS.filter(s=>s.wheel===undefined||v.wheels.includes(s.wheel)).map(s=>{const center=s.center.clone();if(s.wheel!==undefined){center.add(this.wheels[s.wheel].clone().sub(WHEELS[s.wheel]));center.y+=v.radius-.48;}else if(this.family==='xb12'&&s.zone==='sensor')center.set(0,1.4,-1.15);return {...s,center};});
+  if(this.damage){this.damage.family=this.family;this.damage.refresh();this.contactCount=v.wheels.length;this.wheelContact=Array.from({length:6},(_,i)=>v.wheels.includes(i));this.motion.capture();}
+ }
  event(type,detail={}){this.events.push({type,time:this.time,...detail});if(this.events.length>40)this.events.shift();}
  reset(reason='READY'){if(reason!=='READY'&&this.catastrophic&&this.wreckTime<this.wreckDelay)return;if(this.onReset&&reason!=='READY')return this.onReset(reason);this.damage.reset();this.wreckTime=0;this.wreckDelay=3;this.catastrophic=null;this.flightTurns=0;const pad=this.world.pads[this.checkpoint];this.pos.copy(pad.origin).addScaledVector(pad.frame.up,.46);this.q.copy(pad.frame.q);
   // A new opening can scatter solid debris over a pad. Pick a clear point inside
   // the checkpoint ring instead of resetting the rover inside a boulder.
-  for(const radius of [0,2,3.5]){let found=false;for(let i=0;i<(radius?12:1);i++){const angle=i*Math.PI/6,p=pad.origin.clone().addScaledVector(pad.frame.up,.46).addScaledVector(pad.frame.east,Math.cos(angle)*radius).addScaledVector(pad.frame.north,Math.sin(angle)*radius),near=nearColliders(this.world,p,3.5);if(!ROVER_SOLIDS.some(shape=>{const c=shape.center.clone().applyQuaternion(pad.frame.q).add(p);return near.some(solid=>sphereContact(solid,c,shape.radius));})){this.pos.copy(p);found=true;break;}}if(found)break;}
-  this.vel.set(0,0,0);this.omega.set(0,0,0);this.spent=0;this.exhausted=null;this.grounded=true;this.supportTime=.1;this.contactCount=6;this.bodyContacts=0;this.inverted=0;this.invertedSupport=0;this.rightingBoost=false;this.tilt=0;this.age=0;this.padTime=0;this.refilled=true;this.burn=allocate(V(),V(),this.tune.lift/8);this.airtime=0;this.peak=0;this.impact=0;this.steering=0;this.drift=0;this.oversteer=0;this.wheelContact=Array(6).fill(true);this.traction=1;this.trickAxes=[false,false,false];this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];this.rcs=reactionBurn(V(),V());this.parked=false;this.wheelSpin=Array(6).fill(0);this.lastCollision=null;this.collisionCooldown=0;this.kickFlight=false;this.kickAngle=0;this.kickTurns=0;this.kickInput=0;this.kickTotal??=0;this.figureTotal??=0;this.enemyPrevious=null;this.lastReason=reason;this.event('reset',{reason});this.motion.capture();}
+  for(const radius of [0,2,3.5]){let found=false;for(let i=0;i<(radius?12:1);i++){const angle=i*Math.PI/6,p=pad.origin.clone().addScaledVector(pad.frame.up,.46).addScaledVector(pad.frame.east,Math.cos(angle)*radius).addScaledVector(pad.frame.north,Math.sin(angle)*radius),near=nearColliders(this.world,p,3.5);if(!this.solids.some(shape=>{const c=shape.center.clone().applyQuaternion(pad.frame.q).add(p);return near.some(solid=>sphereContact(solid,c,shape.radius));})){this.pos.copy(p);found=true;break;}}if(found)break;}
+  this.vel.set(0,0,0);this.omega.set(0,0,0);this.spent=0;this.exhausted=null;this.grounded=true;this.supportTime=.1;this.contactCount=this.vehicle.wheels.length;this.bodyContacts=0;this.inverted=0;this.invertedSupport=0;this.rightingBoost=false;this.tilt=0;this.age=0;this.padTime=0;this.refilled=true;this.burn=allocate(V(),V(),this.tune.lift/8);this.airtime=0;this.peak=0;this.impact=0;this.steering=0;this.drift=0;this.oversteer=0;this.wheelContact=Array.from({length:6},(_,i)=>this.vehicle.wheels.includes(i));this.traction=1;this.trickAxes=[false,false,false];this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];this.rcs=reactionBurn(V(),V());this.parked=false;this.wheelSpin=Array(6).fill(0);this.lastCollision=null;this.collisionCooldown=0;this.kickFlight=false;this.kickAngle=0;this.kickTurns=0;this.kickInput=0;this.kickTotal??=0;this.figureTotal??=0;this.enemyPrevious=null;this.lastReason=reason;this.event('reset',{reason});this.motion.capture();}
  receiveImpact(hit){
   if(!this.damageEnabled)return null;
   const wasWreck=this.damage.wreck;
@@ -94,7 +101,7 @@ export class Simulation {
   this.omega.addScaledVector(burn.torque.clone().divide(INERTIA).applyQuaternion(this.q),dt);
   if(groundMode&&!this.damage.wreck){
    const f=bodyForward.clone().projectOnPlane(up).normalize(),r=right.clone().projectOnPlane(up).normalize(),speed=this.vel.dot(f);
-   const traction=this.wheelContact.filter(Boolean).length/6;this.traction=traction;
+   const traction=this.wheelContact.filter(Boolean).length/this.vehicle.wheels.length;this.traction=traction;
    const desired=input.drive>0?(this.tune.driveSpeed||18)*input.drive:input.drive<0?7*input.drive:0;
    let accel=input.drive?Math.max(-8,Math.min(9,(desired-speed)*2)):-speed*.45;
    // Above motor cruise speed, coast the drivetrain instead of fighting the jets.
@@ -123,7 +130,8 @@ export class Simulation {
   // Iterated chassis + wheel constraints; sample positions are recomputed after each impulse pass.
   for(let pass=0;pass<4;pass++){
    for(let i=0;i<WHEELS.length+HULL.length;i++){
-    const local=i<WHEELS.length?WHEELS[i]:HULL[i-WHEELS.length];const p=local.clone().applyQuaternion(this.q).add(this.pos),s=terrainSample(this.world,p);
+    if(i<6&&!this.vehicle.wheels.includes(i))continue;
+    const local=i<WHEELS.length?this.wheels[i]:HULL[i-WHEELS.length];const p=local.clone().applyQuaternion(this.q).add(this.pos),s=terrainSample(this.world,p);
     if(s.signed<.025&&!s.throat){const hit=this.contact(p,s.normal,Math.max(0,-s.signed));if(pass===0){maxImpact=Math.max(maxImpact,hit);if(i<6)supported.add(i);else bodyContacts++;
      const closing=-incomingVel.clone().add(new Vector3().crossVectors(incomingOmega,p.clone().sub(this.pos))).dot(s.normal);
      const zone=i<6?'wheel_'+['RL','ML','FL','RR','MR','FR'][i]:'chassis';
@@ -133,7 +141,7 @@ export class Simulation {
    // Rounded compound rover against solid convex environment geometry. Wheel
    // sidewalls, bumpers and sensor are covered even when old point probes miss.
    let deepest=0,correction=null;
-   for(const shape of ROVER_SOLIDS){const center=shape.center.clone().applyQuaternion(this.q).add(this.pos);
+   for(const shape of this.solids){const center=shape.center.clone().applyQuaternion(this.q).add(this.pos);
     for(const solid of solids){const hit=sphereContact(solid,center,shape.radius);if(!hit)continue;
      const closing=this.contact(hit.point,hit.normal,hit.depth,.08,true);
      if(solid.softImpact)softContact=true;
@@ -154,7 +162,7 @@ export class Simulation {
    const rise=this.vel.dot(up)-Math.max(1,incomingVel.dot(up));if(rise>0)this.vel.addScaledVector(up,-rise);
   }
   if(this.age>.3){for(const hit of terrainHits.values())this.receiveImpact(hit);if(collision)this.receiveImpact(collision);}
-  wheelContacts=supported.size;this.wheelContact=Array.from({length:6},(_,i)=>supported.has(i));this.traction=wheelContacts/6;
+  wheelContacts=supported.size;this.wheelContact=Array.from({length:6},(_,i)=>supported.has(i));this.traction=wheelContacts/this.vehicle.wheels.length;
   if(wheelContacts||bodyContacts){this.flightTurns=0;this.trickAxes.fill(false);this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];}
   else {const delta=previousQ.clone().invert().multiply(this.q);if(delta.w<0){delta.x*=-1;delta.y*=-1;delta.z*=-1;delta.w*=-1;}
    const length=Math.hypot(delta.x,delta.y,delta.z),scale=length>1e-9?2*Math.atan2(length,delta.w)/length:2;
@@ -173,7 +181,7 @@ export class Simulation {
   if(collision&&collision.speed>1.5&&this.collisionCooldown===0){this.lastCollision={...collision,time:this.time,severity:collision.speed>=12?'heavy':collision.speed>=6?'moderate':'light'};this.event('collision',this.lastCollision);this.impact=Math.max(this.impact,Math.min(1,collision.speed/15));this.collisionCooldown=.3;}
 
   // Integrate wheel roll from actual hub velocity, in simulation time (pause-safe).
-  for(let i=0;i<6;i++){const p=WHEELS[i],v=this.vel.clone().add(new Vector3().crossVectors(this.omega,p.clone().applyQuaternion(this.q))).applyQuaternion(this.q.clone().invert());const angle=p.z>1?this.steering:0;if(this.wheelContact[i]&&this.damage.states['WHEEL_'+['RL','ML','FL','RR','MR','FR'][i]]<3)this.wheelSpin[i]+=(v.z*Math.cos(angle)+v.x*Math.sin(angle))*dt/.48*(p.z<0?(input.brake?1-this.drift:1+this.drift*.12*Math.max(0,input.drive)):1);}
+  for(const i of this.vehicle.wheels){const p=this.wheels[i],v=this.vel.clone().add(new Vector3().crossVectors(this.omega,p.clone().applyQuaternion(this.q))).applyQuaternion(this.q.clone().invert());const angle=p.z>1?this.steering:0;if(this.wheelContact[i]&&(this.family==='xb12'?this.damage.assetLevel<3:this.damage.states['WHEEL_'+['RL','ML','FL','RR','MR','FR'][i]]<3))this.wheelSpin[i]+=(v.z*Math.cos(angle)+v.x*Math.sin(angle))*dt/this.vehicle.radius*(p.z<0?(input.brake?1-this.drift:1+this.drift*.12*Math.max(0,input.drive)):1);}
   this.contactCount=wheelContacts;this.bodyContacts=bodyContacts;this.supportTime=wheelContacts>=2?.10:Math.max(0,this.supportTime-dt);this.grounded=this.supportTime>0&&this.vel.dot(up)<1.1;
   // Static tyre friction catches the last tiny roll instead of leaving a perpetual crawl on a tilted deck.
   this.parked=this.grounded&&wheelContacts>=4&&!input.drive&&!input.steer&&!input.boost&&!input.down&&!input.lift&&this.vel.clone().projectOnPlane(up).length()<.12&&Math.abs(this.vel.dot(up))<.3&&this.omega.length()<.12;
@@ -197,5 +205,5 @@ export class Simulation {
    if(this.inverted>=OVERTURN_RECOVERY_DELAY-1e-8){this.inverted=0;this.reset('OVERTURNED');}
   }else this.inverted=0;
  }
- snapshot(){return {overturnedIdle:this.inverted,flightTurns:this.flightTurns,catastrophic:this.catastrophic,wreckDelay:this.wreckDelay,wreckTime:this.wreckTime,oversteer:this.oversteer,drift:this.drift,traction:this.traction,wheelContact:[...this.wheelContact],figures:{angles:[...this.figureAngles],turns:[...this.figureTurns]},damage:{enabled:this.damageEnabled,...this.damage.snapshot()},kick:{active:this.kickFlight,angle:this.kickAngle,turns:this.kickTurns,total:this.kickTotal},time:this.time,position:this.pos.toArray(),velocity:this.vel.toArray(),quaternion:this.q.toArray(),angularVelocity:this.omega.toArray(),grounded:this.grounded,contacts:this.contactCount,gas:this.reserve,spent:this.spent,exhausted:this.exhausted,altitude:this.altitude,tilt:this.tilt,checkpoint:this.checkpoint,collision:this.lastCollision,burn:this.burn.effort,events:this.events.slice(-8)};}
+ snapshot(){return {family:this.family,wheelCount:this.vehicle.wheels.length,overturnedIdle:this.inverted,flightTurns:this.flightTurns,catastrophic:this.catastrophic,wreckDelay:this.wreckDelay,wreckTime:this.wreckTime,oversteer:this.oversteer,drift:this.drift,traction:this.traction,wheelContact:[...this.wheelContact],figures:{angles:[...this.figureAngles],turns:[...this.figureTurns]},damage:{enabled:this.damageEnabled,...this.damage.snapshot()},kick:{active:this.kickFlight,angle:this.kickAngle,turns:this.kickTurns,total:this.kickTotal},time:this.time,position:this.pos.toArray(),velocity:this.vel.toArray(),quaternion:this.q.toArray(),angularVelocity:this.omega.toArray(),grounded:this.grounded,contacts:this.contactCount,gas:this.reserve,spent:this.spent,exhausted:this.exhausted,altitude:this.altitude,tilt:this.tilt,checkpoint:this.checkpoint,collision:this.lastCollision,burn:this.burn.effort,events:this.events.slice(-8)};}
 }

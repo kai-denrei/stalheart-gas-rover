@@ -11,7 +11,7 @@ export function respawnClear(race,r,pos,q){
   const p=new Vector3(x,-.44,z).applyQuaternion(q).add(pos),c=coords(p),ground=terrainSample(race.world,p,false);
   if(!onCourse(race.world,c.x,c.z)||ground.throat||ground.signed<-.12||ground.signed>.3)return false;
  }
- if(ROVER_SOLIDS.some(s=>near.some(c=>sphereContact(c,s.center.clone().applyQuaternion(q).add(pos),s.radius))))return false;
+ if((r.sim.solids||ROVER_SOLIDS).some(s=>near.some(c=>sphereContact(c,s.center.clone().applyQuaternion(q).add(pos),s.radius))))return false;
  return race.racers.every(other=>other===r||other.pendingRespawn||
   (pos.distanceToSquared(other.sim.pos)>6.5**2&&pos.distanceToSquared(other.sim.pos.clone().addScaledVector(other.sim.vel,.25))>6.5**2));
 }

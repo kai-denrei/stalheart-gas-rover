@@ -3,7 +3,8 @@ import * as T from '../upstream/stalheart/vendor/three.module.js';
 // Real chassis-mounted surfaces, read from behind (+Z forward). x<0 is screen-right.
 // The plates match the authored rear wheel-cover slope rather than facing the camera.
 export function createRoverInstruments(model) {
- const root=new T.Group();root.name='R47X diegetic instruments';model.getObjectByName('ROVER_CHASSIS_JUMP').add(root);
+ const family=model.userData.roverFamily||'r47x',xb=family==='xb12';
+ const root=new T.Group();root.name='Rover diegetic instruments';(model.getObjectByName(xb?'XB12_CHASSIS':'ROVER_CHASSIS_JUMP')).add(root);
  const canvas=document.createElement('canvas');canvas.width=1024;canvas.height=128;
  const ctx=canvas.getContext('2d');ctx.fillStyle='white';ctx.font='bold 88px monospace';ctx.textAlign='center';ctx.textBaseline='middle';
  for(let i=0;i<10;i++)ctx.fillText(String(i),(i+.5)*102.4,64);
@@ -47,14 +48,15 @@ export function createRoverInstruments(model) {
   // Reuse delivered UV meshes. Move the tiny end-cap screens onto the long cover
   // strips agreed for this lab; delivered LEFT/RIGHT names are reversed in chase view.
   const source=['DISPLAY_SPEED_LEFT','DISPLAY_THRUST_RIGHT','DISPLAY_GAS_RESERVE_REAR'][kind];
-  const mesh=model.getObjectByName(source),size=mesh.userData.size_m;
-  mesh.material=material;mesh.scale.set(width/size[0],height/size[1],1);mesh.position.set(...position);mesh.position.y-=.56;mesh.quaternion.identity();
-  if(kind<2){const n=new T.Vector3(...normal),up=new T.Vector3(0,0,1),right=new T.Vector3().crossVectors(up,n);mesh.quaternion.setFromRotationMatrix(new T.Matrix4().makeBasis(right,up,n));}
+  const mesh=model.getObjectByName(source)||new T.Mesh(new T.PlaneGeometry(1,1),material),size=mesh.userData.size_m||[1,1];
+  mesh.name=source;mesh.material=material;mesh.scale.set(width/size[0],height/size[1],1);mesh.position.set(...position);mesh.position.y-=xb?0:.56;mesh.quaternion.identity();
+  if(kind<2){const n=new T.Vector3(...normal).normalize(),up=new T.Vector3(0,0,1).projectOnPlane(n).normalize(),right=new T.Vector3().crossVectors(up,n);mesh.quaternion.setFromRotationMatrix(new T.Matrix4().makeBasis(right,up,n));}
   else mesh.rotation.y=Math.PI;
   root.add(mesh);return material.uniforms;
  }
- const thrust=plate('THRUST',0,0x25ddff,.265,1.46,[-.85,1.0205,-1.12],[-.119712,.992809,0]);
- const speed=plate('M/S',1,0xff962f,.265,1.46,[.85,1.0205,-1.12],[.119712,.992809,0]);
- const gas=plate('GAS',2,0xaff3ce,.90,.19,[0,.71,-2.393],[0,0,-1]);
+ const swing=family==='r47xs',x=xb?.76:swing?.55:.85,y=xb?1.30:swing?1.01:1.0205,z=xb?-.8:swing?-.75:-1.12;
+ const thrust=plate('THRUST',0,0x25ddff,.265,xb?.82:swing?1.1:1.46,[-x,y,z],xb?[0,.974,-.228]:swing?[0,1,0]:[-.119712,.992809,0]);
+ const speed=plate('M/S',1,0xff962f,.265,xb?.82:swing?1.1:1.46,[x,y,z],xb?[0,.974,-.228]:swing?[0,1,0]:[.119712,.992809,0]);
+ const gas=plate('GAS',2,0xaff3ce,.90,.19,[0,xb?.85:.71,xb?-2.03:-2.393],[0,0,-1]);
  return {root,update(sim,speedMetres){for(let i=0;i<8;i++)thrust.uLevels.value[i]=Math.min(1,sim.burn.forces[i].length()/(sim.tune.lift/8));thrust.uNumber.value=sim.burn.effort/sim.tune.lift*100;speed.uLevels.value[0]=Math.min(1,speedMetres/18);speed.uNumber.value=speedMetres;gas.uLevels.value[0]=sim.reserve/sim.tune.capacity;gas.uNumber.value=Math.ceil(100*sim.reserve/sim.tune.capacity);gas.uUnlimited.value=sim.tune.unlimited?1:0;gas.uColor.value.set(sim.reserve/sim.tune.capacity<.2?0xff962f:0xaff3ce);},dispose(){root.traverse(o=>{if(o.isMesh){o.geometry.dispose();o.material.uniforms.uLabel.value.dispose();o.material.dispose();}});digits.dispose();root.removeFromParent();}};
 }

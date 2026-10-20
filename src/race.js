@@ -28,7 +28,8 @@ export class Race {
   return true;
  }
  insideSpot(r,spot){if(r.pendingRespawn)return false;const s=r.sim,d=this.world.race.deck,inv=d.frame.q.clone().invert();if(s.damage.wreck||!s.grounded||s.vel.length()>this.world.race.rules.stopSpeed||s.omega.length()>this.world.race.rules.stopSpin)return false;const local=s.pos.clone().sub(d.origin).applyQuaternion(inv);if(Math.abs(local.y-(spot.local.y+.44))>.25)return false;
-  for(const x of [-1.23,1.23])for(const z of [-2.4,2.4]){const p=new Vector3(x,-.44,z).applyQuaternion(s.q).add(s.pos).sub(spot.origin).applyQuaternion(inv);if(Math.hypot(p.x,p.z)>this.world.race.rules.spotRadius)return false;}return true;
+  const halfWidth=s.family==='xb12'?1.47:1.23;
+  for(const x of [-halfWidth,halfWidth])for(const z of [-2.4,2.4]){const p=new Vector3(x,-.44,z).applyQuaternion(s.q).add(s.pos).sub(spot.origin).applyQuaternion(inv);if(Math.hypot(p.x,p.z)>this.world.race.rules.spotRadius)return false;}return true;
  }
  claimStatus(r){const open=this.world.race.spots.find(s=>s.owner===null);if(r.place)return `P${r.place} SECURED`;if(!open)return 'RACE COMPLETE';if(r.gate<this.world.race.gates.length)return `GATE ${r.gate+1} MISSED · PASS BETWEEN THE FLAGS`;if(r.sim.damage.wreck)return 'WRECKED · R TO RECOVER';
   if(r.sim.pos.distanceTo(open.origin)>8)return `LAND ON #${open.number} · OTHER SPOTS LOCKED`;

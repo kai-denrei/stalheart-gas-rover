@@ -3,12 +3,14 @@ import {writeFile} from 'node:fs/promises';
 import {browser} from './browser-session.mjs';
 const reports=[];
 for(const mode of ['lab','race']){
- const b=await browser('http://localhost:8166/'+(mode==='race'?'?mode=race':''));
+ const b=await browser('http://localhost:8166/'+(mode==='race'?'?mode=race&fleet=original':''));
  try{
   await b.evaluate(`new Promise((resolve,reject)=>{const end=Date.now()+25000;const tick=()=>window.roverLab?.ready()?resolve(true):Date.now()>end?reject(Error(document.getElementById('loadText').textContent)):setTimeout(tick,80);tick();})`);
-  await b.evaluate(`document.getElementById('start').click();roverLab.pause();if(roverLab.race)roverLab.race.phase='racing';`);
+  // Keep the repair checkpoint clear of the four stationary starting-grid rivals.
+  await b.evaluate(`document.getElementById('start').click();roverLab.pause();if(roverLab.race){roverLab.race.phase='racing';roverLab.race.racers[0].gate=1;}`);
   if(mode==='lab'){
-   const real=await b.evaluate(`(()=>{const l=roverLab,s=l.sim,r=l.world.rocks.find(r=>r.x===15&&r.z===17),stages=[];l.reset();for(let i=0;i<4;i++){l.place(15,8,.46);s.q.copy(r.frame.q);s.vel.copy(r.frame.north).multiplyScalar(18);s.age=2;s.time+=1;s.tune.assistance='manual';s.motion.capture();l.step({},.7);stages.push({hits:s.damage.hits,damage:Math.max(...Object.values(s.damage.states)),core:s.damage.core,collision:s.lastCollision?.collider});}return stages})()`);
+   // Use the tall rigid barrier; the small low barrier intentionally has reduced impact damage.
+   const real=await b.evaluate(`(()=>{const l=roverLab,s=l.sim,r=l.world.rocks.find(r=>r.x===-18&&r.z===24),stages=[];l.reset();for(let i=0;i<4;i++){l.place(-18,15,.46);s.q.copy(r.frame.q);s.vel.copy(r.frame.north).multiplyScalar(18);s.age=2;s.time+=1;s.tune.assistance='manual';s.motion.capture();l.step({},.7);stages.push({hits:s.damage.hits,damage:Math.max(...Object.values(s.damage.states)),core:s.damage.core,collision:s.lastCollision?.collider});}return stages})()`);
    assert.ok(real[0].hits>0);assert.ok(real.at(-1).hits>real[0].hits);assert.ok(real.at(-1).damage>=2);reports.push({mode,physicalImpacts:real});
   }
   const result=await b.evaluate(`(()=>{
@@ -31,7 +33,7 @@ for(const mode of ['lab','race']){
   if(result.rival)assert.ok(result.rival.shared&&result.rival.paint&&result.rival.damaged);
   await b.screenshot(`artifacts/damage-${mode}.png`);
   const repair=await b.evaluate(`(()=>{const l=roverLab;l.reset();l.view.render(.016);const zero=Object.values(l.sim.damage.states).every(v=>v===0),repaired=l.view.model.getObjectByName('WHEEL_FL').geometry===l.view.damageBank[0].getObjectByName('WHEEL_FL').geometry;return {zero,repaired,penalty:l.race?.racers[0].penalty??null}})()`);
-  assert.ok(repair.zero&&repair.repaired);if(mode==='race')assert.equal(repair.penalty,3);
+  assert.ok(repair.zero&&repair.repaired,JSON.stringify({mode,repair}));if(mode==='race')assert.equal(repair.penalty,3);
   const memory=await b.evaluate(`(()=>{const l=roverLab,s=l.sim,v=l.view;function cycle(){for(let n=0;n<10;n++){s.time+=.7;s.receiveImpact({zone:'FRONT_BUMPER',speed:18,local:[0,0,2],collider:'memory-test'});v.render(.016);}l.reset();v.render(.016);}cycle();const before=v.renderer.info.memory.geometries;for(let n=0;n<5;n++)cycle();return {before,after:v.renderer.info.memory.geometries}})()`);
   assert.equal(memory.before,memory.after);assert.deepEqual(b.errors,[]);reports.push({mode,result,repair,memory,errors:b.errors});
  }finally{await b.close();}

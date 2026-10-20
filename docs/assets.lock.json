@@ -1828,6 +1828,111 @@
       "bytes": 35148,
       "kind": "copy",
       "revision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/recon-rover-s/runtime.js",
+      "path": "assets/recon-rover-s/runtime.js",
+      "sha256": "10a6870fe10ac166fa692e8e923d115ddbe9cbf3d45248f26de7ce26912d9a32",
+      "bytes": 18094,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/recon-rover-s/thruster-fx.js",
+      "path": "assets/recon-rover-s/thruster-fx.js",
+      "sha256": "232f3283b994210f427997501bbbc66199f7ca3f9988ef216ab32c6a0f46764c",
+      "bytes": 22226,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/recon-rover-s/README.md",
+      "path": "assets/recon-rover-s/README.md",
+      "sha256": "f9543f2d56f135c824b78ac26333c1cf84758de4bd49b87edfbfe21b4898c5bd",
+      "bytes": 5952,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/recon-rover-s/manifest.json",
+      "path": "assets/recon-rover-s/manifest.json",
+      "sha256": "1d7b6a4d238b4567c3150a12a5678d3c8f9d40dcb376798129c84cc5dc97e1c5",
+      "bytes": 559672,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/recon-rover-s/lod1/r47xs_recon_rover_d1_lod1.glb",
+      "path": "assets/recon-rover-s/lod1/r47xs_recon_rover_d1_lod1.glb",
+      "sha256": "ce633832402eb7d94c99960c600efee48cd7e96ba0bb8bb0c8b9fc206fc9bb68",
+      "bytes": 411780,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/recon-rover-s/lod1/r47xs_recon_rover_d0_lod1.glb",
+      "path": "assets/recon-rover-s/lod1/r47xs_recon_rover_d0_lod1.glb",
+      "sha256": "5b594781ca6286f08eb20c9be744fc9bbb882e3ada5dbbaf92596ff8aa06f0f0",
+      "bytes": 413640,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/recon-rover-s/lod1/r47xs_recon_rover_d2_lod1.glb",
+      "path": "assets/recon-rover-s/lod1/r47xs_recon_rover_d2_lod1.glb",
+      "sha256": "6b98e19c8f55101b962897b27b474556c763b1dbf01465804ec17e91ce7f0afb",
+      "bytes": 403088,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/recon-rover-s/lod1/r47xs_recon_rover_d3_lod1.glb",
+      "path": "assets/recon-rover-s/lod1/r47xs_recon_rover_d3_lod1.glb",
+      "sha256": "bbe97e617962d841888fad56f1c8805d8231d8518b6d50eda0e94e61764e480f",
+      "bytes": 402480,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/xb12/runtime.js",
+      "path": "assets/xb12/runtime.js",
+      "sha256": "cc50bfbd5bc8d99940af24718a7ffef8f54c4845e255158d41d7896630b7e864",
+      "bytes": 2626,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/xb12/xb12_d3_lod1.glb",
+      "path": "assets/xb12/xb12_d3_lod1.glb",
+      "sha256": "d03a0e00923c027b34b2de57d6a297bca593a5b75905f9621ce310c81fde503c",
+      "bytes": 268272,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/xb12/xb12_d2_lod1.glb",
+      "path": "assets/xb12/xb12_d2_lod1.glb",
+      "sha256": "13304d833ec0048a5340ee65e4100d1b6e1a7588718d1c40b74fa857f2bb2f41",
+      "bytes": 354800,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/xb12/xb12_d0_lod1.glb",
+      "path": "assets/xb12/xb12_d0_lod1.glb",
+      "sha256": "48dbfcca0b768d92534d1e86d92e28d4967b21c60b9b48598bb52f86495333ee",
+      "bytes": 369196,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/xb12/README.md",
+      "path": "assets/xb12/README.md",
+      "sha256": "f4d105f8041cfc2183e42f147e78d126b349de34d67c5bc574fb471151d35b7c",
+      "bytes": 11825,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/xb12/xb12_d1_lod1.glb",
+      "path": "assets/xb12/xb12_d1_lod1.glb",
+      "sha256": "7fddaef79a905cd70de2a0e5fd001d30cb46c5a380d90ddc42f3f4a27dc28ca8",
+      "bytes": 369624,
+      "kind": "copy"
+    },
+    {
+      "source": "https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/94e33c6db18ff37267c8cd9fda50644fdd443146/assets/xb12/manifest.json",
+      "path": "assets/xb12/manifest.json",
+      "sha256": "8766662b17f665829f98bf482c3157edf23a8ebc73650147877f2a8a73a8757c",
+      "bytes": 77384,
+      "kind": "copy"
     }
   ],
   "flagsRevision": "7466a4a15ecd6b520dc405316cbeaa58a4e211a2",
@@ -1836,5 +1941,6 @@
   "raceCelebrationRevision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
   "combatExpansionRevision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
   "battleExpansionRevision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
-  "creatureCrowdsRevision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f"
+  "creatureCrowdsRevision": "5c36b5a13b5ca72532396c5cdc03303841b15c8f",
+  "roverFleetRevision": "94e33c6db18ff37267c8cd9fda50644fdd443146"
 }

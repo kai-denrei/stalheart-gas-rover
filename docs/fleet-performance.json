@@ -1,0 +1,341 @@
+{
+  "scenario": "Five visible rovers, full Last Leap environment, paused simulation, animated rig update path, 1439\u00d7901 at 1.75 DPR; two rounds in reverse order.",
+  "results": [
+    {
+      "fleet": "original",
+      "fps": 60.00300015000751,
+      "frame": 16.66583333333333,
+      "p95": 16.759999999999856,
+      "render": 3.5276666649182635,
+      "gpu": 4.531114231111112,
+      "calls": 518,
+      "triangles": 438072,
+      "resolution": [
+        2518,
+        1576
+      ],
+      "metrics": [
+        {
+          "family": "r47x",
+          "draws": 32,
+          "triangles": 4750
+        },
+        {
+          "family": "r47x",
+          "draws": 32,
+          "triangles": 4750
+        },
+        {
+          "family": "r47x",
+          "draws": 32,
+          "triangles": 4750
+        },
+        {
+          "family": "r47x",
+          "draws": 32,
+          "triangles": 4750
+        },
+        {
+          "family": "r47x",
+          "draws": 32,
+          "triangles": 4750
+        }
+      ],
+      "errors": []
+    },
+    {
+      "fleet": "mixed",
+      "fps": 60.002400180015,
+      "frame": 16.666000000000004,
+      "p95": 16.779999999999564,
+      "render": 3.498166669209798,
+      "gpu": 4.522706802222222,
+      "calls": 542,
+      "triangles": 442222,
+      "resolution": [
+        2518,
+        1576
+      ],
+      "metrics": [
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "xb12",
+          "draws": 32,
+          "triangles": 6616
+        },
+        {
+          "family": "r47x",
+          "draws": 32,
+          "triangles": 4750
+        },
+        {
+          "family": "xb12",
+          "draws": 32,
+          "triangles": 6616
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        }
+      ],
+      "errors": []
+    },
+    {
+      "fleet": "new",
+      "fps": 60.0030002100165,
+      "frame": 16.66583333333333,
+      "p95": 16.76000000000058,
+      "render": 3.403499999841054,
+      "gpu": 4.322631093333333,
+      "calls": 554,
+      "triangles": 442556,
+      "resolution": [
+        2518,
+        1576
+      ],
+      "metrics": [
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "xb12",
+          "draws": 32,
+          "triangles": 6616
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "xb12",
+          "draws": 32,
+          "triangles": 6616
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        }
+      ],
+      "errors": []
+    },
+    {
+      "fleet": "r47xs",
+      "fps": 60.00300021001649,
+      "frame": 16.665833333333335,
+      "p95": 16.740000000000144,
+      "render": 2.9136666631698604,
+      "gpu": 4.104503944444444,
+      "calls": 578,
+      "triangles": 439298,
+      "resolution": [
+        2518,
+        1576
+      ],
+      "metrics": [
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        }
+      ],
+      "errors": []
+    },
+    {
+      "fleet": "r47xs",
+      "fps": 60.00300015000748,
+      "frame": 16.665833333333335,
+      "p95": 16.76000000000022,
+      "render": 3.839333318869273,
+      "gpu": 4.527883637777778,
+      "calls": 578,
+      "triangles": 439292,
+      "resolution": [
+        2518,
+        1576
+      ],
+      "metrics": [
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        }
+      ],
+      "errors": []
+    },
+    {
+      "fleet": "new",
+      "fps": 60.001200060003,
+      "frame": 16.666333333333334,
+      "p95": 16.759999999999856,
+      "render": 3.6501666585604347,
+      "gpu": 4.539808882222223,
+      "calls": 554,
+      "triangles": 442488,
+      "resolution": [
+        2518,
+        1576
+      ],
+      "metrics": [
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "xb12",
+          "draws": 32,
+          "triangles": 6616
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "xb12",
+          "draws": 32,
+          "triangles": 6616
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        }
+      ],
+      "errors": []
+    },
+    {
+      "fleet": "mixed",
+      "fps": 60.00300021001649,
+      "frame": 16.665833333333335,
+      "p95": 16.720000000000436,
+      "render": 3.611333338419596,
+      "gpu": 4.517443957777778,
+      "calls": 542,
+      "triangles": 442280,
+      "resolution": [
+        2518,
+        1576
+      ],
+      "metrics": [
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        },
+        {
+          "family": "xb12",
+          "draws": 32,
+          "triangles": 6616
+        },
+        {
+          "family": "r47x",
+          "draws": 32,
+          "triangles": 4750
+        },
+        {
+          "family": "xb12",
+          "draws": 32,
+          "triangles": 6616
+        },
+        {
+          "family": "r47xs",
+          "draws": 44,
+          "triangles": 4990
+        }
+      ],
+      "errors": []
+    },
+    {
+      "fleet": "original",
+      "fps": 60.003600300026996,
+      "frame": 16.665666666666667,
+      "p95": 16.759999999999856,
+      "render": 3.5536666750907897,
+      "gpu": 4.534330084444445,
+      "calls": 518,
+      "triangles": 438072,
+      "resolution": [
+        2518,
+        1576
+      ],
+      "metrics": [
+        {
+          "family": "r47x",
+          "draws": 32,
+          "triangles": 4750
+        },
+        {
+          "family": "r47x",
+          "draws": 32,
+          "triangles": 4750
+        },
+        {
+          "family": "r47x",
+          "draws": 32,
+          "triangles": 4750
+        },
+        {
+          "family": "r47x",
+          "draws": 32,
+          "triangles": 4750
+        },
+        {
+          "family": "r47x",
+          "draws": 32,
+          "triangles": 4750
+        }
+      ],
+      "errors": []
+    }
+  ]
+}
