@@ -5,9 +5,11 @@ import {makeLandingSequence} from '../upstream/stalheart/src/domain/landing-sequ
 import {STORY_ARRIVAL,STORY_SCALE,PLUME_CLUSTER,SH02_WELL} from '../upstream/stalheart/src/content/story-defaults.js';
 import {createLaunchPlume} from '../upstream/stalheart/src/fx/launch-plume.js';
 import {makeScorch,makeEmbers,IMPACT_TUNE} from '../upstream/stalheart/src/impactfx.js';
-import {point,frameAt,coords} from './world.js';
+import {point,frameAt} from './world.js';
 import {boxCollider,cylinderCollider} from './collisions.js';
 const sequence=makeLandingSequence(STORY_ARRIVAL.landing);
+import {ARRIVAL_APRON} from './podium-layout.js';
+export {ARRIVAL_APRON} from './podium-layout.js';
 export const TRAFFIC={x:40,z:235,delay:12,period:70,docked:14,close:1.8,ignition:1,ascent:7};
 const celebrationSequence=makeLandingSequence({...STORY_ARRIVAL.landing,orbit:2,descent:12,startAltitude:320});
 export function celebrationArrivalState(time,active=true){
@@ -33,9 +35,10 @@ export function batchRig(root,animations=[]){
  for(const {joint,material,geos} of batches.values()){joint.add(new T.Mesh(mergeGeometries(geos),material));geos.forEach(g=>g.dispose());}meshes.forEach(o=>o.removeFromParent());
 }
 export async function createBaseTraffic(view,race,{celebration=false}={}){
- const [pad,rocket]=await Promise.all(['hugin_launchpad','sh_rocket'].map(n=>new GLTFLoader().loadAsync('./assets/base-traffic/'+n+'.glb'))),root=new T.Group(),deck=view.world.race.deck,site=celebration?deck.origin.clone().addScaledVector(deck.frame.north,deck.d/2+34):point(TRAFFIC.x,TRAFFIC.z),frame=frameAt(site);if(celebration){const c=coords(site);site.copy(point(c.x,c.z));}
+ const [pad,rocket]=await Promise.all(['hugin_launchpad','sh_rocket'].map(n=>new GLTFLoader().loadAsync('./assets/base-traffic/'+n+'.glb'))),root=new T.Group(),deck=view.world.race.deck,site=celebration?deck.origin.clone().addScaledVector(deck.frame.east,ARRIVAL_APRON.x).addScaledVector(deck.frame.north,ARRIVAL_APRON.z).addScaledVector(deck.frame.up,deck.h):point(TRAFFIC.x,TRAFFIC.z),frame=celebration?deck.frame:frameAt(site);
+ if(celebration){const origin=site.clone().addScaledVector(frame.up,-deck.h),apron=new T.Mesh(new T.BoxGeometry(ARRIVAL_APRON.w,deck.h,ARRIVAL_APRON.d),new T.MeshStandardMaterial({color:0x29454d,roughness:.7,metalness:.25}));apron.position.copy(origin).addScaledVector(frame.up,deck.h/2);apron.quaternion.copy(frame.q);view.scene.add(apron);view.world.colliders.push(boxCollider({...ARRIVAL_APRON,h:deck.h,origin,frame},'arrival-apron'));}
  root.name=celebration?'DISCO_SH02_ARRIVAL':'HUGIN_SH02_TRAFFIC';root.position.copy(site);root.quaternion.copy(frame.q);view.scene.add(root);
- for(const name of ['REUSABLE_BOOSTER','CARGO_CAPSULE']){const o=pad.scene.getObjectByName(name);if(o)o.visible=false;}batchRig(pad.scene);root.add(pad.scene);
+ for(const name of ['REUSABLE_BOOSTER','CARGO_CAPSULE']){const o=pad.scene.getObjectByName(name);if(o)o.visible=false;}batchRig(pad.scene);root.add(pad.scene);pad.scene.visible=true;
  const ship=new T.Group();ship.position.set(-3,2.5,0);ship.scale.setScalar(STORY_SCALE.rocket);root.add(ship);batchRig(rocket.scene,rocket.animations);ship.add(rocket.scene);
  const mixer=new T.AnimationMixer(rocket.scene),clips=Object.fromEntries(rocket.animations.map(c=>{const a=mixer.clipAction(c);a.setLoop(T.LoopOnce,1);a.clampWhenFinished=true;a.play();a.paused=true;a.enabled=false;return [c.name,a];}));
  const plumes=PLUME_CLUSTER.map(e=>{const p=createLaunchPlume({width:e.width,height:e.height});p.position.set(Math.cos(e.angle*Math.PI/180)*e.radius,SH02_WELL.bell-e.height/2+1,Math.sin(e.angle*Math.PI/180)*e.radius);p.userData.engine=e;ship.add(p);p.userData.setIntensity(0);return p;});
@@ -56,5 +59,5 @@ export async function createBaseTraffic(view,race,{celebration=false}={}){
  }
  function update(){const eye=ship.worldToLocal(view.camera.position.clone());for(const p of plumes){const e=p.userData.engine;p.userData.setIntensity(state.plume*(1-e.depth+e.depth*Math.sin(time*e.cadence+e.phase))*.55);p.userData.tick(time+e.phase);p.rotation.set(0,Math.atan2(eye.x-p.position.x,eye.z-p.position.z),0);}}
  apply(0);
- return {root,ship,model:rocket.scene,pad:pad.scene,clips,plumes,step(dt){if(generation!==view.world.race.hazardGeneration){generation=view.world.race.hazardGeneration;time=landings=takeoffs=0;last=celebration?celebrationArrivalState(0,false):trafficState(0);dustKey='';dropDust();apply(0);}if(!['racing','finished'].includes(race.phase))return;time+=dt;apply(dt);},update,snapshot(){return {celebration,time,phase:state.phase,altitude:state.altitude,cycle:state.cycle,landings,takeoffs,plume:state.plume,dust:!!dust,visible:ship.visible,clips:Object.fromEntries(Object.entries(clips).filter(([,a])=>a.enabled).map(([n,a])=>[n,a.time]))};}};
+ return {root,ship,model:rocket.scene,pad:pad.scene,clips,plumes,step(dt){if(generation!==view.world.race.hazardGeneration){generation=view.world.race.hazardGeneration;time=landings=takeoffs=0;last=celebration?celebrationArrivalState(0,false):trafficState(0);dustKey='';dropDust();apply(0);}if(!['racing','finished'].includes(race.phase))return;time+=dt;apply(dt);},update,snapshot(){return {celebration,time,phase:state.phase,altitude:state.altitude,cycle:state.cycle,landings,takeoffs,plume:state.plume,dust:!!dust,visible:ship.visible,padVisible:root.visible&&pad.scene.visible,clips:Object.fromEntries(Object.entries(clips).filter(([,a])=>a.enabled).map(([n,a])=>[n,a.time]))};}};
 }

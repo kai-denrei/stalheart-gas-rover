@@ -40,7 +40,7 @@ Later extensions can add reusable city assemblies, explicit bridge pieces, encou
 
 ## Celebration SH02
 
-The third podium claim starts a separate arrival beside the finish. The SH02 appears 320 m above its landing pad and 360 m behind it, ignites its boosters after 1.4 seconds, and descends over 14 seconds. It reuses Stalheart's animated landing legs, shock absorption, opening door, clustered plumes, dust and scorch. It stays docked for the celebration and resets with the race. Regular base traffic continues on its own schedule and audio source.
+The third podium claim starts a separate arrival onto the connected front-right podium apron. The apron and receiving tower are visible from the start and included in the finish preview. The SH02 appears 320 m above its landing pad and 360 m behind it, ignites its boosters after 1.4 seconds, and descends over 14 seconds. It reuses Stalheart's animated landing legs, shock absorption, opening door, clustered plumes, dust and scorch. It stays docked for the celebration and resets with the race. Regular base traffic continues on its own schedule and audio source.
 
 ## Verification
 

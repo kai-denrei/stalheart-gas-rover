@@ -1,3 +1,4 @@
+import {ARRIVAL_APRON} from './podium-layout.js';
 import {COURSES,BASE1_ROUTE} from './race-courses.js';
 import {Vector3} from '../upstream/stalheart/vendor/three.module.js';
 import {point,frameAt} from './world.js';
@@ -19,4 +20,4 @@ export function createRaceWorld(id='race'){
  return {holes,pads,rocks,colliders,holeScale:1,race:{course,route,gates,deck,spots,rules:RACE_RULES}};
 }
 export function segmentDistance(x,z,a,b){const dx=b[0]-a[0],dz=b[1]-a[1],t=Math.max(0,Math.min(1,((x-a[0])*dx+(z-a[1])*dz)/(dx*dx+dz*dz)));return Math.hypot(x-a[0]-t*dx,z-a[1]-t*dz);}
-export function onCourse(world,x,z,margin=0){const {route,deck,rules}=world.race;if(Math.abs(x-deck.x)<=deck.w/2+2+margin&&z>=deck.z-deck.d/2-10-margin&&z<=deck.z+deck.d/2+3+margin)return true;return route.concat([[deck.x,deck.z]]).slice(1).some((b,i)=>segmentDistance(x,z,route[i]||route.at(-1),b)<=rules.halfWidth+margin);}
+export function onCourse(world,x,z,margin=0){const {route,deck,rules}=world.race;if(Math.abs(x-deck.x)<110&&Math.abs(z-deck.z)<80){const p=point(x,z).sub(deck.origin),a=ARRIVAL_APRON;if(Math.abs(p.dot(deck.frame.east)-a.x)<=a.w/2+margin&&Math.abs(p.dot(deck.frame.north)-a.z)<=a.d/2+margin)return true;}if(Math.abs(x-deck.x)<=deck.w/2+2+margin&&z>=deck.z-deck.d/2-10-margin&&z<=deck.z+deck.d/2+3+margin)return true;return route.concat([[deck.x,deck.z]]).slice(1).some((b,i)=>segmentDistance(x,z,route[i]||route.at(-1),b)<=rules.halfWidth+margin);}

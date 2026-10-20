@@ -25,11 +25,19 @@ export class IsaoController {
  unlock(){this.unlocked=true;}
  enter(){
   if(!this.unlocked)return false;
-  if(!this.spawned){const source=this.view.sim.pos,f=frameAt(source);this.position.copy(source).addScaledVector(f.up,4).addScaledVector(f.east,4);this.rotation.copy(f.q).multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),this.yaw));this.velocity.set(0,0,0);this.resolveContacts();this.capture();this.spawned=true;}
+  if(!this.spawned){
+   const deck=this.view.world.race?.deck,rigs=this.view.raceView?.defense?.rigs||[],sites=this.view.raceView?.city?.sites||[];
+   const mounts=rigs.filter(r=>!r.podium&&r.state.family==='quiver').map(r=>{const position=r.model.getWorldPosition(new T.Vector3()),site=sites.find(s=>s.root.position.clone().sub(position).projectOnPlane(upAt(position)).length()<3);return {position,amber:site?.base===2};});
+   const nearby=deck?mounts.filter(m=>m.position.distanceTo(deck.origin)<180):[];nearby.sort((a,b)=>Number(b.amber)-Number(a.amber)||a.position.distanceToSquared(deck.origin)-b.position.distanceToSquared(deck.origin));
+   if(nearby.length){this.position.copy(nearby[0].position).addScaledVector(upAt(nearby[0].position),12);this.overlook=coords(this.position);}
+   else if(deck)this.position.copy(deck.origin).addScaledVector(deck.frame.north,-65).addScaledVector(deck.frame.up,48);
+   else {const source=this.view.sim.pos,f=frameAt(source);this.position.copy(source).addScaledVector(f.up,4).addScaledVector(f.east,4);}
+   const f=frameAt(this.position);if(deck){const target=deck.origin.clone().addScaledVector(deck.frame.north,-15).addScaledVector(deck.frame.up,deck.h+3),delta=target.sub(this.position);this.yaw=Math.atan2(delta.dot(f.east),delta.dot(f.north));this.cameraYaw=0;this.pitch=T.MathUtils.clamp(Math.atan2(-delta.dot(f.up),delta.clone().projectOnPlane(f.up).length()),.1,1.05);this.distance=10;}
+   this.rotation.copy(f.q).multiply(new T.Quaternion().setFromAxisAngle(new T.Vector3(0,1,0),this.yaw));this.velocity.set(0,0,0);this.resolveContacts();this.capture();this.spawned=true;}
   this.active=true;this.forwardHeld=0;this.root.visible=true;this.cameraInitialized=false;return true;
  }
  capture(){this.previous.copy(this.position);this.previousRotation.copy(this.rotation);}
- reset(){this.active=false;this.unlocked=false;this.spawned=false;this.root.visible=false;this.keys.clear();this.velocity.set(0,0,0);this.yaw=0;this.cameraYaw=0;this.pitch=.32;this.distance=5;this.forwardHeld=0;this.setFace('Happy');}
+ reset(){this.active=false;this.unlocked=false;this.spawned=false;this.overlook=null;this.root.visible=false;this.keys.clear();this.velocity.set(0,0,0);this.yaw=0;this.cameraYaw=0;this.pitch=.32;this.distance=5;this.forwardHeld=0;this.setFace('Happy');}
  look(dx,dy){this.cameraYaw-=dx*.005;this.pitch=T.MathUtils.clamp(this.pitch+dy*.004,-.55,1.25);}
  resolveContacts(){
   this.contacts=0;

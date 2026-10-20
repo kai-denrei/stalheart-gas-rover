@@ -28,6 +28,7 @@
     "test:planes": "node scripts/planes-browser-test.mjs",
     "test:boost-finale": "node scripts/boost-finale-browser-test.mjs",
     "test:polish": "node scripts/rover-polish-browser-test.mjs",
+    "test:handoff": "node scripts/podium-handoff-browser-test.mjs",
     "test:stage": "node scripts/stage-maker-browser-test.mjs && node scripts/stage-template-browser-test.mjs",
     "test:overturned": "node scripts/overturned-browser-test.mjs"
   },

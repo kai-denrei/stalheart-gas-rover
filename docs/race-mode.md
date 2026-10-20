@@ -15,7 +15,7 @@ The course has straights, right-angle corners, two tight hairpins, seven solid r
 - **Arrow keys / Q/E:** pitch, yaw and roll corrections.
 - **R:** recover to the last validated gate, refill, and wait three seconds.
 - **P:** pause; **V:** camera; mouse drag/scroll changes the view.
-- **Restart race:** reset all five rovers and start a shared five-second countdown.
+- **Restart race:** reset all five rovers and start a shared three-second countdown.
 
 Gates must be crossed **in order between the flags**, on the ground or airborne. Swept validation catches fast crossings; the ceiling is the top of the flags. Return through a missed gate; the next gate remains cyan until then. Crossing the last gate validates the course but does not finish the race.
 
@@ -89,10 +89,18 @@ Next stage requested by the owner: heavier enemies and distant Gunship/SOL suppo
 
 The Great Divide black-hole formation keeps its compass bearing and is raised above Base 2’s local horizon to frame the finish gantry. Decorative direction chevrons and leftover proving-ground runway strips are removed from races; kerbs, flags and service pads remain.
 
-The five-light start sequence and beeps use the physical board only, without a duplicate countdown HUD. Recovery displays a large `PENALTY 3`, `2`, `1` with its reason. The recovery penalty remains three seconds. The preceding out-of-bounds warning lasts five seconds and only runs when all touching wheels are more than 4 m beyond the road edge; airborne travel is exempt.
+The three-light start sequence and beeps use the physical board only, without a duplicate countdown HUD. Recovery displays a large `PENALTY 3`, `2`, `1` with its reason. The recovery penalty remains three seconds. The preceding out-of-bounds warning lasts five seconds and only runs when all touching wheels are more than 4 m beyond the road edge; airborne travel is exempt.
 
 Damaging rover–alien contacts produce red envelopes around both bodies plus a short expanding contact ring. The effect is capped at 16 simultaneous impacts, uses two instanced batches, and follows the existing contact cooldown. Actual impulse recoil remains mass-dependent; killed small bodies carry their knockback briefly before settling.
 
 The current control sets, named three-plane flips, gate bonuses and total-wreck recovery are specified in [flight and race rules](flight-and-traction.md).
 
 Race refill areas retain their flat disk/ring markers but omit the old proving-ground bollards and glowing caps, which protruded through the asphalt. The box-shaped rocks remain intentional physical obstacles.
+
+## Lift-off turns and podium handoff
+
+While grounded and moving above walking speed, release W while holding A/D to shift grip forward: the rear slides farther and the rover turns more sharply. Reapply throttle or straighten the steering to recover. The effect fades with speed and does not add forces in flight.
+
+A podium claim automatically switches control to ISAO, hovering 12 m above a nearby dome-mounted Quiver and facing the prize spots. Great Divide prefers the nearby orange Base 2 domes. There is no F toggle back to the finished rover; restarting the race restores driving. If an authored stage has no suitable dome sentry, ISAO uses an elevated overlook in front of the finish.
+
+The celebration SH02 lands on a connected apron at the front-right of the podium when viewed from the approach. The apron, pad and receiving tower are present throughout the race. The front battery on that side sits farther out to clear the new structure. The rocket retains its orbital approach, delayed booster ignition and 14-second touchdown sequence after the third claim.

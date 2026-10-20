@@ -4,7 +4,7 @@ Open **http://localhost:8166/?mode=race** and refresh an existing tab.
 
 ## Post-race ISAO
 
-Claiming any podium automatically hands control to ISAO. Players who miss the podium also receive control once the race ends. F switches between ISAO and the parked rover's views. Restart removes the drone and locks the handoff again.
+Claiming any podium automatically hands control to ISAO. Players who miss the podium also receive control once the race ends. ISAO starts above the nearest suitable dome-mounted Quiver, looking toward the podium; Great Divide prefers an orange dome. Post-race control stays with ISAO without an F toggle. Restart removes the drone and locks the handoff again.
 
 | Control | Action |
 | --- | --- |
@@ -13,7 +13,6 @@ Claiming any podium automatically hands control to ISAO. Players who miss the po
 | Shift+Space / Space | Descend / ascend |
 | Drag | Orbit the third-person camera |
 | Mouse wheel | Zoom |
-| F | ISAO / rover view |
 | P / Escape | Pause |
 
 The original `isao_birudoron_lod1.glb` is copied from Stalheart revision `5c36b5a13b5ca72532396c5cdc03303841b15c8f` and hash-pinned. The model is fitted to a 1.4 m span for this playable role. Its original `Hover_Idle`, `Rotor_Cycle`, happy, determined and surprised expressions drive the character. ISAO retains his commanded heading when hovering or reversing. Mouse dragging only orbits the camera; it does not steer flight.
@@ -35,7 +34,7 @@ The road uses the same polyline/capsule union as the race boundary and the exist
 ## Validation
 
 - 78 unit tests pass; 164 pinned assets and 149 modules pass hash, syntax and import checks.
-- Browser acceptance verifies actual flag impacts, physical player podium claim, automatic ISAO takeover, keyboard movement isolated from the rover, paused movement, F switching, continued combat and reset cleanup.
+- Browser acceptance verifies actual flag impacts, physical player podium claim, automatic ISAO takeover, keyboard movement isolated from the rover, paused movement, the absence of an F toggle, continued combat and reset cleanup.
 - Full physical race completes all 14 gates and fills the three podiums at about 189 seconds with solid flags present.
 - Local desktop Chrome samples remain approximately 60 FPS at 1440×913 (DPR 1) and 2520×1597 (DPR 1.75). The ISAO battle samples average about 1.01 ms simulation, 2.48–2.61 ms render submission and 2.10–4.37 ms GPU; P95 frame interval 16.7 ms. These are local measurements, not a phone benchmark.
 

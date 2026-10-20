@@ -19,7 +19,7 @@ export class Simulation {
   // A new opening can scatter solid debris over a pad. Pick a clear point inside
   // the checkpoint ring instead of resetting the rover inside a boulder.
   for(const radius of [0,2,3.5]){let found=false;for(let i=0;i<(radius?12:1);i++){const angle=i*Math.PI/6,p=pad.origin.clone().addScaledVector(pad.frame.up,.46).addScaledVector(pad.frame.east,Math.cos(angle)*radius).addScaledVector(pad.frame.north,Math.sin(angle)*radius),near=nearColliders(this.world,p,3.5);if(!ROVER_SOLIDS.some(shape=>{const c=shape.center.clone().applyQuaternion(pad.frame.q).add(p);return near.some(solid=>sphereContact(solid,c,shape.radius));})){this.pos.copy(p);found=true;break;}}if(found)break;}
-  this.vel.set(0,0,0);this.omega.set(0,0,0);this.spent=0;this.exhausted=null;this.grounded=true;this.supportTime=.1;this.contactCount=6;this.bodyContacts=0;this.inverted=0;this.invertedSupport=0;this.rightingBoost=false;this.tilt=0;this.age=0;this.padTime=0;this.refilled=true;this.burn=allocate(V(),V(),this.tune.lift/8);this.airtime=0;this.peak=0;this.impact=0;this.steering=0;this.drift=0;this.wheelContact=Array(6).fill(true);this.traction=1;this.trickAxes=[false,false,false];this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];this.rcs=reactionBurn(V(),V());this.parked=false;this.wheelSpin=Array(6).fill(0);this.lastCollision=null;this.collisionCooldown=0;this.kickFlight=false;this.kickAngle=0;this.kickTurns=0;this.kickInput=0;this.kickTotal??=0;this.figureTotal??=0;this.enemyPrevious=null;this.lastReason=reason;this.event('reset',{reason});this.motion.capture();}
+  this.vel.set(0,0,0);this.omega.set(0,0,0);this.spent=0;this.exhausted=null;this.grounded=true;this.supportTime=.1;this.contactCount=6;this.bodyContacts=0;this.inverted=0;this.invertedSupport=0;this.rightingBoost=false;this.tilt=0;this.age=0;this.padTime=0;this.refilled=true;this.burn=allocate(V(),V(),this.tune.lift/8);this.airtime=0;this.peak=0;this.impact=0;this.steering=0;this.drift=0;this.oversteer=0;this.wheelContact=Array(6).fill(true);this.traction=1;this.trickAxes=[false,false,false];this.figureAngles=[0,0];this.figureTurns=[0,0];this.figureLabels=[null,null];this.rcs=reactionBurn(V(),V());this.parked=false;this.wheelSpin=Array(6).fill(0);this.lastCollision=null;this.collisionCooldown=0;this.kickFlight=false;this.kickAngle=0;this.kickTurns=0;this.kickInput=0;this.kickTotal??=0;this.figureTotal??=0;this.enemyPrevious=null;this.lastReason=reason;this.event('reset',{reason});this.motion.capture();}
  receiveImpact(hit){
   if(!this.damageEnabled)return null;
   const wasWreck=this.damage.wreck;
@@ -99,20 +99,23 @@ export class Simulation {
    let accel=input.drive?Math.max(-8,Math.min(9,(desired-speed)*2)):-speed*.45;
    // Above motor cruise speed, coast the drivetrain instead of fighting the jets.
    if(input.boost&&this.rcs.force.z*input.boost>0&&Math.sign(speed)===Math.sign(input.boost)&&Math.abs(speed)>Math.abs(desired))accel=-speed*.12;
-   const handbrake=Math.max(0,Math.min(1,input.brake||0)),powerDrift=Math.max(0,input.drive)*Math.min(1,Math.abs(input.steer)*2.1)*Math.min(1,Math.max(0,(speed-4.5)/5.5))*.995,wantDrift=Math.max(powerDrift,handbrake*Math.min(1,Math.max(0,(Math.abs(speed)-2)/4)));
+   // Lift-off transfers grip forward: the rear steps out while the front tightens the turn.
+   const liftOff=!input.drive&&!input.boost?Math.min(1,Math.max(0,(speed-4)/5))*Math.min(1,Math.abs(input.steer)*2):0;
+   this.oversteer+=(liftOff-this.oversteer)*Math.min(1,dt*6);
+   const handbrake=Math.max(0,Math.min(1,input.brake||0)),powerDrift=Math.max(0,input.drive)*Math.min(1,Math.abs(input.steer)*2.1)*Math.min(1,Math.max(0,(speed-4.5)/5.5))*.995,wantDrift=Math.max(powerDrift,this.oversteer*.99,handbrake*Math.min(1,Math.max(0,(Math.abs(speed)-2)/4)));
    this.drift+=(wantDrift-this.drift)*Math.min(1,dt*(wantDrift>this.drift?14:2.8));
    if(handbrake)accel=input.drive?accel-Math.sign(speed)*2:-Math.max(-12,Math.min(12,speed/dt));
    this.vel.addScaledVector(f,accel*health.drive*traction*dt).addScaledVector(r,-this.vel.dot(r)*Math.min(1,dt*7*health.grip*traction*(1-this.drift)));
    // Axle forces: front tyres retain bite while the accelerating or braked rear axle loses lateral grip.
    for(const [z,grip] of [[1.15,4.5],[-1.15,.08]]){const lever=f.clone().multiplyScalar(z),slip=this.vel.clone().add(new Vector3().crossVectors(this.omega,lever)).dot(r),force=Math.max(-grip,Math.min(grip,-slip*grip))*this.drift*health.grip*traction;this.impulse(r.clone().multiplyScalar(force*dt),lever);}
-   const targetYaw=-input.steer*(.55+Math.min(Math.abs(speed)/10,1)*.65)*(1+this.drift*.18)*(speed<-.5?-1:1)*health.steer+health.pull*Math.max(-1.5,Math.min(1.5,speed/10));
-   this.omega.addScaledVector(up,(targetYaw-this.omega.dot(up))*Math.min(1,dt*(9-5.5*this.drift)*health.grip*traction));
+   const targetYaw=-input.steer*(.55+Math.min(Math.abs(speed)/10,1)*.65)*(1+this.drift*.18)*(1+this.oversteer*.45)*(speed<-.5?-1:1)*health.steer+health.pull*Math.max(-1.5,Math.min(1.5,speed/10));
+   this.omega.addScaledVector(up,(targetYaw-this.omega.dot(up))*Math.min(1,dt*(9-5.5*this.drift+3*this.oversteer)*health.grip*traction));
    // Speed and lateral acceleration unload the inside tyres physically. There
    // is no random grip switch: contact returns when the chassis levels again.
    const roll=Math.atan2(bodyUp.dot(r.clone().negate()),bodyUp.dot(up)),lean=Math.max(0,Math.min(1,(Math.abs(speed)-11)/11))*Math.max(-1,Math.min(1,this.omega.dot(up)))*.22;
    this.omega.addScaledVector(f,((lean-roll)*40-this.omega.dot(f)*5)*dt);
   }
-  if(!groundMode)this.drift*=Math.exp(-dt*8);
+  if(!groundMode){this.drift*=Math.exp(-dt*8);this.oversteer*=Math.exp(-dt*8);}
   this.pos.addScaledVector(this.vel,dt);
   const angle=this.omega.length()*dt;if(angle>1e-10)this.q.premultiply(new Quaternion().setFromAxisAngle(this.omega.clone().normalize(),angle)).normalize();
   let wheelContacts=0,bodyContacts=0,maxImpact=0,collision=null;const supported=new Set(),solids=nearColliders(this.world,this.pos,3.5);
@@ -194,5 +197,5 @@ export class Simulation {
    if(this.inverted>=OVERTURN_RECOVERY_DELAY-1e-8){this.inverted=0;this.reset('OVERTURNED');}
   }else this.inverted=0;
  }
- snapshot(){return {overturnedIdle:this.inverted,flightTurns:this.flightTurns,catastrophic:this.catastrophic,wreckDelay:this.wreckDelay,wreckTime:this.wreckTime,drift:this.drift,traction:this.traction,wheelContact:[...this.wheelContact],figures:{angles:[...this.figureAngles],turns:[...this.figureTurns]},damage:{enabled:this.damageEnabled,...this.damage.snapshot()},kick:{active:this.kickFlight,angle:this.kickAngle,turns:this.kickTurns,total:this.kickTotal},time:this.time,position:this.pos.toArray(),velocity:this.vel.toArray(),quaternion:this.q.toArray(),angularVelocity:this.omega.toArray(),grounded:this.grounded,contacts:this.contactCount,gas:this.reserve,spent:this.spent,exhausted:this.exhausted,altitude:this.altitude,tilt:this.tilt,checkpoint:this.checkpoint,collision:this.lastCollision,burn:this.burn.effort,events:this.events.slice(-8)};}
+ snapshot(){return {overturnedIdle:this.inverted,flightTurns:this.flightTurns,catastrophic:this.catastrophic,wreckDelay:this.wreckDelay,wreckTime:this.wreckTime,oversteer:this.oversteer,drift:this.drift,traction:this.traction,wheelContact:[...this.wheelContact],figures:{angles:[...this.figureAngles],turns:[...this.figureTurns]},damage:{enabled:this.damageEnabled,...this.damage.snapshot()},kick:{active:this.kickFlight,angle:this.kickAngle,turns:this.kickTurns,total:this.kickTotal},time:this.time,position:this.pos.toArray(),velocity:this.vel.toArray(),quaternion:this.q.toArray(),angularVelocity:this.omega.toArray(),grounded:this.grounded,contacts:this.contactCount,gas:this.reserve,spent:this.spent,exhausted:this.exhausted,altitude:this.altitude,tilt:this.tilt,checkpoint:this.checkpoint,collision:this.lastCollision,burn:this.burn.effort,events:this.events.slice(-8)};}
 }
