@@ -1,0 +1,14 @@
+import assert from 'node:assert/strict';
+import {writeFile} from 'node:fs/promises';
+import {browser} from './browser-session.mjs';
+const b=await browser(new URL('?mode=race',process.env.LAB_URL||'http://localhost:8166/').href,{watchdogMs:300000});
+try{
+ for(let i=0;i<800;i++){if(await b.evaluate('!!window.roverLab?.ready()'))break;await new Promise(r=>setTimeout(r,150));}
+ await b.call('Runtime.evaluate',{expression:"document.getElementById('start').click();document.getElementById('skipIntro').click();roverLab.pause()",userGesture:true});
+ const report=await b.evaluate(`(async()=>{const {Vector3}=await import('./upstream/stalheart/vendor/three.module.js'),l=roverLab,d=l.view.raceView.defense,previous=new Map(),r={samples:0,maxClawSlip:0,maxFootError:0,minContacts:6,stanceSamples:0,swings:0},original=d.defense.beforeWeapons;
+ d.defense.beforeWeapons=dt=>{original(dt);r.samples++;for(const rig of d.feids.rigs){const contacts=rig.gait.feet.filter(f=>f.planted).length;r.minContacts=Math.min(r.minContacts,contacts);for(const f of rig.gait.feet){const foot=rig.model.getObjectByName('SOCKET_FOOT_'+f.leg.id).getWorldPosition(new Vector3());r.maxFootError=Math.max(r.maxFootError,foot.distanceTo(f.position));const key=d.feids.rigs.indexOf(rig)+f.leg.id,old=previous.get(key),tips=[1,2,3].map(i=>rig.model.getObjectByName('SOCKET_CLAW_'+f.leg.id+'_'+i).getWorldPosition(new Vector3()));if(f.planted&&old?.planted){r.stanceSamples++;for(let i=0;i<3;i++)r.maxClawSlip=Math.max(r.maxClawSlip,tips[i].distanceTo(old.tips[i]));}if(!f.planted)r.swings++;previous.set(key,{planted:f.planted,tips});}}};
+ l.step({},24);d.defense.beforeWeapons=original;r.mechs=d.feids.snapshot();return r;})()`);
+ assert.ok(report.samples>700);assert.ok(report.stanceSamples>1000);assert.ok(report.swings>1000);assert.ok(report.minContacts>=3);assert.ok(report.maxClawSlip<.00001,JSON.stringify(report));assert.ok(report.maxFootError<.001,JSON.stringify(report));assert.ok(report.mechs.mechs.every(m=>m.distance>2));
+ await b.evaluate(`(()=>{const v=roverLab.view,s=v.raceView.defense.feids.controller.site;v.isao.active=true;v.isao.present=()=>{v.camera.position.copy(s.origin).addScaledVector(s.frame.east,14).addScaledVector(s.frame.up,8).addScaledVector(s.frame.north,20);v.camera.up.copy(s.frame.up);v.camera.lookAt(s.origin);v.camera.updateMatrixWorld();};document.body.classList.add('intro-mode');v.render(.016);})()`);
+ await b.screenshot('artifacts/mech-anchored-gait.png');assert.deepEqual(b.errors,[]);await writeFile('artifacts/mech-gait-browser.json',JSON.stringify(report,null,2));console.log(JSON.stringify({samples:report.samples,minContacts:report.minContacts,maxClawSlip:report.maxClawSlip,maxFootError:report.maxFootError,travel:report.mechs.mechs.map(m=>m.distance),errors:b.errors},null,2));
+}finally{await b.close();}

@@ -35,6 +35,7 @@
     "profile:fleet": "node scripts/profile-fleet.mjs",
     "test:gates": "node scripts/gate-feedback-browser-test.mjs",
     "test:feids": "node scripts/feids-browser-test.mjs",
+    "test:mech-gait": "node scripts/mech-gait-browser-test.mjs",
     "profile:feids": "node scripts/profile-feids.mjs"
   },
   "engines": {
