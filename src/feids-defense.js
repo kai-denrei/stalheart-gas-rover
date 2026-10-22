@@ -36,30 +36,46 @@ export function deploymentCues(){
  TOUCHDOWNS.forEach((at,i)=>cues.push({id:'mech-'+i,name:'mech_reentry',at:at-MECH_IMPACT_AUDIO,gain:.65,mech:i},{id:'rubble-'+i,name:'mech_rubble',at:at+.06,gain:.65,mech:i}));
  return cues.sort((a,b)=>a.at-b.at);
 }
+export function quiverCadence(mech,pod,shot=0){
+ // Stable variation per launcher and salvo; replay/reset stays reproducible.
+ const seed=((mech+1)*73856093^(pod+1)*19349663^(shot+1)*83492791)>>>0;
+ return {delay:.18+mech*.19+pod*.43,reload:3.1+mech*.16+pod*.29+(seed%997)/997*.65};
+}
 export class FeidsDefense {
  constructor(world){this.world=world;this.site=deploymentSite(world);this.reset();}
- reset(){this.startedAt=null;this.time=-1;this.generation=this.world.race.hazardGeneration;this.events=[];this.mechs=(this.site?.landings||[]).map((p,i)=>({id:i,...p,home:{...p},heading:i%2?.22:-.22,walk:0,speed:0,active:false,target:null,nextScan:0,position:point(p.x,p.z),distance:0,landed:false}));}
- step(dt,race,defense){
+ reset(){this.startedAt=null;this.time=-1;this.generation=this.world.race.hazardGeneration;this.events=[];this.mechs=(this.site?.landings||[]).map((p,i)=>({id:i,...p,home:{...p},heading:i%2?.22:-.22,walk:0,speed:0,active:false,target:null,nextScan:0,position:point(p.x,p.z),distance:0,landed:false,sector:[-2.5,-.85,.8,2.35][i],patrol:null,patrolIndex:0,blocked:0,mode:'deploying'}));}
+ step(dt,race,defense,{hunt=true}={}){
   if(this.generation!==this.world.race.hazardGeneration)this.reset();if(!this.site)return;
-  if(this.startedAt===null){if(!['racing','finished'].includes(race.phase)||!race.racers.some(r=>r.gate>=Math.ceil(this.world.race.gates.length*.65)))return;this.startedAt=defense.time;}
+  if(this.startedAt===null){if(!['racing','finished'].includes(race.phase))return;this.startedAt=defense.time;}
   const previous=this.time;this.time=Math.max(0,defense.time-this.startedAt);
   for(const m of this.mechs){
    if(!m.landed&&this.time>=TOUCHDOWNS[m.id]){m.landed=true;this.events.push({type:'impact',mech:m.id,at:TOUCHDOWNS[m.id]});}
-   m.active=this.time>=TOUCHDOWNS[m.id]+SETTLE_SECONDS;if(!m.active)continue;
-   if(defense.time>=m.nextScan){m.nextScan=defense.time+.35;let best=145**2,target=null;for(const e of defense.enemies){if(e.dead)continue;const d=m.position.distanceToSquared(e.position);if(d<best){best=d;target=e;}}m.target=target?.id??null;}
-   const target=defense.enemies.find(e=>e.id===m.target&&!e.dead);m.speed=0;
-   if(target){const frame=frameAt(m.position),delta=target.position.clone().sub(m.position),wanted=Math.atan2(delta.dot(frame.east),delta.dot(frame.north)),turn=angle(wanted-m.heading);m.heading+=clamp(turn,-1.25*dt,1.25*dt);
-    const distance=Math.hypot(target.x-m.x,target.z-m.z);
-    if(distance>19&&Math.abs(turn)<.65){
-     for(const offset of [0,.7,-.7,1.25,-1.25]){const heading=m.heading+offset,travel=1.65*dt,next=coords(m.position.clone().addScaledVector(frame.east,Math.sin(heading)*travel).addScaledVector(frame.north,Math.cos(heading)*travel)),x=next.x,z=next.z,dx=x-m.x,dz=z-m.z;
-      if(Math.hypot(x-m.home.x,z-m.home.z)>95||!clearMechSite(this.world,x,z))continue;
-      if(this.mechs.some(other=>other!==m&&Math.hypot(x-other.x,z-other.z)<MECH_RADIUS*2+.2)||race.racers.some(r=>!r.pendingRespawn&&point(x,z,1).distanceTo(r.sim.pos)<5.8))continue;
-      m.x=x;m.z=z;m.speed=1.65;m.distance+=Math.hypot(dx,dz);m.walk+=Math.hypot(dx,dz)/(.8*SCALE/2.4);break;
-     }
+   m.active=this.time>=TOUCHDOWNS[m.id]+SETTLE_SECONDS;m.speed=0;if(!m.active||!hunt)continue;
+   if(defense.time>=m.nextScan){m.nextScan=defense.time+.55+m.id*.035;let best=Infinity,target=null;
+    for(const e of defense.enemies){if(e.dead||Math.hypot(e.x-m.home.x,e.z-m.home.z)>155)continue;const d=m.position.distanceToSquared(e.position);if(d>180**2)continue;
+     const assigned=this.mechs.filter(other=>other!==m&&other.target===e.id).length,bearing=Math.atan2(e.x-m.home.x,e.z-m.home.z),score=d+assigned*12000+(1-Math.cos(bearing-m.sector))*1800-(e.id===m.target?350:0);
+     if(score<best){best=score;target=e;}
+    }m.target=target?.id??null;
+   }
+   const target=defense.enemies.find(e=>e.id===m.target&&!e.dead);let goal;
+   if(target){m.mode='hunt';m.patrol=null;const dx=m.x-target.x,dz=m.z-target.z,d=Math.hypot(dx,dz);if(d<21){const a=Math.atan2(dx,dz)+(m.id%2?-.55:.55);goal={x:target.x+Math.sin(a)*20,z:target.z+Math.cos(a)*20};}else goal=target;}
+   else {m.mode='patrol';if(!m.patrol||Math.hypot(m.x-m.patrol.x,m.z-m.patrol.z)<2||m.blocked>2.5){m.patrol=null;m.blocked=0;
+     for(let k=0;k<24;k++){const a=m.sector+Math.sin(m.patrolIndex*.83)*.65+k*2.399,r=16+(m.patrolIndex%3)*9,x=m.home.x+Math.sin(a)*r,z=m.home.z+Math.cos(a)*r;
+      if(clearMechSite(this.world,x,z)&&this.mechs.every(o=>o===m||!o.patrol||Math.hypot(x-o.patrol.x,z-o.patrol.z)>12)){m.patrol={x,z};break;}}
+     m.patrolIndex++;
+    }goal=m.patrol;
+   }
+   if(!goal)continue;const frame=frameAt(m.position),look=(target?.position||point(goal.x,goal.z)).clone().sub(m.position);if(target?.velocity)look.addScaledVector(target.velocity,look.length()/150);const wanted=Math.atan2(look.dot(frame.east),look.dot(frame.north)),turn=angle(wanted-m.heading);m.heading+=clamp(turn,-1.5*dt,1.5*dt);
+   const towards=point(goal.x,goal.z).sub(m.position),travelHeading=Math.atan2(towards.dot(frame.east),towards.dot(frame.north));
+   if(Math.abs(turn)<.9){
+    for(const offset of [0,.55,-.55,1.1,-1.1,1.65,-1.65,2.2,-2.2]){const heading=travelHeading+offset,travel=(1.8+m.id*.08)*dt,next=coords(m.position.clone().addScaledVector(frame.east,Math.sin(heading)*travel).addScaledVector(frame.north,Math.cos(heading)*travel)),x=next.x,z=next.z,dx=x-m.x,dz=z-m.z;
+     if(Math.hypot(x-m.home.x,z-m.home.z)>115||!clearMechSite(this.world,x,z))continue;
+     if(this.mechs.some(other=>other!==m&&Math.hypot(x-other.x,z-other.z)<MECH_RADIUS*2+.2)||race.racers.some(r=>!r.pendingRespawn&&point(x,z,1).distanceTo(r.sim.pos)<5.8))continue;
+     m.x=x;m.z=z;m.speed=travel/Math.max(dt,.001);m.distance+=Math.hypot(dx,dz);m.walk+=travel/(.8*SCALE/2.4);break;
     }
-   }m.position.copy(point(m.x,m.z));
+   }m.blocked=m.speed?0:m.blocked+dt;m.position.copy(point(m.x,m.z));
   }
   for(let i=0;i<2;i++){const at=6.2+i*.45;if(previous<at&&this.time>=at)this.events.push({type:'split',capsule:i,at});}
  }
- snapshot(){return {time:this.time,startedAt:this.startedAt,site:this.site?{x:this.site.x,z:this.site.z}:null,events:[...this.events],mechs:this.mechs.map(m=>({id:m.id,x:m.x,z:m.z,heading:m.heading,active:m.active,landed:m.landed,target:m.target,distance:m.distance}))};}
+ snapshot(){return {time:this.time,startedAt:this.startedAt,site:this.site?{x:this.site.x,z:this.site.z}:null,events:[...this.events],mechs:this.mechs.map(m=>({id:m.id,x:m.x,z:m.z,heading:m.heading,mode:m.mode,patrol:m.patrol,active:m.active,landed:m.landed,target:m.target,distance:m.distance}))};}
 }

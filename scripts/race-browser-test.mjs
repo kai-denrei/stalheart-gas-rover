@@ -3,7 +3,7 @@ const b=await browser('http://localhost:8166/?mode=race',{watchdogMs:300000});co
 try{
  await b.evaluate(`new Promise((resolve,reject)=>{const end=Date.now()+30000;const f=()=>window.roverLab?.ready()?resolve(true):Date.now()>end?reject(Error(document.getElementById('loadText').textContent)):setTimeout(f,100);f();})`);
  const initial=await b.evaluate(`(()=>{const l=roverLab;return {racers:l.race.racers.length,models:l.view.raceView.rivals.length,phase:l.race.phase,colliders:l.world.colliders.length,colors:l.view.raceView.rivals.map(v=>v.group.getObjectByName(v.family==='xb12'?'XB12_HULL':'CHASSIS_ARMOR_BODY').material.color.getHex()),gas:l.sim.reserve,locked:document.getElementById('unlimited').disabled};})()`);assert.equal(initial.racers,5);assert.equal(initial.models,4);assert.equal(new Set(initial.colors).size,4);assert.equal(initial.gas,160);assert.ok(initial.locked);checks.push('five distinct loaded rover models; equal finite reserve; fixed race rules');
- await b.evaluate(`document.getElementById('start').click();roverLab.pause();roverLab.view.render(.016);`);
+ await b.evaluate(`document.getElementById('start').click();document.getElementById('skipIntro').click();roverLab.pause();roverLab.view.render(.016);`);
  await new Promise(r=>setTimeout(r,600));await b.screenshot('artifacts/race-grid.png');
  const countdown=await b.evaluate(`roverLab.step({},2);roverLab.race.phase`);assert.equal(countdown,'countdown');await b.evaluate(`roverLab.step({},1.1)`);checks.push('shared three second countdown');
  // Drive the player using real browser keyboard events, with all rivals running.

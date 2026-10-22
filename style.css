@@ -20,3 +20,7 @@
 body.disco-mode > :not(#world):not(script):not(#help):not(#labPanel) { visibility:hidden !important; pointer-events:none !important; }
 
 .editor-return {display:inline-block;padding:10px 14px;border:1px solid #648c85;border-radius:4px;color:#aff3ce;background:#132b30;text-decoration:none;font:12px monospace;}
+
+/* Full viewport deployment, with only pause/skip controls over the animation. */
+body.intro-mode > :not(#world):not(#introControls):not(script) {visibility:hidden !important;pointer-events:none !important;}
+#introControls{position:fixed;right:24px;bottom:24px;z-index:50;display:flex;gap:10px}#introControls[hidden]{display:none}#introControls button{background:#09191dcc;color:#dcf5eb;border:1px solid #b0ded65c;padding:12px 16px;font:12px monospace;cursor:pointer}#introControls kbd{margin-left:8px;font-size:10px}

@@ -104,7 +104,7 @@ export class Presentation {
   const ground=terrainSample(this.world,s.pos,false),alt=Number.isFinite(ground.height)?Math.max(0,ground.altitude-ground.height):100;
   this.shadow.visible=Number.isFinite(ground.height)&&alt<30;if(this.shadow.visible){this.shadow.position.copy(s.pos.clone().sub(CENTER).normalize().multiplyScalar(RADIUS+ground.height+.06).add(CENTER));this.shadow.quaternion.setFromUnitVectors(new T.Vector3(0,0,1),up);this.shadow.material.opacity=.24*Math.max(0,1-alt/30);this.shadow.scale.setScalar((1+alt*.03)*s.vehicle.scale);}
   this.exhaustionMarker.visible=!!s.exhausted;if(s.exhausted){this.exhaustionMarker.position.fromArray(s.exhausted.position);this.exhaustionMarker.rotation.y=s.time;}
-  if(!this.isao?.active){
+  if(!this.isao?.active&&!this.intro?.active){
   const orbitF=fwd.clone().applyAxisAngle(up,this.orbit);let wanted,target=s.pos.clone().addScaledVector(up,.4);
   if(this.mode==='overhead'){wanted=s.pos.clone().addScaledVector(up,65).addScaledVector(fwd,-.1);}
   else if(this.mode==='mast'){wanted=s.pos.clone().addScaledVector(up,1.3).addScaledVector(fwd,1.1);target=wanted.clone().addScaledVector(fwd,25);}
@@ -123,7 +123,7 @@ export class Presentation {
   if(!this.cameraInitialized||this.mode==='mast'){this.camera.position.copy(wanted);this.look.copy(target);this.cameraInitialized=true;}else{this.camera.position.lerp(wanted,1-Math.exp(-dt*6));this.look.lerp(target,1-Math.exp(-dt*10));}
   this.camera.up.copy(this.mode==='overhead'?fwd:up);this.camera.lookAt(this.look);this.raceView?.celebration?.camera(this.camera);
   }
-  this.isao?.present(dt,alpha);
+  this.isao?.present(dt,alpha);this.intro?.camera();
   this.raceView?.city?.update(this.camera.position);this.performance.beginGpu();this.renderer.render(this.scene,this.camera);this.performance.endGpu();
  }
 }

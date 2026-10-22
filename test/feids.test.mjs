@@ -4,12 +4,12 @@ import assert from 'node:assert/strict';
 import {createRaceWorld} from '../src/race-world.js';
 import {point,frameAt} from '../src/world.js';
 import {CityDefense} from '../src/city-defense.js';
-import {FeidsDefense,clearMechSite,clearDropColumn,deploymentCues,TOUCHDOWNS} from '../src/feids-defense.js';
+import {FeidsDefense,clearMechSite,clearDropColumn,deploymentCues,quiverCadence,TOUCHDOWNS} from '../src/feids-defense.js';
 for(const mode of ['race','expedition'])test(mode+': FEIDS lands beside the arrival, activates after settling, resets without duplication',()=>{
- const world=createRaceWorld(mode),f=new FeidsDefense(world),defense={time:0,enemies:[]},race={phase:'racing',racers:[{gate:0,sim:{pos:point(0,0)}}]};
+ const world=createRaceWorld(mode),f=new FeidsDefense(world),defense={time:0,enemies:[]},race={phase:'countdown',racers:[{gate:0,sim:{pos:point(0,0)}}]};
  assert.ok(f.site);assert.ok(f.mechs.every(m=>clearMechSite(world,m.x,m.z)));assert.ok(Math.hypot(f.site.x-world.race.deck.x,f.site.z-world.race.deck.z)<150);
  f.step(.025,race,defense);assert.equal(f.startedAt,null);
- race.racers[0].gate=Math.ceil(world.race.gates.length*.65);f.step(.025,race,defense);assert.equal(f.time,0);assert.ok(f.mechs.every(m=>!m.active));
+ race.phase='racing';f.step(.025,race,defense);assert.equal(f.time,0);assert.ok(f.mechs.every(m=>!m.active));
  for(const t of [6.3,6.7,13.1,14.1,16.2,19.3,22]){defense.time=t;f.step(.025,race,defense);}
  assert.equal(f.events.filter(e=>e.type==='split').length,2);assert.deepEqual(f.events.filter(e=>e.type==='impact').map(e=>e.at),TOUCHDOWNS);assert.ok(f.mechs.every(m=>m.active));
  const m=f.mechs[0],before={x:m.x,z:m.z};defense.enemies=[{id:99,dead:0,position:point(m.x+30,m.z+30),x:m.x+30,z:m.z+30}];for(let i=0;i<200;i++){defense.time+=.025;f.step(.025,race,defense);}
@@ -24,3 +24,19 @@ test('disabled mobile weapons cannot acquire or fire while packed in the capsule
 });
 
 test('a bridge with clear ground beneath it still blocks the mech descent corridor',()=>{const world=createRaceWorld();world.colliders=[boxCollider({origin:point(0,0,8),frame:frameAt(point(0,0)),w:10,d:10,h:2},'overhead-bridge')];assert.equal(clearDropColumn(world,0,0),false);assert.equal(clearDropColumn(world,20,0),true);});
+
+test('all four settled mechs patrol separate directions even without enemies',()=>{
+ const world=createRaceWorld(),f=new FeidsDefense(world),race={phase:'racing',racers:[]},d={time:0,enemies:[]};f.step(0,race,d);d.time=28;f.step(0,race,d,{hunt:false});
+ for(let i=0;i<800;i++){d.time+=.025;f.step(.025,race,d);}
+ assert.ok(f.mechs.every(m=>m.distance>8&&m.mode==='patrol'));assert.equal(new Set(f.mechs.map(m=>Math.round(Math.atan2(m.z-m.home.z,m.x-m.home.x)))).size,4);
+ for(const a of f.mechs)for(const b of f.mechs)if(a!==b)assert.ok(Math.hypot(a.x-b.x,a.z-b.z)>5.2);
+});
+test('available aliens are distributed across hunters instead of everyone chasing one',()=>{
+ const world=createRaceWorld(),f=new FeidsDefense(world),race={phase:'racing',racers:[]},d={time:0,enemies:[]};f.step(0,race,d);d.time=28;
+ d.enemies=f.mechs.map((m,i)=>({id:i,x:m.x+Math.sin(m.sector)*30,z:m.z+Math.cos(m.sector)*30,position:point(m.x+Math.sin(m.sector)*30,m.z+Math.cos(m.sector)*30)}));
+ f.step(.025,race,d);assert.equal(new Set(f.mechs.map(m=>m.target)).size,4);assert.ok(f.mechs.every(m=>m.mode==='hunt'));
+});
+test('eight Quiver launchers have distinct repeatable delays and varied reloads',()=>{
+ const pods=Array.from({length:8},(_,i)=>quiverCadence(i>>1,i%2));assert.equal(new Set(pods.map(p=>p.delay)).size,8);assert.equal(new Set(pods.map(p=>p.reload)).size,8);
+ assert.deepEqual(quiverCadence(2,1,3),quiverCadence(2,1,3));assert.notEqual(quiverCadence(2,1,3).reload,quiverCadence(2,1,4).reload);
+});
