@@ -1,0 +1,1002 @@
+{
+  "family": "feids26",
+  "label": "FEIDS-26 / Fusiform Expendable Interplanetary Delivery System",
+  "plain_glb_source_of_truth": true,
+  "coordinate_system": {
+    "units": "metres",
+    "up": "+Y",
+    "forward": "+Z",
+    "origin": "ground below shell centre"
+  },
+  "dimensions_m": [
+    7.499760150909424,
+    7.499760150909424,
+    20.15999984741211
+  ],
+  "cargo": {
+    "count": 2,
+    "family": "MX06 Ridgeback",
+    "scale": 0.75,
+    "layout": "tandem; folded legs; separate referenced assets"
+  },
+  "damage_states": {
+    "D0": "Intact",
+    "D1": "Scorched tiles",
+    "D2": "Dented quadrant and scorching",
+    "D3": "Breached shell; no animation"
+  },
+  "lod_selection": {
+    "initial": 2,
+    "approach_distance_m": 150,
+    "hysteresis_m": 20,
+    "lod0": "Recording master",
+    "lod1": "Animated release shell",
+    "lod2": "Static closed distance; swap before opening"
+  },
+  "assets": [
+    {
+      "file": "feids26_d0_lod0.glb",
+      "lod": 0,
+      "bounds": {
+        "min": [
+          -3.749880075454712,
+          0.05011992454528791,
+          -10.079999923706055
+        ],
+        "max": [
+          3.749880075454712,
+          7.549880075454712,
+          10.079999923706055
+        ],
+        "dimensions_m": [
+          7.499760150909424,
+          7.499760150909424,
+          20.15999984741211
+        ]
+      },
+      "damage_level": 0,
+      "static": false,
+      "bytes": 234172,
+      "triangles": 5696,
+      "draw_calls": 4,
+      "plot_m": [
+        8,
+        22
+      ],
+      "sockets": [
+        {
+          "node": "SOCKET_CARGO_1",
+          "position_m": [
+            0,
+            2.05,
+            -2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CARGO_2",
+          "position_m": [
+            0,
+            2.05,
+            2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CENTER",
+          "position_m": [
+            0,
+            3.8,
+            0
+          ]
+        }
+      ],
+      "required_nodes": [
+        "FEIDS26_ROOT",
+        "SHELL_QUADRANT_1",
+        "SHELL_ARMOR_1",
+        "SHELL_QUADRANT_2",
+        "SHELL_ARMOR_2",
+        "SHELL_QUADRANT_3",
+        "SHELL_ARMOR_3",
+        "SHELL_QUADRANT_4",
+        "SHELL_ARMOR_4",
+        "TAIL_TELEMETRY",
+        "SOCKET_CARGO_1",
+        "SOCKET_CARGO_2",
+        "SOCKET_CENTER"
+      ],
+      "clips": [
+        {
+          "name": "Shell_Separate",
+          "duration_s": 4,
+          "loop": false
+        }
+      ],
+      "sha256": "6605f14bbe6557b6c7dd0bd208789d137e6a07dac357c55ede768a6de2f43120",
+      "meshopt_file": "derived/meshopt/feids26_d0_lod0.meshopt.glb",
+      "meshopt_bytes": 104848,
+      "meshopt_derived": true,
+      "credit": "Models by jelaludo"
+    },
+    {
+      "file": "feids26_d0_lod1.glb",
+      "lod": 1,
+      "bounds": {
+        "min": [
+          -3.749880075454712,
+          0.05011992454528791,
+          -10.079999923706055
+        ],
+        "max": [
+          3.749880075454712,
+          7.549880075454712,
+          10.079999923706055
+        ],
+        "dimensions_m": [
+          7.499760150909424,
+          7.499760150909424,
+          20.15999984741211
+        ]
+      },
+      "damage_level": 0,
+      "static": false,
+      "bytes": 126428,
+      "triangles": 1568,
+      "draw_calls": 4,
+      "plot_m": [
+        8,
+        22
+      ],
+      "sockets": [
+        {
+          "node": "SOCKET_CARGO_1",
+          "position_m": [
+            0,
+            2.05,
+            -2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CARGO_2",
+          "position_m": [
+            0,
+            2.05,
+            2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CENTER",
+          "position_m": [
+            0,
+            3.8,
+            0
+          ]
+        }
+      ],
+      "required_nodes": [
+        "FEIDS26_ROOT",
+        "SHELL_QUADRANT_1",
+        "SHELL_ARMOR_1",
+        "SHELL_QUADRANT_2",
+        "SHELL_ARMOR_2",
+        "SHELL_QUADRANT_3",
+        "SHELL_ARMOR_3",
+        "SHELL_QUADRANT_4",
+        "SHELL_ARMOR_4",
+        "TAIL_TELEMETRY",
+        "SOCKET_CARGO_1",
+        "SOCKET_CARGO_2",
+        "SOCKET_CENTER"
+      ],
+      "clips": [
+        {
+          "name": "Shell_Separate",
+          "duration_s": 4,
+          "loop": false
+        }
+      ],
+      "sha256": "1c57a8eedaa3fbc2b14c9b481c936a86b06edf2988ecc5885dda3db635166472",
+      "meshopt_file": "derived/meshopt/feids26_d0_lod1.meshopt.glb",
+      "meshopt_bytes": 64044,
+      "meshopt_derived": true,
+      "credit": "Models by jelaludo"
+    },
+    {
+      "file": "feids26_d0_lod2.glb",
+      "lod": 2,
+      "bounds": {
+        "min": [
+          -3.749880075454712,
+          0.050119925290346146,
+          -10.079999923706055
+        ],
+        "max": [
+          3.749880075454712,
+          7.549880027770996,
+          10.079999923706055
+        ],
+        "dimensions_m": [
+          7.499760150909424,
+          7.49976010248065,
+          20.15999984741211
+        ]
+      },
+      "damage_level": 0,
+      "static": true,
+      "bytes": 30324,
+      "triangles": 864,
+      "draw_calls": 1,
+      "plot_m": [
+        8,
+        22
+      ],
+      "sockets": [
+        {
+          "node": "SOCKET_CARGO_1",
+          "position_m": [
+            0,
+            2.05,
+            -2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CARGO_2",
+          "position_m": [
+            0,
+            2.05,
+            2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CENTER",
+          "position_m": [
+            0,
+            3.8,
+            0
+          ]
+        }
+      ],
+      "required_nodes": [
+        "FEIDS26_ROOT",
+        "SHELL_QUADRANT_1",
+        "SHELL_ARMOR_1",
+        "SHELL_QUADRANT_2",
+        "SHELL_ARMOR_2",
+        "SHELL_QUADRANT_3",
+        "SHELL_ARMOR_3",
+        "SHELL_QUADRANT_4",
+        "SHELL_ARMOR_4",
+        "TAIL_TELEMETRY",
+        "SOCKET_CARGO_1",
+        "SOCKET_CARGO_2",
+        "SOCKET_CENTER",
+        "FEIDS_STATIC"
+      ],
+      "clips": [],
+      "sha256": "85ee908ef693d0183c819d9fe7b0eb791cc2dab0e84f7bf787110ecf8246c4fd",
+      "meshopt_file": "derived/meshopt/feids26_d0_lod2.meshopt.glb",
+      "meshopt_bytes": 17020,
+      "meshopt_derived": true,
+      "credit": "Models by jelaludo"
+    },
+    {
+      "file": "feids26_d1_lod0.glb",
+      "lod": 0,
+      "bounds": {
+        "min": [
+          -3.749880075454712,
+          0.05011992454528791,
+          -10.079999923706055
+        ],
+        "max": [
+          3.749880075454712,
+          7.549880075454712,
+          10.079999923706055
+        ],
+        "dimensions_m": [
+          7.499760150909424,
+          7.499760150909424,
+          20.15999984741211
+        ]
+      },
+      "damage_level": 1,
+      "static": false,
+      "bytes": 251308,
+      "triangles": 5696,
+      "draw_calls": 4,
+      "plot_m": [
+        8,
+        22
+      ],
+      "sockets": [
+        {
+          "node": "SOCKET_CARGO_1",
+          "position_m": [
+            0,
+            2.05,
+            -2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CARGO_2",
+          "position_m": [
+            0,
+            2.05,
+            2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CENTER",
+          "position_m": [
+            0,
+            3.8,
+            0
+          ]
+        }
+      ],
+      "required_nodes": [
+        "FEIDS26_ROOT",
+        "SHELL_QUADRANT_1",
+        "SHELL_ARMOR_1",
+        "SHELL_QUADRANT_2",
+        "SHELL_ARMOR_2",
+        "SHELL_QUADRANT_3",
+        "SHELL_ARMOR_3",
+        "SHELL_QUADRANT_4",
+        "SHELL_ARMOR_4",
+        "TAIL_TELEMETRY",
+        "SOCKET_CARGO_1",
+        "SOCKET_CARGO_2",
+        "SOCKET_CENTER"
+      ],
+      "clips": [
+        {
+          "name": "Shell_Separate",
+          "duration_s": 4,
+          "loop": false
+        }
+      ],
+      "sha256": "8d2ee19c3a31190d65ad048f8310abf001f0592136d49bbdce123932b66cc643",
+      "meshopt_file": "derived/meshopt/feids26_d1_lod0.meshopt.glb",
+      "meshopt_bytes": 116772,
+      "meshopt_derived": true,
+      "credit": "Models by jelaludo"
+    },
+    {
+      "file": "feids26_d1_lod1.glb",
+      "lod": 1,
+      "bounds": {
+        "min": [
+          -3.749880075454712,
+          0.05011992454528791,
+          -10.079999923706055
+        ],
+        "max": [
+          3.749880075454712,
+          7.549880075454712,
+          10.079999923706055
+        ],
+        "dimensions_m": [
+          7.499760150909424,
+          7.499760150909424,
+          20.15999984741211
+        ]
+      },
+      "damage_level": 1,
+      "static": false,
+      "bytes": 132044,
+      "triangles": 1568,
+      "draw_calls": 4,
+      "plot_m": [
+        8,
+        22
+      ],
+      "sockets": [
+        {
+          "node": "SOCKET_CARGO_1",
+          "position_m": [
+            0,
+            2.05,
+            -2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CARGO_2",
+          "position_m": [
+            0,
+            2.05,
+            2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CENTER",
+          "position_m": [
+            0,
+            3.8,
+            0
+          ]
+        }
+      ],
+      "required_nodes": [
+        "FEIDS26_ROOT",
+        "SHELL_QUADRANT_1",
+        "SHELL_ARMOR_1",
+        "SHELL_QUADRANT_2",
+        "SHELL_ARMOR_2",
+        "SHELL_QUADRANT_3",
+        "SHELL_ARMOR_3",
+        "SHELL_QUADRANT_4",
+        "SHELL_ARMOR_4",
+        "TAIL_TELEMETRY",
+        "SOCKET_CARGO_1",
+        "SOCKET_CARGO_2",
+        "SOCKET_CENTER"
+      ],
+      "clips": [
+        {
+          "name": "Shell_Separate",
+          "duration_s": 4,
+          "loop": false
+        }
+      ],
+      "sha256": "7e2915f3696160899284e9e625f1355bb081c4f926214cb994c39db39861c5a0",
+      "meshopt_file": "derived/meshopt/feids26_d1_lod1.meshopt.glb",
+      "meshopt_bytes": 67580,
+      "meshopt_derived": true,
+      "credit": "Models by jelaludo"
+    },
+    {
+      "file": "feids26_d1_lod2.glb",
+      "lod": 2,
+      "bounds": {
+        "min": [
+          -3.749880075454712,
+          0.050119925290346146,
+          -10.079999923706055
+        ],
+        "max": [
+          3.749880075454712,
+          7.549880027770996,
+          10.079999923706055
+        ],
+        "dimensions_m": [
+          7.499760150909424,
+          7.49976010248065,
+          20.15999984741211
+        ]
+      },
+      "damage_level": 1,
+      "static": true,
+      "bytes": 32772,
+      "triangles": 864,
+      "draw_calls": 1,
+      "plot_m": [
+        8,
+        22
+      ],
+      "sockets": [
+        {
+          "node": "SOCKET_CARGO_1",
+          "position_m": [
+            0,
+            2.05,
+            -2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CARGO_2",
+          "position_m": [
+            0,
+            2.05,
+            2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CENTER",
+          "position_m": [
+            0,
+            3.8,
+            0
+          ]
+        }
+      ],
+      "required_nodes": [
+        "FEIDS26_ROOT",
+        "SHELL_QUADRANT_1",
+        "SHELL_ARMOR_1",
+        "SHELL_QUADRANT_2",
+        "SHELL_ARMOR_2",
+        "SHELL_QUADRANT_3",
+        "SHELL_ARMOR_3",
+        "SHELL_QUADRANT_4",
+        "SHELL_ARMOR_4",
+        "TAIL_TELEMETRY",
+        "SOCKET_CARGO_1",
+        "SOCKET_CARGO_2",
+        "SOCKET_CENTER",
+        "FEIDS_STATIC"
+      ],
+      "clips": [],
+      "sha256": "6d77d04e3d7105515e508569d5149b27492f93c56e1331659e7434bf529f29fa",
+      "meshopt_file": "derived/meshopt/feids26_d1_lod2.meshopt.glb",
+      "meshopt_bytes": 18728,
+      "meshopt_derived": true,
+      "credit": "Models by jelaludo"
+    },
+    {
+      "file": "feids26_d2_lod0.glb",
+      "lod": 0,
+      "bounds": {
+        "min": [
+          -3.749880075454712,
+          0.05011992454528791,
+          -10.079999923706055
+        ],
+        "max": [
+          3.749880075454712,
+          7.549880075454712,
+          10.079999923706055
+        ],
+        "dimensions_m": [
+          7.499760150909424,
+          7.499760150909424,
+          20.15999984741211
+        ]
+      },
+      "damage_level": 2,
+      "static": false,
+      "bytes": 253508,
+      "triangles": 5696,
+      "draw_calls": 4,
+      "plot_m": [
+        8,
+        22
+      ],
+      "sockets": [
+        {
+          "node": "SOCKET_CARGO_1",
+          "position_m": [
+            0,
+            2.05,
+            -2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CARGO_2",
+          "position_m": [
+            0,
+            2.05,
+            2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CENTER",
+          "position_m": [
+            0,
+            3.8,
+            0
+          ]
+        }
+      ],
+      "required_nodes": [
+        "FEIDS26_ROOT",
+        "SHELL_QUADRANT_1",
+        "SHELL_ARMOR_1",
+        "SHELL_QUADRANT_2",
+        "SHELL_ARMOR_2",
+        "SHELL_QUADRANT_3",
+        "SHELL_ARMOR_3",
+        "SHELL_QUADRANT_4",
+        "SHELL_ARMOR_4",
+        "TAIL_TELEMETRY",
+        "SOCKET_CARGO_1",
+        "SOCKET_CARGO_2",
+        "SOCKET_CENTER"
+      ],
+      "clips": [
+        {
+          "name": "Shell_Separate",
+          "duration_s": 4,
+          "loop": false
+        }
+      ],
+      "sha256": "f78c89f8d8208f2ad7f897334921e9812e5a7d56b08d1cb305a66a6bf5f90038",
+      "meshopt_file": "derived/meshopt/feids26_d2_lod0.meshopt.glb",
+      "meshopt_bytes": 120704,
+      "meshopt_derived": true,
+      "credit": "Models by jelaludo"
+    },
+    {
+      "file": "feids26_d2_lod1.glb",
+      "lod": 1,
+      "bounds": {
+        "min": [
+          -3.749880075454712,
+          0.05011992454528791,
+          -10.079999923706055
+        ],
+        "max": [
+          3.749880075454712,
+          7.549880075454712,
+          10.079999923706055
+        ],
+        "dimensions_m": [
+          7.499760150909424,
+          7.499760150909424,
+          20.15999984741211
+        ]
+      },
+      "damage_level": 2,
+      "static": false,
+      "bytes": 133160,
+      "triangles": 1568,
+      "draw_calls": 4,
+      "plot_m": [
+        8,
+        22
+      ],
+      "sockets": [
+        {
+          "node": "SOCKET_CARGO_1",
+          "position_m": [
+            0,
+            2.05,
+            -2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CARGO_2",
+          "position_m": [
+            0,
+            2.05,
+            2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CENTER",
+          "position_m": [
+            0,
+            3.8,
+            0
+          ]
+        }
+      ],
+      "required_nodes": [
+        "FEIDS26_ROOT",
+        "SHELL_QUADRANT_1",
+        "SHELL_ARMOR_1",
+        "SHELL_QUADRANT_2",
+        "SHELL_ARMOR_2",
+        "SHELL_QUADRANT_3",
+        "SHELL_ARMOR_3",
+        "SHELL_QUADRANT_4",
+        "SHELL_ARMOR_4",
+        "TAIL_TELEMETRY",
+        "SOCKET_CARGO_1",
+        "SOCKET_CARGO_2",
+        "SOCKET_CENTER"
+      ],
+      "clips": [
+        {
+          "name": "Shell_Separate",
+          "duration_s": 4,
+          "loop": false
+        }
+      ],
+      "sha256": "189bb67719b68e16d175a63afb4c841edc6466a10f7abd94ad2fc43dd6753a08",
+      "meshopt_file": "derived/meshopt/feids26_d2_lod1.meshopt.glb",
+      "meshopt_bytes": 69688,
+      "meshopt_derived": true,
+      "credit": "Models by jelaludo"
+    },
+    {
+      "file": "feids26_d2_lod2.glb",
+      "lod": 2,
+      "bounds": {
+        "min": [
+          -3.749880075454712,
+          0.050119925290346146,
+          -10.079999923706055
+        ],
+        "max": [
+          3.749880075454712,
+          7.549880027770996,
+          10.079999923706055
+        ],
+        "dimensions_m": [
+          7.499760150909424,
+          7.49976010248065,
+          20.15999984741211
+        ]
+      },
+      "damage_level": 2,
+      "static": true,
+      "bytes": 33420,
+      "triangles": 864,
+      "draw_calls": 1,
+      "plot_m": [
+        8,
+        22
+      ],
+      "sockets": [
+        {
+          "node": "SOCKET_CARGO_1",
+          "position_m": [
+            0,
+            2.05,
+            -2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CARGO_2",
+          "position_m": [
+            0,
+            2.05,
+            2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CENTER",
+          "position_m": [
+            0,
+            3.8,
+            0
+          ]
+        }
+      ],
+      "required_nodes": [
+        "FEIDS26_ROOT",
+        "SHELL_QUADRANT_1",
+        "SHELL_ARMOR_1",
+        "SHELL_QUADRANT_2",
+        "SHELL_ARMOR_2",
+        "SHELL_QUADRANT_3",
+        "SHELL_ARMOR_3",
+        "SHELL_QUADRANT_4",
+        "SHELL_ARMOR_4",
+        "TAIL_TELEMETRY",
+        "SOCKET_CARGO_1",
+        "SOCKET_CARGO_2",
+        "SOCKET_CENTER",
+        "FEIDS_STATIC"
+      ],
+      "clips": [],
+      "sha256": "514aafa81491c20d33817883d385a850f2bfd0347721cf70fa19982d316adacb",
+      "meshopt_file": "derived/meshopt/feids26_d2_lod2.meshopt.glb",
+      "meshopt_bytes": 19264,
+      "meshopt_derived": true,
+      "credit": "Models by jelaludo"
+    },
+    {
+      "file": "feids26_d3_lod0.glb",
+      "lod": 0,
+      "bounds": {
+        "min": [
+          -3.749880075454712,
+          0.05011992454528791,
+          -10.079999923706055
+        ],
+        "max": [
+          3.749880075454712,
+          7.549880075454712,
+          10.079999923706055
+        ],
+        "dimensions_m": [
+          7.499760150909424,
+          7.499760150909424,
+          20.15999984741211
+        ]
+      },
+      "damage_level": 3,
+      "static": false,
+      "bytes": 176104,
+      "triangles": 5552,
+      "draw_calls": 4,
+      "plot_m": [
+        8,
+        22
+      ],
+      "sockets": [
+        {
+          "node": "SOCKET_CARGO_1",
+          "position_m": [
+            0,
+            2.05,
+            -2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CARGO_2",
+          "position_m": [
+            0,
+            2.05,
+            2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CENTER",
+          "position_m": [
+            0,
+            3.8,
+            0
+          ]
+        }
+      ],
+      "required_nodes": [
+        "FEIDS26_ROOT",
+        "SHELL_QUADRANT_1",
+        "SHELL_ARMOR_1",
+        "SHELL_QUADRANT_2",
+        "SHELL_ARMOR_2",
+        "SHELL_QUADRANT_3",
+        "SHELL_ARMOR_3",
+        "SHELL_QUADRANT_4",
+        "SHELL_ARMOR_4",
+        "TAIL_TELEMETRY",
+        "SOCKET_CARGO_1",
+        "SOCKET_CARGO_2",
+        "SOCKET_CENTER"
+      ],
+      "clips": [],
+      "sha256": "2d754de3e42c76e4f39f6c7d0ee2b2db021449767a954588ac31dbc8aaf70ec1",
+      "meshopt_file": "derived/meshopt/feids26_d3_lod0.meshopt.glb",
+      "meshopt_bytes": 81436,
+      "meshopt_derived": true,
+      "credit": "Models by jelaludo"
+    },
+    {
+      "file": "feids26_d3_lod1.glb",
+      "lod": 1,
+      "bounds": {
+        "min": [
+          -3.749880075454712,
+          0.05011992454528791,
+          -10.079999923706055
+        ],
+        "max": [
+          3.749880075454712,
+          7.549880075454712,
+          10.079999923706055
+        ],
+        "dimensions_m": [
+          7.499760150909424,
+          7.499760150909424,
+          20.15999984741211
+        ]
+      },
+      "damage_level": 3,
+      "static": false,
+      "bytes": 58700,
+      "triangles": 1528,
+      "draw_calls": 4,
+      "plot_m": [
+        8,
+        22
+      ],
+      "sockets": [
+        {
+          "node": "SOCKET_CARGO_1",
+          "position_m": [
+            0,
+            2.05,
+            -2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CARGO_2",
+          "position_m": [
+            0,
+            2.05,
+            2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CENTER",
+          "position_m": [
+            0,
+            3.8,
+            0
+          ]
+        }
+      ],
+      "required_nodes": [
+        "FEIDS26_ROOT",
+        "SHELL_QUADRANT_1",
+        "SHELL_ARMOR_1",
+        "SHELL_QUADRANT_2",
+        "SHELL_ARMOR_2",
+        "SHELL_QUADRANT_3",
+        "SHELL_ARMOR_3",
+        "SHELL_QUADRANT_4",
+        "SHELL_ARMOR_4",
+        "TAIL_TELEMETRY",
+        "SOCKET_CARGO_1",
+        "SOCKET_CARGO_2",
+        "SOCKET_CENTER"
+      ],
+      "clips": [],
+      "sha256": "39c947be1c35923d9e612677a5a0a48e7b7ac73d78f6ca1dc9abfc7658cadd9f",
+      "meshopt_file": "derived/meshopt/feids26_d3_lod1.meshopt.glb",
+      "meshopt_bytes": 31472,
+      "meshopt_derived": true,
+      "credit": "Models by jelaludo"
+    },
+    {
+      "file": "feids26_d3_lod2.glb",
+      "lod": 2,
+      "bounds": {
+        "min": [
+          -3.749880075454712,
+          0.050119925290346146,
+          -10.079999923706055
+        ],
+        "max": [
+          3.749880075454712,
+          7.549880027770996,
+          10.079999923706055
+        ],
+        "dimensions_m": [
+          7.499760150909424,
+          7.49976010248065,
+          20.15999984741211
+        ]
+      },
+      "damage_level": 3,
+      "static": true,
+      "bytes": 32352,
+      "triangles": 836,
+      "draw_calls": 1,
+      "plot_m": [
+        8,
+        22
+      ],
+      "sockets": [
+        {
+          "node": "SOCKET_CARGO_1",
+          "position_m": [
+            0,
+            2.05,
+            -2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CARGO_2",
+          "position_m": [
+            0,
+            2.05,
+            2.2
+          ]
+        },
+        {
+          "node": "SOCKET_CENTER",
+          "position_m": [
+            0,
+            3.8,
+            0
+          ]
+        }
+      ],
+      "required_nodes": [
+        "FEIDS26_ROOT",
+        "SHELL_QUADRANT_1",
+        "SHELL_ARMOR_1",
+        "SHELL_QUADRANT_2",
+        "SHELL_ARMOR_2",
+        "SHELL_QUADRANT_3",
+        "SHELL_ARMOR_3",
+        "SHELL_QUADRANT_4",
+        "SHELL_ARMOR_4",
+        "TAIL_TELEMETRY",
+        "SOCKET_CARGO_1",
+        "SOCKET_CARGO_2",
+        "SOCKET_CENTER",
+        "FEIDS_STATIC"
+      ],
+      "clips": [],
+      "sha256": "0eaa5f31dfba27f565d8a7e34f00eec88db97694d0dab7a8970c3a31e4a8a206",
+      "meshopt_file": "derived/meshopt/feids26_d3_lod2.meshopt.glb",
+      "meshopt_bytes": 18668,
+      "meshopt_derived": true,
+      "credit": "Models by jelaludo"
+    }
+  ]
+}

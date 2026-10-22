@@ -77,10 +77,12 @@ export class CityDefense {
    if(p.flight){const pose=advanceQuiver(p.flight,dt,e&&!e.dead?e.position:undefined);Object.assign(p,{ignition:pose.ignition,phase:pose.phase});p.direction.copy(pose.direction);p.position.copy(pose.position);arrived=pose.done;this.stats.missilePhases[p.phase]=(this.stats.missilePhases[p.phase]||0)+1;if(p.ignition&&!p.ignited){p.ignited=true;this.onIgnition?.(p.position);}}
    else if(p.arc){const t=Math.min(1,p.age/p.duration);p.position.copy(p.from).lerp(p.to,t).addScaledVector(p.up,4*p.arc*t*(1-t));arrived=t===1;}
    else {const delta=p.to.clone().sub(p.position),distance=delta.length(),travel=p.speed*dt;p.position.addScaledVector(delta,Math.min(1,travel/Math.max(distance,.0001)));arrived=distance<=travel;}
-   const obstructed=segmentBlocked(this.world,p.previous,p.position,this.spatial),friendly=race.racers.some(r=>segmentNear(p.previous,p.position,r.sim.pos,2));
+   const obstructed=segmentBlocked(this.world,p.previous,p.position,this.spatial),friendly=race.racers.some(r=>segmentNear(p.previous,p.position,r.sim.pos,2))||this.friendlyBlocked?.(p.previous,p.position,p.mech);
    if(arrived||obstructed||friendly||p.age>12){p.done=true;this.onImpact?.(p.type,p.position);this.stats.impacts++;if(!obstructed&&!friendly)this.blast(p.position,['quiver','heptapod','mortar'].includes(p.type)?12:2,p.damage,['quiver','mortar'].includes(p.type)?'bofors':'rotary');}
   }this.projectiles=this.projectiles.filter(p=>!p.done);
+  this.beforeWeapons?.(dt,race);
   for(const g of this.guns){
+   if(g.enabled===false){g.beam=null;g.engaged=false;g.engagedAt=null;continue;}
    for(const [id,until] of g.rejected)if(until<=this.time)g.rejected.delete(id);
    if(g.type==='relay'){g.engaged=false;for(const e of this.enemies)if(!e.dead&&e.position.distanceToSquared(g.origin)<g.range*g.range){e.slowUntil=this.time+TOWER_BY_KEY.relay.slowDur;g.engaged=true;}continue;}
    const missile=g.type==='quiver'||g.type==='heptapod',missileTune=g.type==='heptapod'?MISSILE_DEFAULTS.heptapod:QUIVER;
@@ -91,20 +93,20 @@ export class CityDefense {
    if(missile)stepMissileLock(g.lock,dt,e,Math.hypot(e.x-g.x,e.z-g.z),from?0:99999,{...missileTune,maxRange:g.range});
    if(!from)continue;
    if(g.beam&&this.time<g.beam.until){
-    if(segmentBlocked(this.world,from,target,this.spatial)||race.racers.some(r=>segmentNear(from,target,r.sim.pos,2))){g.beam=null;continue;}
+    if(segmentBlocked(this.world,from,target,this.spatial)||(race.racers.some(r=>segmentNear(from,target,r.sim.pos,2))||this.friendlyBlocked?.(from,target,g.mech))){g.beam=null;continue;}
     g.beam.from.copy(from);g.beam.to.copy(target);for(const victim of this.enemies)if(!victim.dead&&segmentNear(from,target,victim.position,1.25)){victim.hp-=g.damage*dt;victim.hit=this.time;if(victim.hp<=0)this.kill(victim);}continue;
    }g.beam=null;
    if(this.time<g.next||g.overheated||(g.type==='rotor'&&this.time-g.engagedAt<FIRING.rotor.spinUp))continue;
    if(missile&&(!missileCanFire(g.lock,e,Math.hypot(e.x-g.x,e.z-g.z),0,{...missileTune,maxRange:g.range})||this.projectiles.some(p=>p.gun===g.id)))continue;
    if(!missile&&g.type!=='mortar'&&segmentBlocked(this.world,from,target,this.spatial)){this.stats.blocked++;g.rejected.set(e.id,this.time+1.5);g.target=null;g.next=this.time+.15;continue;}
-   if(!missile&&g.type!=='mortar'&&race.racers.some(r=>segmentNear(from,target,r.sim.pos,2))){g.rejected.set(e.id,this.time+.5);g.target=null;continue;}
+   if(!missile&&g.type!=='mortar'&&(race.racers.some(r=>segmentNear(from,target,r.sim.pos,2))||this.friendlyBlocked?.(from,target,g.mech))){g.rejected.set(e.id,this.time+.5);g.target=null;continue;}
    if(this.projectiles.length>=128&&g.type!=='lancer')continue;
    const gap=g.cooldown??.5;g.next=Math.max(this.time-gap,g.next)+gap;this.stats.fired++;const id=++this.serial;
    this.shots.push({id,time:this.time,from:from.clone(),to:target,gun:g.id,type:g.type});
    if(g.type==='needle'){g.next=this.time+gap;e.hp-=g.damage;e.hit=this.time;if(e.hp<=0)this.kill(e);this.onImpact?.('needle',target);}
    else if(['lancer','plasma'].includes(g.type)){g.beam={from:from.clone(),to:target.clone(),until:this.time+(FIRING[g.type]?.beamHold??.1)};g.next=g.beam.until+gap;}
-   else {const direction=g.direction?.()??target.clone().sub(from).projectOnPlane(upAt(from)).normalize().multiplyScalar(.56).addScaledVector(upAt(from),.83).normalize(),flight=missile?launchQuiver(from,target,direction,g.type):null;
-    this.projectiles.push({id,gun:g.id,type:g.type,from:from.clone(),to:target,position:from.clone(),previous:from.clone(),direction:direction.clone(),flight,ignition:false,phase:flight?'Eject':g.type==='mortar'?'Arc':'Round',arc:g.type==='mortar'?from.distanceTo(target)*.62:0,duration:Math.max(1,from.distanceTo(target)/35),up:upAt(from),age:0,speed:150,target:e.id,damage:g.damage});
+   else {const direction=g.direction?.()??target.clone().sub(from).projectOnPlane(upAt(from)).normalize().multiplyScalar(.56).addScaledVector(upAt(from),.83).normalize(),flight=missile?launchQuiver(from,target,direction,g.type):null,destination=g.straight?from.clone().addScaledVector(direction,from.distanceTo(target)):target;
+    this.projectiles.push({id,gun:g.id,mech:g.mech,type:g.type,from:from.clone(),to:destination,position:from.clone(),previous:from.clone(),direction:direction.clone(),flight,ignition:false,phase:flight?'Eject':g.type==='mortar'?'Arc':'Round',arc:g.type==='mortar'?from.distanceTo(target)*.62:0,duration:Math.max(1,from.distanceTo(target)/35),up:upAt(from),age:0,speed:150,target:e.id,damage:g.damage});
     if(g.type==='rotor'){g.heat+=SENTRY_HEAT.rotor.perShot;if(g.heat>=1)g.overheated=true;}
    }
    g.fire?.();this.onShot?.(g.type,from);if(missile){g.lock=makeLock();g.target=null;}

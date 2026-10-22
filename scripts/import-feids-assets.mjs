@@ -1,0 +1,9 @@
+import {mkdir,writeFile,readFile} from 'node:fs/promises';
+import {dirname} from 'node:path';
+import {createHash} from 'node:crypto';
+const revision='1b9a85e34bd2b1c3738d3a66ce3c0b1ff24c7e26',base=`https://raw.githubusercontent.com/jelaludo/SentryTowers_A6/${revision}/`,lock=JSON.parse(await readFile('docs/assets.lock.json','utf8'));
+const paths=['assets/feids26/feids26_d0_lod1.glb','assets/feids26/feids26_d0_lod2.glb','assets/feids26/manifest.json','assets/feids26/README.md','assets/ridgeback-mech/mx06_d0_lod1.glb','assets/ridgeback-mech/mx06_d0_lod2.glb','assets/ridgeback-mech/manifest.json','assets/ridgeback-mech/README.md','assets/feids26/runtime.js','assets/ridgeback-mech/runtime.js','feids26/timeline.js','feids26/shield-heat.js','ridgeback-drop/effects.js'];
+async function put(path,data,source,rev){await mkdir(dirname(path),{recursive:true});await writeFile(path,data);lock.files=lock.files.filter(x=>x.path!==path);lock.files.push({path,source,revision:rev,kind:'copy',bytes:data.length,sha256:createHash('sha256').update(data).digest('hex')});}
+for(const source of paths){const r=await fetch(base+source);if(!r.ok)throw Error(`${r.status}: ${source}`);const data=Buffer.from(await r.arrayBuffer()),path=source.endsWith('.js')?'upstream/a6/'+source:source;await put(path,data,base+source,revision);}
+for(const [name,source] of [['feids_reentry','FEIDS_26__Re_entrySound.mp3'],['mech_reentry','10SecondsMechReentryWooshImpactAt4Seconds_Aftereffect.mp3'],['mech_rubble','MechLanding_rubble-crash-275691.mp3']])await put('assets/audio/'+name+'.mp3',await readFile('/Users/minikai/Downloads/'+source),'User supplied: '+source,'2026-10-22');
+lock.feidsRevision=revision;await writeFile('docs/assets.lock.json',JSON.stringify(lock,null,2)+'\n');console.log('Imported FEIDS-26, Ridgeback rigs and three supplied audio tracks at',revision);
